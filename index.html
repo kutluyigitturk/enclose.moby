@@ -70,10 +70,15 @@
     }
 
     /* --- KONTROLLER (Altta Yüzen Katman) --- */
+    /* --- KONTROLLER (Kesin Konumlandırma) --- */
     .controls-container {
-        margin-bottom: 40px; /* Alttan boşluk */
-        z-index: 10; /* Canvas'ın üstünde */
-        pointer-events: none; /* Kapsayıcı tıklamayı engellemesin */
+        position: absolute; /* Flex akışından çıkar, serbest bırak */
+        bottom: 40px;       /* Sayfanın en altından 40px yukarıda dur */
+        left: 0;
+        width: 100%;        /* Genişliği tam yap ki text-align çalışsın */
+        text-align: center; /* Butonu ortala */
+        z-index: 10;
+        pointer-events: none; 
     }
 
     /* --- RETRO 3D BUTON --- */
