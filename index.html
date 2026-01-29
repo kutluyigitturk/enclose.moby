@@ -72,12 +72,11 @@
     /* --- KONTROLLER (Altta Yüzen Katman) --- */
     /* --- KONTROLLER (Kesin Konumlandırma) --- */
     .controls-container {
-        position: absolute; /* Flex akışından çıkar, serbest bırak */
-        bottom: 40px;       /* Sayfanın en altından 40px yukarıda dur */
-        left: 0;
-        width: 100%;        /* Genişliği tam yap ki text-align çalışsın */
-        text-align: center; /* Butonu ortala */
-        z-index: 10;
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
         pointer-events: none; 
     }
 
