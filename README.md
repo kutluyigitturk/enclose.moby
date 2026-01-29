@@ -1,20 +1,20 @@
 <div align="center">
 
-# 🐋 enclose.moby
+# enclose.moby
 
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.1-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/enclosemobyv0_1.jpg" alt="enclose.moby gameplay" width="600">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/enclosemobyv0_2.jpg" alt="enclose.moby gameplay" width="600">
 
 *A strategic puzzle game where you trap the legendary white whale*
-
+![alt text](image.png)
 </div>
 
 ---
@@ -111,6 +111,7 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | Version | Date | Changes |
 |---------|------|---------|
 | v0.1 | 2025 | Initial release - Core mechanics, 1 level |
+| v0.2 | 2025 | Bug Fixes, Change font family, 1 level |
 
 ---
 
