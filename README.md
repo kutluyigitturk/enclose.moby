@@ -14,7 +14,6 @@
 <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/enclosemobyv0_2.jpg" alt="enclose.moby gameplay" width="600">
 
 *A strategic puzzle game where you trap the legendary white whale*
-![alt text](image.png)
 </div>
 
 ---
