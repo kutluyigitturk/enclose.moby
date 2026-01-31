@@ -500,7 +500,7 @@
             const tileByH = Math.floor(safeHeight / ROWS);
             
             TILE = Math.min(tileByW, tileByH);
-            TILE = Math.max(35, Math.min(60, TILE)); // Min 35px, Max 60px
+            TILE = Math.max(15, Math.min(60, TILE)); // Min 15px, Max 60px
 
             // --- ORTALAMA ---
             const mapW = COLS * TILE;
@@ -662,13 +662,16 @@
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Sprite çiz
+                        // Sprite çiz - TILE küçükse boyutu sınırla
                         const img = buoyFrames[frameIndex];
                         if (img) {
+                            // Sabit boyut kullan, TILE'dan bağımsız
+                            const drawW = Math.max(TILE, 25);
                             const ratio = img.height / img.width;
-                            const drawH = TILE * ratio;
+                            const drawH = drawW * ratio;
+                            const drawX = px + (TILE - drawW) / 2;
                             const drawY = py + TILE - drawH;
-                            ctx.drawImage(img, px, drawY, TILE, drawH);
+                            ctx.drawImage(img, drawX, drawY, drawW, drawH);
                         }
                         
                         if (elapsed < 400) {
