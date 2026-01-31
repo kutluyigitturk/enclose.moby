@@ -756,6 +756,46 @@
             }
         };
         canvas.onmouseleave = () => { hoverPos = {x: -1, y: -1}; draw(); };
+
+        // --- MOBİL TOUCH DESTEĞİ ---
+        canvas.ontouchstart = (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((touch.clientX - rect.left - offsetX) / TILE);
+            const y = Math.floor((touch.clientY - rect.top - offsetY) / TILE);
+            
+            if(x < 0 || x >= COLS || y < 0 || y >= ROWS) return;
+
+            if (gameWon && grid[y][x] === 2) {
+                grid[y][x] = 0;
+                playerWalls = playerWalls.filter(p => p.x !== x || p.y !== y);
+                gameWon = false;
+                winningPath = null;
+                finalScore = 0;
+                draw();
+                return;
+            }
+
+            if (gameWon) return;
+
+            if(grid[y][x] === 0 && playerWalls.length < currentMaxWalls) {
+                wallSpawnTimes[`${y}_${x}`] = Date.now();
+                grid[y][x] = 2;
+                playerWalls.push({x, y});
+                draw();
+                checkEnclosure();
+            } 
+            else if(grid[y][x] === 2) {
+                grid[y][x] = 0;
+                playerWalls = playerWalls.filter(p => p.x !== x || p.y !== y);
+                draw();
+            }
+        };
+
+canvas.ontouchmove = (e) => {
+    e.preventDefault();
+};
         
         canvas.onclick = (e) => {
              const rect = canvas.getBoundingClientRect();
@@ -788,6 +828,7 @@
                  draw();
              }
         };
+        
         
         function checkEnclosure() {
             if (gameWon) return;
