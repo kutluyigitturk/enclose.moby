@@ -662,22 +662,20 @@
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // DEBUG: Her zaman kırmızı kare çiz (frame 3 için)
-                        if (frameIndex === 3) {
-                            ctx.fillStyle = "#ff0000";
-                            ctx.fillRect(px + 4, py + 4, TILE - 8, TILE - 8);
-                        } else {
-                            // Diğer frame'ler için sprite
-                            const img = buoyFrames[frameIndex];
-                            if (img) {
-                                const ratio = img.height / img.width;
-                                const drawH = TILE * ratio;
-                                const drawY = py + TILE - drawH;
-                                ctx.drawImage(img, px, drawY, TILE, drawH);
-                            }
+                        // Sprite çiz
+                        const img = buoyFrames[frameIndex];
+                        if (img) {
+                            const ratio = img.height / img.width;
+                            const drawH = TILE * ratio;
+                            const drawY = py + TILE - drawH;
+                            ctx.drawImage(img, px, drawY, TILE, drawH);
                         }
                         
-                        if (elapsed < 350) requestAnimationFrame(draw);
+                        // Animasyon HENÜZ bitmemişse devam et
+                        // 350'ye kadar çizmeye devam et ki son frame görünsün
+                        if (elapsed < 400) {
+                            requestAnimationFrame(draw);
+                        }
                     }
 
                     // E) MOBY DICK
