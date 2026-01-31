@@ -310,6 +310,11 @@
 
         // Dışarı tıklayınca Dropdown'ı kapatma (Opsiyonel ama iyi olur)
         window.onclick = function(event) {
+            // Canvas'a tıklandıysa dropdown işlemini yapma
+            if (event.target.id === 'gameCanvas') {
+                return; // Canvas click'lerini engelleme
+            }
+            
             if (!event.target.matches('.menu-icon-btn')) {
                 var dropdowns = document.getElementsByClassName("dropdown-content");
                 for (var i = 0; i < dropdowns.length; i++) {
@@ -738,6 +743,9 @@
             const x = Math.floor((touch.clientX - rect.left - offsetX) / TILE);
             const y = Math.floor((touch.clientY - rect.top - offsetY) / TILE);
             
+            // DEBUG - Ekrana yazı yaz
+            alert("Touch: x=" + x + ", y=" + y + ", grid=" + (grid[y] ? grid[y][x] : "yok"));
+            
             if(x < 0 || x >= COLS || y < 0 || y >= ROWS) return;
 
             if (gameWon && grid[y][x] === 2) {
@@ -756,6 +764,10 @@
                 wallSpawnTimes[`${y}_${x}`] = Date.now();
                 grid[y][x] = 2;
                 playerWalls.push({x, y});
+                
+                // DEBUG
+                alert("Buoy eklendi! playerWalls=" + playerWalls.length);
+                
                 draw();
                 checkEnclosure();
             } 
@@ -766,9 +778,9 @@
             }
         };
 
-canvas.ontouchmove = (e) => {
-    e.preventDefault();
-};
+        canvas.ontouchmove = (e) => {
+            e.preventDefault();
+        };
         
         canvas.onclick = (e) => {
              const rect = canvas.getBoundingClientRect();
