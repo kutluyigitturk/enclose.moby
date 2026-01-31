@@ -500,7 +500,7 @@
             const tileByH = Math.floor(safeHeight / ROWS);
             
             TILE = Math.min(tileByW, tileByH);
-            TILE = Math.max(15, Math.min(60, TILE)); // Min 15px, Max 60px
+            TILE = Math.max(35, Math.min(60, TILE)); // Min 35px, Max 60px
 
             // --- ORTALAMA ---
             const mapW = COLS * TILE;
@@ -653,9 +653,10 @@
                         const elapsed = currentTime - spawnTime;
                         
                         let frameIndex;
-                        if(elapsed < 150) frameIndex = 0;
-                        else if(elapsed < 300) frameIndex = 1;
-                        else frameIndex = 2;
+                        if(elapsed < 100) frameIndex = 0;
+                        else if(elapsed < 200) frameIndex = 1;
+                        else if(elapsed < 300) frameIndex = 2;
+                        else frameIndex = 3;
                         
                         // Gölge
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
