@@ -386,6 +386,21 @@
             initLevel(); 
         });
 
+        const buoy0 = new Image();
+        const buoy1 = new Image();
+        const buoy2 = new Image();
+        const buoy3 = new Image();
+
+        buoy0.onload = () => { buoyFrames[0] = buoy0; };
+        buoy1.onload = () => { buoyFrames[1] = buoy1; };
+        buoy2.onload = () => { buoyFrames[2] = buoy2; };
+        buoy3.onload = () => { buoyFrames[3] = buoy3; };
+
+        buoy0.src = srcBuoy0;
+        buoy1.src = srcBuoy1;
+        buoy2.src = srcBuoy2;
+        buoy3.src = srcBuoy3;
+
         const wallSpawnTimes = {}; 
         const resetBtn = document.getElementById('reset-btn');
 
