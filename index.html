@@ -386,21 +386,6 @@
             initLevel(); 
         });
 
-        const buoy0 = new Image();
-        const buoy1 = new Image();
-        const buoy2 = new Image();
-        const buoy3 = new Image();
-
-        buoy0.onload = () => { buoyFrames[0] = buoy0; };
-        buoy1.onload = () => { buoyFrames[1] = buoy1; };
-        buoy2.onload = () => { buoyFrames[2] = buoy2; };
-        buoy3.onload = () => { buoyFrames[3] = buoy3; };
-
-        buoy0.src = srcBuoy0;
-        buoy1.src = srcBuoy1;
-        buoy2.src = srcBuoy2;
-        buoy3.src = srcBuoy3;
-
         const wallSpawnTimes = {}; 
         const resetBtn = document.getElementById('reset-btn');
 
@@ -673,45 +658,35 @@
                         ctx.strokeRect(px + 0.5, py + 0.5, TILE - 1, TILE - 1);
                     }
 
-                    // D) ŞAMANDIRA (KAYBOLMA SORUNU ÇÖZÜLDÜ)
+                    // D) ŞAMANDIRA (KESİN ÇÖZÜM)
                     else if (grid[y][x] === 2) { 
                         const key = `${y}_${x}`;
                         const spawnTime = wallSpawnTimes[key] || 0;
                         const elapsed = currentTime - spawnTime;
                         
-                        // 1. Hangi kare gösterilecek?
-                        let frameIndex = 3; // Varsayılan (Bitiş)
+                        // 1. Hangi kare?
+                        let frameIndex = 3; // Varsayılan (Bitiş karesi)
                         if(elapsed < 100) frameIndex = 0;
                         else if(elapsed < 200) frameIndex = 1;
                         else if(elapsed < 300) frameIndex = 2;
                         
-                        // 2. Gölgeyi Çiz (Gölge her zaman görünür)
+                        // 2. Gölge Çiz
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // 3. Resmi Seç ve Kontrol Et (YEDEK MEKANİZMA)
-                        let img = buoyFrames[frameIndex];
-                        
-                        // Eğer o anki resim (özellikle buoy3) bozuksa veya yüklenmediyse,
-                        // yerine hemen 'buoyFrames[0]' yani ilk kareyi kullan.
-                        if (!img || !img.complete || img.naturalWidth === 0) {
-                            img = buoyFrames[0]; 
-                        }
+                        // 3. Resmi Çiz
+                        const img = buoyFrames[frameIndex];
+                        // Resim varsa çiz, yoksa (henüz yüklenmediyse) ilk kareyi dene
+                        const drawImg = (img && img.complete) ? img : buoyFrames[0];
 
-                        // 4. Resmi Çiz
-                        if (img && img.complete && img.naturalWidth > 0) {
-                            const ratio = img.naturalHeight / img.naturalWidth;
+                        if (drawImg && drawImg.complete && drawImg.naturalWidth > 0) {
+                            const ratio = drawImg.naturalHeight / drawImg.naturalWidth;
                             const drawH = TILE * ratio;
                             const drawY = (py + TILE) - drawH;
-                            ctx.drawImage(img, px, drawY, TILE, drawH);
-                        } else {
-                            // Eğer HİÇBİR resim yoksa (acil durum), kırmızı bir kutu çiz ki yerini görelim
-                            ctx.fillStyle = "#ff5252";
-                            ctx.fillRect(px + 10, py + 10, TILE - 20, TILE - 20);
+                            ctx.drawImage(drawImg, px, drawY, TILE, drawH);
                         }
 
-                        // 5. Animasyon Döngüsü
-                        // Animasyon bitene kadar çizimi tazelemeye devam et
+                        // 4. Animasyon Devam Ediyorsa
                         if (elapsed < 350) { 
                             requestAnimationFrame(draw); 
                         }
