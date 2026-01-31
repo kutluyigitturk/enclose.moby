@@ -648,10 +648,31 @@
 
                     // D) ŞAMANDIRA
                     else if (grid[y][x] === 2) { 
-                        ctx.fillStyle = "#00ff00";
-                        ctx.fillRect(px, py, TILE, TILE);
+                        const key = `${y}_${x}`;
+                        const spawnTime = wallSpawnTimes[key] || 0;
+                        const elapsed = currentTime - spawnTime;
                         
-                        ctx.drawImage(buoyFrames[2], px, py, TILE, TILE);
+                        let frameIndex;
+                        if(elapsed < 100) frameIndex = 0;
+                        else if(elapsed < 200) frameIndex = 1;
+                        else frameIndex = 2; // Son frame olarak 2 kullan
+                        
+                        // Gölge
+                        ctx.fillStyle = "rgba(0,0,0,0.3)";
+                        ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
+                        
+                        // Sprite çiz
+                        const img = buoyFrames[frameIndex];
+                        if (img) {
+                            const ratio = img.height / img.width;
+                            const drawH = TILE * ratio;
+                            const drawY = py + TILE - drawH;
+                            ctx.drawImage(img, px, drawY, TILE, drawH);
+                        }
+                        
+                        if (elapsed < 300) {
+                            requestAnimationFrame(draw);
+                        }
                     }
 
                     // E) MOBY DICK
