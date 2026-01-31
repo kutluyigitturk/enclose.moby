@@ -651,19 +651,34 @@
                         const spawnTime = wallSpawnTimes[key] || 0;
                         const elapsed = currentTime - spawnTime;
                         
+                        let frameIndex = 3;
+                        if(elapsed < 100) frameIndex = 0;
+                        else if(elapsed < 200) frameIndex = 1;
+                        else if(elapsed < 300) frameIndex = 2;
+                        
                         // Gölge
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Animasyon renkleri
-                        let color = "#e74c3c"; // Kırmızı (final)
-                        if(elapsed < 100) color = "#f39c12"; // Turuncu
-                        else if(elapsed < 200) color = "#e67e22"; // Koyu turuncu
-                        else if(elapsed < 300) color = "#d35400"; // Daha koyu
+                        // Sprite var mı kontrol et
+                        const img = buoyFrames[frameIndex];
                         
-                        // Basit kare çiz
-                        ctx.fillStyle = color;
-                        ctx.fillRect(px + 4, py + 4, TILE - 8, TILE - 8);
+                        if (img && img.complete && img.width > 0) {
+                            // Sprite'ı çiz
+                            const ratio = img.height / img.width;
+                            const drawH = TILE * ratio;
+                            const drawY = (py + TILE) - drawH;
+                            ctx.drawImage(img, px, drawY, TILE, drawH);
+                        } else {
+                            // Yedek: Renkli kare çiz
+                            let color = "#e74c3c";
+                            if(frameIndex === 0) color = "#f39c12";
+                            else if(frameIndex === 1) color = "#e67e22";
+                            else if(frameIndex === 2) color = "#d35400";
+                            
+                            ctx.fillStyle = color;
+                            ctx.fillRect(px + 4, py + 4, TILE - 8, TILE - 8);
+                        }
                         
                         // Animasyon devam
                         if (elapsed < 350) { 
