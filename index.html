@@ -648,19 +648,11 @@
 
                     // D) ŞAMANDIRA
                     else if (grid[y][x] === 2) { 
-                        // Arka plan - hangi frame'e göre renk değişsin
-                        if (buoyFrames[3] && buoyFrames[3].width > 0) {
-                            ctx.fillStyle = "#00ff00"; // Yeşil = frame 3 var
-                        } else {
-                            ctx.fillStyle = "#ff0000"; // Kırmızı = frame 3 yok
-                        }
+                        ctx.fillStyle = "#00ff00";
                         ctx.fillRect(px, py, TILE, TILE);
                         
-                        // Frame 0'ı çiz
-                        const img = buoyFrames[0];
-                        if (img) {
-                            ctx.drawImage(img, px, py, TILE, TILE);
-                        }
+                        // Doğrudan frame 3
+                        ctx.drawImage(buoyFrames[3], px, py, TILE, TILE);
                     }
 
                     // E) MOBY DICK
