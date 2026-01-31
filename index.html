@@ -574,6 +574,7 @@
         }
 
         function draw() {
+            console.log("buoyFrames:", buoyFrames.length, buoyFrames[0] ? "var" : "yok", buoyFrames[0]?.width);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // 1. OKYANUS
@@ -760,7 +761,7 @@
             const rect = canvas.getBoundingClientRect();
             const x = Math.floor((touch.clientX - rect.left - offsetX) / TILE);
             const y = Math.floor((touch.clientY - rect.top - offsetY) / TILE);
-                      
+            
             if(x < 0 || x >= COLS || y < 0 || y >= ROWS) return;
 
             if (gameWon && grid[y][x] === 2) {
@@ -779,7 +780,6 @@
                 wallSpawnTimes[`${y}_${x}`] = Date.now();
                 grid[y][x] = 2;
                 playerWalls.push({x, y});
-                
                 draw();
                 checkEnclosure();
             } 
