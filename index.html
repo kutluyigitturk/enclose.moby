@@ -660,30 +660,33 @@
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Sprite var mı kontrol et
+                        // Sprite kontrolü
                         const img = buoyFrames[frameIndex];
                         
-                        if (img && img.complete && img.width > 0) {
-                            // Sprite'ı çiz
+                        if (img && img.width > 0) {
                             const ratio = img.height / img.width;
                             const drawH = TILE * ratio;
                             const drawY = (py + TILE) - drawH;
                             ctx.drawImage(img, px, drawY, TILE, drawH);
                         } else {
-                            // Yedek: Renkli kare çiz
-                            let color = "#e74c3c";
-                            if(frameIndex === 0) color = "#f39c12";
-                            else if(frameIndex === 1) color = "#e67e22";
-                            else if(frameIndex === 2) color = "#d35400";
+                            // Fallback: Güzel gradient buoy
+                            const gradient = ctx.createLinearGradient(px, py, px, py + TILE);
+                            gradient.addColorStop(0, "#ff6b6b");
+                            gradient.addColorStop(1, "#c0392b");
+                            ctx.fillStyle = gradient;
                             
-                            ctx.fillStyle = color;
-                            ctx.fillRect(px + 4, py + 4, TILE - 8, TILE - 8);
+                            // Yuvarlak üst
+                            ctx.beginPath();
+                            ctx.arc(px + TILE/2, py + TILE/3, TILE/3, Math.PI, 0);
+                            ctx.rect(px + TILE/6, py + TILE/3, TILE*2/3, TILE/2);
+                            ctx.fill();
+                            
+                            // Beyaz şerit
+                            ctx.fillStyle = "#fff";
+                            ctx.fillRect(px + TILE/6, py + TILE/2, TILE*2/3, 4);
                         }
                         
-                        // Animasyon devam
-                        if (elapsed < 350) { 
-                            requestAnimationFrame(draw); 
-                        }
+                        if (elapsed < 350) requestAnimationFrame(draw);
                     }
 
                     // E) MOBY DICK
@@ -757,10 +760,7 @@
             const rect = canvas.getBoundingClientRect();
             const x = Math.floor((touch.clientX - rect.left - offsetX) / TILE);
             const y = Math.floor((touch.clientY - rect.top - offsetY) / TILE);
-            
-            // DEBUG - Ekrana yazı yaz
-            alert("Touch: x=" + x + ", y=" + y + ", grid=" + (grid[y] ? grid[y][x] : "yok"));
-            
+                      
             if(x < 0 || x >= COLS || y < 0 || y >= ROWS) return;
 
             if (gameWon && grid[y][x] === 2) {
@@ -779,9 +779,6 @@
                 wallSpawnTimes[`${y}_${x}`] = Date.now();
                 grid[y][x] = 2;
                 playerWalls.push({x, y});
-                
-                // DEBUG
-                alert("Buoy eklendi! playerWalls=" + playerWalls.length);
                 
                 draw();
                 checkEnclosure();
