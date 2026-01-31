@@ -661,15 +661,19 @@
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Sprite çiz
-                        const img = buoyFrames[frameIndex];
-                        const w = img.width;
-                        const h = img.height;
-                        const ratio = h / w;
-                        const drawH = TILE * ratio;
-                        const drawY = py + TILE - drawH;
+                        // DEBUG: frameIndex'i ekrana yaz
+                        ctx.fillStyle = "#fff";
+                        ctx.font = "12px Arial";
+                        ctx.fillText(frameIndex + "", px + 5, py + 15);
                         
-                        ctx.drawImage(img, px, drawY, TILE, drawH);
+                        // Sprite çiz - HER ZAMAN frame 0 kullan (test)
+                        const img = buoyFrames[0]; // Geçici olarak hep 0
+                        if (img) {
+                            const ratio = img.height / img.width;
+                            const drawH = TILE * ratio;
+                            const drawY = py + TILE - drawH;
+                            ctx.drawImage(img, px, drawY, TILE, drawH);
+                        }
                         
                         if (elapsed < 350) requestAnimationFrame(draw);
                     }
