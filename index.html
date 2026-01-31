@@ -671,8 +671,6 @@
                             ctx.drawImage(img, px, drawY, TILE, drawH);
                         }
                         
-                        // Animasyon HENÜZ bitmemişse devam et
-                        // 350'ye kadar çizmeye devam et ki son frame görünsün
                         if (elapsed < 400) {
                             requestAnimationFrame(draw);
                         }
