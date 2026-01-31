@@ -658,35 +658,33 @@
                         ctx.strokeRect(px + 0.5, py + 0.5, TILE - 1, TILE - 1);
                     }
 
-                    // D) ŞAMANDIRA (KESİN ÇÖZÜM)
+                    // D) ŞAMANDIRA
                     else if (grid[y][x] === 2) { 
                         const key = `${y}_${x}`;
                         const spawnTime = wallSpawnTimes[key] || 0;
                         const elapsed = currentTime - spawnTime;
                         
-                        // 1. Hangi kare?
-                        let frameIndex = 3; // Varsayılan (Bitiş karesi)
+                        let frameIndex = 3;
                         if(elapsed < 100) frameIndex = 0;
                         else if(elapsed < 200) frameIndex = 1;
                         else if(elapsed < 300) frameIndex = 2;
                         
-                        // 2. Gölge Çiz
+                        // Gölge
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // 3. Resmi Çiz
+                        // Buoy çizimi - basit ve güvenli
                         const img = buoyFrames[frameIndex];
-                        // Resim varsa çiz, yoksa (henüz yüklenmediyse) ilk kareyi dene
-                        const drawImg = (img && img.complete) ? img : buoyFrames[0];
-
-                        if (drawImg && drawImg.complete && drawImg.naturalWidth > 0) {
-                            const ratio = drawImg.naturalHeight / drawImg.naturalWidth;
+                        if (img) {
+                            const w = img.naturalWidth || img.width || 50;
+                            const h = img.naturalHeight || img.height || 75;
+                            const ratio = h / w;
                             const drawH = TILE * ratio;
                             const drawY = (py + TILE) - drawH;
-                            ctx.drawImage(drawImg, px, drawY, TILE, drawH);
+                            ctx.drawImage(img, px, drawY, TILE, drawH);
                         }
-
-                        // 4. Animasyon Devam Ediyorsa
+                        
+                        // Animasyon devam
                         if (elapsed < 350) { 
                             requestAnimationFrame(draw); 
                         }
