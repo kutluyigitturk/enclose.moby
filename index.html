@@ -463,60 +463,51 @@
             // 1. Level Verisini Çek
             const currentLevelData = levels[currentLevelIndex];
             const currentMap = currentLevelData.map;
-
-            currentMaxWalls = currentLevelData.maxWalls || 10;
             
+            // 2. Harita Boyutlarını Algıla
             ROWS = currentMap.length;
             COLS = currentMap[0].length;
+            currentMaxWalls = currentLevelData.maxWalls || 10;
 
+            // 3. Başlığı Güncelle
             const titleEl = document.querySelector('.subtitle');
             if (titleEl) titleEl.textContent = "Level " + (currentLevelIndex + 1) + " - " + currentLevelData.name;
             
+            // 4. Ekran Boyutunu Al
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            // --- YENİ VE KESİN HESAPLAMA ---
-            
-            // A) Üst ve Alt Panellerin Kapladığı "Gerçek" Alanı Ölç
+            // --- GÜVENLİ ALAN HESABI ---
             const headerEl = document.querySelector('.header-container');
             const footerEl = document.querySelector('.controls-container');
             
-            // Header yüksekliği + üst boşluk (yoksa varsayılan 120px)
+            // Header yüksekliği (yoksa 120px)
             const headerZone = headerEl ? (headerEl.offsetTop + headerEl.offsetHeight + 10) : 120;
             
-            // Footer yüksekliği + alt boşluk (CSS'de bottom:30px verdik, onu da ekliyoruz)
-            // Butonun yüksekliği (~50) + alttan boşluk (30) + güvenlik payı (20) = ~100px
+            // Footer yüksekliği (yoksa 100px)
             const footerZone = footerEl ? (footerEl.offsetHeight + 50) : 100;
 
-            // B) Oyun İçin Kalan Güvenli Yükseklik
-            const safeWidth = canvas.width - 20; // Sağdan soldan 10'ar px pay
+            const safeWidth = canvas.width - 20; 
             const safeHeight = canvas.height - headerZone - footerZone;
 
-            // C) TILE Boyutunu Bu Güvenli Alana Göre Hesapla
-            // Haritayı bu alana sığdıracak en büyük kare boyutunu bul
+            // --- TILE HESABI ---
             const tileByW = Math.floor(safeWidth / COLS);
             const tileByH = Math.floor(safeHeight / ROWS);
             
-            // En küçük olanı seç ki taşma olmasın
             TILE = Math.min(tileByW, tileByH);
+            TILE = Math.max(15, Math.min(60, TILE)); // Min 15px, Max 60px
 
-            // Sınırlandırma: Çok küçük veya çok büyük olmasın (ama asla taşmasın)
-            // Eğer sığmıyorsa 15px'e kadar küçülsün, yer varsa 60px'e kadar büyüsün
-            TILE = Math.max(15, Math.min(60, TILE));
-
-            // D) Haritayı Ortala (Ama Header'ın Altından Başlat)
+            // --- ORTALAMA ---
             const mapW = COLS * TILE;
             const mapH = ROWS * TILE;
 
             offsetX = Math.floor((canvas.width - mapW) / 2);
             
-            // Dikeyortalama: Header alanı + (Kalan boşlukta ortalama)
-            // Eğer alan negatifse (çok küçük ekran), direkt header'ın altına yapıştır.
             const remainingH = safeHeight - mapH;
+            // Dikeyde tam ortaya koymak için headerZone'a ekle
             offsetY = headerZone + (remainingH > 0 ? remainingH / 2 : 0);
 
-            // ------------------------------------
-
+            // --- SIFIRLAMA ---
             grid = [];
             playerWalls = [];
             gameWon = false; 
@@ -595,13 +586,6 @@
 
             const currentTime = Date.now(); 
 
-            if (gameWon && winningPath) {
-                if (winAlpha < 0.6) {
-                    winAlpha += 0.01; 
-                    if(winAlpha > 0.6) winAlpha = 0.6;
-                }
-            }
-
             // 3. HARİTA DÖNGÜSÜ
             for (let y = 0; y < ROWS; y++) {
                 for (let x = 0; x < COLS; x++) {
@@ -624,46 +608,45 @@
 
                     // C) KARA
                     if (grid[y][x] === 1) {
+                        // ... (Kara çizim mantığı aynı kalıyor, burayı özet geçiyorum) ...
                         const isLandBelow = (y < ROWS - 1 && grid[y+1][x] === 1);
                         const hasLandLeft = (x > 0 && grid[y][x-1] === 1);
                         const hasLandRight= (x < COLS - 1 && grid[y][x+1] === 1);
 
                         if (isLandBelow) {
-                            if (typeof imgMiddle !== 'undefined' && imgMiddle) ctx.drawImage(imgMiddle, px, py, TILE, TILE);
+                            if (imgMiddle) ctx.drawImage(imgMiddle, px, py, TILE, TILE);
                             else { ctx.fillStyle = "#35693f"; ctx.fillRect(px, py, TILE, TILE); }
                         } else {
                             if (!hasLandLeft && !hasLandRight) {
-                                if (typeof imgSingle !== 'undefined' && imgSingle) ctx.drawImage(imgSingle, px, py, TILE, TILE);
+                                if (imgSingle) ctx.drawImage(imgSingle, px, py, TILE, TILE);
                                 else ctx.fillRect(px, py, TILE, TILE);
                             } else {
                                 const useSide1 = (x % 2 === 0);
-                                const imgToUse = useSide1 ? ((typeof imgSide1 !== 'undefined') ? imgSide1 : null) : ((typeof imgSide2 !== 'undefined') ? imgSide2 : null);
+                                const imgToUse = useSide1 ? imgSide1 : imgSide2;
                                 if (imgToUse) ctx.drawImage(imgToUse, px, py, TILE, TILE);
                                 else ctx.fillRect(px, py, TILE, TILE);
                             }
                         }
-
-                        const isWaterUp    = (y === 0 || grid[y-1][x] === 0);
+                        // Su kenarları gölgelendirme
+                        const isWaterUp = (y === 0 || grid[y-1][x] === 0);
                         const isWaterLeft = (x === 0 || grid[y][x-1] === 0);
-                        const isWaterRight= (x === COLS - 1 || grid[y][x+1] === 0);
-                        
+                        const isWaterRight = (x === COLS - 1 || grid[y][x+1] === 0);
                         ctx.fillStyle = "rgba(20, 40, 30, 0.5)"; 
-                        const bSize = 4;
-                        if(isWaterUp)    ctx.fillRect(px, py, TILE, bSize);          
-                        if(isWaterLeft)  ctx.fillRect(px, py, bSize, TILE);          
-                        if(isWaterRight) ctx.fillRect(px + TILE - bSize, py, bSize, TILE); 
-
+                        if(isWaterUp) ctx.fillRect(px, py, TILE, 4);          
+                        if(isWaterLeft) ctx.fillRect(px, py, 4, TILE);          
+                        if(isWaterRight) ctx.fillRect(px + TILE - 4, py, 4, TILE); 
                         ctx.strokeStyle = "rgba(0, 0, 0, 0.2)"; 
                         ctx.lineWidth = 1;
                         ctx.strokeRect(px + 0.5, py + 0.5, TILE - 1, TILE - 1);
                     }
 
-                    // D) ŞAMANDIRA
+                    // D) ŞAMANDIRA (BURASI KRİTİK DÜZELTME)
                     else if (grid[y][x] === 2) { 
                         const key = `${y}_${x}`;
                         const spawnTime = wallSpawnTimes[key] || 0;
                         const elapsed = currentTime - spawnTime;
                         
+                        // Kare Seçimi
                         let frameIndex = 3;
                         if(elapsed < 100) frameIndex = 0;
                         else if(elapsed < 200) frameIndex = 1;
@@ -673,18 +656,18 @@
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Buoy çizimi - basit ve güvenli
-                        const img = buoyFrames[frameIndex];
+                        // Resim Çizimi (Her zaman çalışır)
+                        // Eğer o anki kare yoksa (yüklenmediyse), ilk kareyi kullan (yedek)
+                        const img = buoyFrames[frameIndex] || buoyFrames[0];
+                        
                         if (img) {
-                            const w = img.naturalWidth || img.width || 50;
-                            const h = img.naturalHeight || img.height || 75;
-                            const ratio = h / w;
+                            const ratio = (img.height && img.width) ? (img.height / img.width) : 1.5;
                             const drawH = TILE * ratio;
                             const drawY = (py + TILE) - drawH;
                             ctx.drawImage(img, px, drawY, TILE, drawH);
                         }
-                        
-                        // Animasyon devam
+
+                        // Animasyon devam ediyorsa tekrar iste
                         if (elapsed < 350) { 
                             requestAnimationFrame(draw); 
                         }
@@ -697,11 +680,12 @@
                     
                     // F) GHOST PREVIEW
                     if (grid[y][x] === 0 && x === hoverPos.x && y === hoverPos.y && playerWalls.length < currentMaxWalls) {
-                         if (x !== mobyPos.x || y !== mobyPos.y && buoyFrames[0]) {
+                         // Önizleme için her zaman ilk kareyi kullan
+                         const bImg = buoyFrames[0];
+                         if (x !== mobyPos.x || y !== mobyPos.y && bImg) {
                              ctx.save();
                              ctx.globalAlpha = 0.5;
-                             const bImg = buoyFrames[0];
-                             const ratio = bImg.naturalHeight / bImg.naturalWidth;
+                             const ratio = (bImg.height && bImg.width) ? (bImg.height / bImg.width) : 1.5;
                              ctx.drawImage(bImg, px, (py+TILE)-(TILE*ratio), TILE, TILE*ratio);
                              ctx.restore();
                          }
@@ -712,21 +696,18 @@
             // --- UI METİNLERİ ---
             const mapBottomY = offsetY + (ROWS * TILE);
             const mapRightX = offsetX + (COLS * TILE);
-            
-            // 1. Sol Alt (Buoy)
+
+            // Sol Alt
             ctx.save(); 
             ctx.textAlign = "left";
             ctx.fillStyle = "#66bb6a"; 
             ctx.font = "22px 'Schoolbell', cursive"; 
-            
-            // Kalan hak ve Toplam hak hesabı
             let used = playerWalls.length;
             let remaining = currentMaxWalls - used;
-            
-            // Ekrana Yazdır: "Buoy: 9/10" formatında
             ctx.fillText("Buoy: " + remaining + "/" + currentMaxWalls, offsetX, mapBottomY + 30);
             ctx.restore(); 
 
+            // Sağ Alt
             ctx.save(); 
             ctx.textAlign = "right"; 
             ctx.fillStyle = "#fff"; 
@@ -735,7 +716,12 @@
             ctx.fillText(scoreText, mapRightX, mapBottomY + 30);
             ctx.restore(); 
 
+            // Animasyon devamlılığı (Kazanma efekti için)
             if (gameWon) {
+                if (winAlpha < 0.6) {
+                    winAlpha += 0.01; 
+                    if(winAlpha > 0.6) winAlpha = 0.6;
+                }
                 requestAnimationFrame(draw);
             }
         }
