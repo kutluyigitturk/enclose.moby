@@ -648,9 +648,15 @@
 
                     // D) ŞAMANDIRA
                     else if (grid[y][x] === 2) { 
-                        // Mavi kare çiz - grid=2 olduğunu kanıtla
+                        // Mavi kare arka plan
                         ctx.fillStyle = "#0000ff";
                         ctx.fillRect(px, py, TILE, TILE);
+                        
+                        // Sprite çiz
+                        const img = buoyFrames[3];
+                        if (img && img.width > 0) {
+                            ctx.drawImage(img, px, py, TILE, TILE);
+                        }
                     }
 
                     // E) MOBY DICK
