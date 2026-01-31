@@ -661,31 +661,15 @@
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Sprite kontrolü
+                        // Sprite çiz
                         const img = buoyFrames[frameIndex];
+                        const w = img.width;
+                        const h = img.height;
+                        const ratio = h / w;
+                        const drawH = TILE * ratio;
+                        const drawY = py + TILE - drawH;
                         
-                        if (img && img.width > 0) {
-                            const ratio = img.height / img.width;
-                            const drawH = TILE * ratio;
-                            const drawY = (py + TILE) - drawH;
-                            ctx.drawImage(img, px, drawY, TILE, drawH);
-                        } else {
-                            // Fallback: Güzel gradient buoy
-                            const gradient = ctx.createLinearGradient(px, py, px, py + TILE);
-                            gradient.addColorStop(0, "#ff6b6b");
-                            gradient.addColorStop(1, "#c0392b");
-                            ctx.fillStyle = gradient;
-                            
-                            // Yuvarlak üst
-                            ctx.beginPath();
-                            ctx.arc(px + TILE/2, py + TILE/3, TILE/3, Math.PI, 0);
-                            ctx.rect(px + TILE/6, py + TILE/3, TILE*2/3, TILE/2);
-                            ctx.fill();
-                            
-                            // Beyaz şerit
-                            ctx.fillStyle = "#fff";
-                            ctx.fillRect(px + TILE/6, py + TILE/2, TILE*2/3, 4);
-                        }
+                        ctx.drawImage(img, px, drawY, TILE, drawH);
                         
                         if (elapsed < 350) requestAnimationFrame(draw);
                     }
