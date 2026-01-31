@@ -640,34 +640,43 @@
                         ctx.strokeRect(px + 0.5, py + 0.5, TILE - 1, TILE - 1);
                     }
 
-                    // D) ŞAMANDIRA (BURASI KRİTİK DÜZELTME)
+                    // D) ŞAMANDIRA (MOBİL İÇİN DÜZELTİLMİŞ BLOK)
                     else if (grid[y][x] === 2) { 
                         const key = `${y}_${x}`;
                         const spawnTime = wallSpawnTimes[key] || 0;
                         const elapsed = currentTime - spawnTime;
                         
-                        // Kare Seçimi
-                        let frameIndex = 3;
-                        if(elapsed < 100) frameIndex = 0;
-                        else if(elapsed < 200) frameIndex = 1;
-                        else if(elapsed < 300) frameIndex = 2;
+                        // 1. Hangi kare? (Varsayılan olarak SON kare yani 3)
+                        let frameIndex = 3; 
                         
-                        // Gölge
+                        if (elapsed < 100) frameIndex = 0;
+                        else if (elapsed < 200) frameIndex = 1;
+                        else if (elapsed < 300) frameIndex = 2;
+                        
+                        // 2. Gölgeyi Çiz
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Resim Çizimi (Her zaman çalışır)
-                        // Eğer o anki kare yoksa (yüklenmediyse), ilk kareyi kullan (yedek)
-                        const img = buoyFrames[frameIndex] || buoyFrames[0];
-                        
+                        // 3. Resmi Seç ve Kontrol Et (KRİTİK KISIM)
+                        let img = buoyFrames[frameIndex];
+
+                        // Eğer o anki resim (özellikle son kare) yüklenmediyse veya bozuksa,
+                        // hemen 0. kareyi (başlangıç karesi) yedek olarak kullan.
+                        // Mobildeki kaybolma sorunu genelde buradaki "img"nin boş gelmesidir.
+                        if (!img || !img.complete || img.naturalWidth === 0) {
+                            img = buoyFrames[0]; 
+                        }
+
+                        // 4. Çizim
                         if (img) {
-                            const ratio = (img.height && img.width) ? (img.height / img.width) : 1.5;
+                            // Oran hesabı (Sıfıra bölünme hatasını önlemek için || 1 ekledik)
+                            const ratio = (img.naturalHeight || 1) / (img.naturalWidth || 1);
                             const drawH = TILE * ratio;
                             const drawY = (py + TILE) - drawH;
                             ctx.drawImage(img, px, drawY, TILE, drawH);
                         }
 
-                        // Animasyon devam ediyorsa tekrar iste
+                        // 5. Animasyon bitmediyse çizimi yenilemeye devam et
                         if (elapsed < 350) { 
                             requestAnimationFrame(draw); 
                         }
