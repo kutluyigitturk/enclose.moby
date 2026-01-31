@@ -741,12 +741,12 @@
                 }
                 requestAnimationFrame(draw);
             }
-            // DEBUG - Sol üste sprite durumu yaz
-            ctx.fillStyle = "#fff";
-            ctx.font = "16px Arial";
-            ctx.textAlign = "left";
-            ctx.fillText("B0:" + (buoyFrames[0] ? buoyFrames[0].width : "YOK"), 10, 60);
-            ctx.fillText("B3:" + (buoyFrames[3] ? buoyFrames[3].width : "YOK"), 10, 80);
+        // DEBUG - Sol üste sprite durumu yaz
+        ctx.fillStyle = "#fff";
+        ctx.font = "16px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText("B0:" + (buoyFrames[0] ? buoyFrames[0].width : "YOK"), 10, 60);
+        ctx.fillText("B3:" + (buoyFrames[3] ? buoyFrames[3].width : "YOK"), 10, 80);
         }
 
         canvas.onmousemove = (e) => {
