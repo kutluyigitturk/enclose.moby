@@ -653,9 +653,9 @@
                         const elapsed = currentTime - spawnTime;
                         
                         let frameIndex;
-                        if(elapsed < 100) frameIndex = 0;
-                        else if(elapsed < 200) frameIndex = 1;
-                        else frameIndex = 2; // Son frame olarak 2 kullan
+                        if(elapsed < 150) frameIndex = 0;
+                        else if(elapsed < 300) frameIndex = 1;
+                        else frameIndex = 2;
                         
                         // Gölge
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
@@ -670,7 +670,7 @@
                             ctx.drawImage(img, px, drawY, TILE, drawH);
                         }
                         
-                        if (elapsed < 300) {
+                        if (elapsed < 400) {
                             requestAnimationFrame(draw);
                         }
                     }
