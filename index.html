@@ -658,41 +658,40 @@
                         ctx.strokeRect(px + 0.5, py + 0.5, TILE - 1, TILE - 1);
                     }
 
-                    // D) ŞAMANDIRA (GÜNCELLENMİŞ)
+                    // D) ŞAMANDIRA
                     else if (grid[y][x] === 2) { 
                         const key = `${y}_${x}`;
                         const spawnTime = wallSpawnTimes[key] || 0;
                         const elapsed = currentTime - spawnTime;
                         let frameIndex = 3;
                         
-                        // Animasyon zamanlaması
                         if(elapsed < 60) frameIndex = 0;
                         else if(elapsed < 120) frameIndex = 1;
                         else if(elapsed < 180) frameIndex = 2;
                         
-                        const img = buoyFrames[frameIndex];
+                        // Gölge (her zaman çiz)
+                        ctx.fillStyle = "rgba(0,0,0,0.3)";
+                        ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Resim yüklü ve geçerli mi?
-                        if(img && img.complete && img.naturalWidth > 0) {
-                             // Oran hesabı (Hata önleyici ile)
-                             const ratio = (img.naturalHeight / img.naturalWidth) || 1;
-                             
-                             const drawH = TILE * ratio;
-                             const drawY = (py + TILE) - drawH;
-                             
-                             // Gölge
-                             ctx.fillStyle = "rgba(0,0,0,0.3)";
-                             ctx.fillRect(px+2, py+TILE-4, TILE-4, 4);
-                             
-                             // Şamandıra Çizimi
-                             ctx.drawImage(img, px, drawY, TILE, drawH);
-                             
-                             // Animasyon devam ediyorsa tekrar çiz
-                             if(frameIndex < 3) requestAnimationFrame(draw);
+                        // Buoy çizimi - güvenli kontrol
+                        if (buoyFrames && buoyFrames.length > frameIndex) {
+                            const img = buoyFrames[frameIndex];
+                            if (img && img.complete && img.naturalWidth > 0) {
+                                const ratio = img.naturalHeight / img.naturalWidth;
+                                const drawH = TILE * ratio;
+                                const drawY = (py + TILE) - drawH;
+                                ctx.drawImage(img, px, drawY, TILE, drawH);
+                                
+                                if(frameIndex < 3) requestAnimationFrame(draw);
+                            } else {
+                                // Resim yüklenmediyse kırmızı kare çiz
+                                ctx.fillStyle = "#ff4444";
+                                ctx.fillRect(px + 5, py + 5, TILE - 10, TILE - 10);
+                            }
                         } else {
-                            // Resim yüklenmediyse geçici bir kare çiz (Debug için)
-                            ctx.fillStyle = "red";
-                            ctx.fillRect(px + 10, py + 10, TILE - 20, TILE - 20);
+                            // buoyFrames boşsa mavi kare çiz
+                            ctx.fillStyle = "#4444ff";
+                            ctx.fillRect(px + 5, py + 5, TILE - 10, TILE - 10);
                         }
                     }
 
