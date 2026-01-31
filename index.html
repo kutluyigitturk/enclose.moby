@@ -732,9 +732,11 @@
             }
         // DEBUG - Sol üste sprite durumu yaz
         ctx.fillStyle = "#fff";
-        ctx.font = "16px Arial";
-        ctx.textAlign = "left";
-        ctx.fillText("TILE:" + TILE, 10, 100);
+        ctx.font = "12px Arial";
+        ctx.fillText("B0:" + buoyFrames[0]?.width + "x" + buoyFrames[0]?.height, 10, 60);
+        ctx.fillText("B1:" + buoyFrames[1]?.width + "x" + buoyFrames[1]?.height, 10, 75);
+        ctx.fillText("B2:" + buoyFrames[2]?.width + "x" + buoyFrames[2]?.height, 10, 90);
+        ctx.fillText("B3:" + buoyFrames[3]?.width + "x" + buoyFrames[3]?.height, 10, 105);
         }
 
         canvas.onmousemove = (e) => {
