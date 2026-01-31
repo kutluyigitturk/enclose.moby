@@ -652,9 +652,9 @@
                         ctx.fillStyle = "#0000ff";
                         ctx.fillRect(px, py, TILE, TILE);
                         
-                        // Sprite çiz
-                        const img = buoyFrames[3];
-                        if (img && img.width > 0) {
+                        // Frame 0'ı dene
+                        const img = buoyFrames[0];
+                        if (img) {
                             ctx.drawImage(img, px, py, TILE, TILE);
                         }
                     }
