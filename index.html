@@ -648,15 +648,9 @@
 
                     // D) ŞAMANDIRA
                     else if (grid[y][x] === 2) { 
-                        // TEST: Sadece sprite çiz, animasyon yok
-                        ctx.fillStyle = "rgba(0,0,0,0.3)";
-                        ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
-                        
-                        const img = buoyFrames[3];
-                        const ratio = img.height / img.width;
-                        const drawH = TILE * ratio;
-                        const drawY = py + TILE - drawH;
-                        ctx.drawImage(img, px, drawY, TILE, drawH);
+                        // Mavi kare çiz - grid=2 olduğunu kanıtla
+                        ctx.fillStyle = "#0000ff";
+                        ctx.fillRect(px, py, TILE, TILE);
                     }
 
                     // E) MOBY DICK
