@@ -684,30 +684,25 @@
                         else if(elapsed < 120) frameIndex = 1;
                         else if(elapsed < 180) frameIndex = 2;
                         
-                        // Gölge (her zaman çiz)
+                        // Gölge
                         ctx.fillStyle = "rgba(0,0,0,0.3)";
                         ctx.fillRect(px + 2, py + TILE - 4, TILE - 4, 4);
                         
-                        // Buoy çizimi - güvenli kontrol
-                        if (buoyFrames && buoyFrames.length > frameIndex) {
-                            const img = buoyFrames[frameIndex];
-                            if (img && img.complete && img.naturalWidth > 0) {
-                                const ratio = img.naturalHeight / img.naturalWidth;
+                        // Buoy çizimi - basitleştirilmiş
+                        const img = buoyFrames[frameIndex];
+                        if (img) {
+                            try {
+                                const ratio = (img.height || 75) / (img.width || 50);
                                 const drawH = TILE * ratio;
                                 const drawY = (py + TILE) - drawH;
                                 ctx.drawImage(img, px, drawY, TILE, drawH);
-                                
-                                if(frameIndex < 3) requestAnimationFrame(draw);
-                            } else {
-                                // Resim yüklenmediyse kırmızı kare çiz
-                                ctx.fillStyle = "#ff4444";
+                            } catch(e) {
+                                ctx.fillStyle = "#ff0000";
                                 ctx.fillRect(px + 5, py + 5, TILE - 10, TILE - 10);
                             }
-                        } else {
-                            // buoyFrames boşsa mavi kare çiz
-                            ctx.fillStyle = "#4444ff";
-                            ctx.fillRect(px + 5, py + 5, TILE - 10, TILE - 10);
                         }
+                        
+                        if(frameIndex < 3) requestAnimationFrame(draw);
                     }
 
                     // E) MOBY DICK
