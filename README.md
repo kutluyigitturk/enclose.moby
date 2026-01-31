@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.3-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -109,14 +109,45 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 
 | Version | Date | Changes |
 |---------|------|---------|
-| v0.1 | 2025 | Initial release - Core mechanics, 1 level |
-| v0.2 | 2025 | Bug Fixes, Change font family, 1 level |
+| v0.1 | 2025-01-29 | Initial release - Core mechanics, 1 level |
+| v0.2 | 2025-01-29 | Bug Fixes, Change font family, 1 level |
+| v0.3 | 2025-01-31 | Responsive design, dynamic scaling, UI improvements |
+
+---
+
+## 📋 Changelog
+
+### v0.3 (2025-01-31)
+
+**🎨 UI/UX Improvements**
+- TILE size now dynamically calculated based on screen size (min 30px, max 50px)
+- Game area centered horizontally and positioned below header
+- Buoy counter now shows "Buoy: x/y" format
+- Ghost preview respects level-based wall limits
+
+**✨ Visual Enhancements**
+- Buoy placement now has multi-frame spawn animation
+- Shadow effect added to buoys for depth
+- Ocean waves now render outside game area too
+- Moby Dick sprite scales with TILE size
+
+**🔧 Technical Fixes**
+- Fixed wave generation to align with offset and TILE
+- Ghost preview no longer appears on Moby Dick's position
+- All state variables properly reset on level load
+- Grid data initialization made more robust
+- Win animation uses requestAnimationFrame for smooth rendering
+
+**📱 Responsiveness**
+- Header and footer dynamically positioned relative to game area
+- Minimum and maximum TILE constraints for small screens
+- Removed fixed 10-wall limit, now level-based (currentMaxWalls)
 
 ---
 
 <div align="center">
 
-### 🌊 Can you trap the legendary white whale? 🐋
+### Can you trap the Moby Dick?
 
 Made with ❤️ by [Kutlu Yigitturk](https://github.com/kutluyigitturk)
 
