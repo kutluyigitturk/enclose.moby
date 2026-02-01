@@ -113,18 +113,24 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 
 ## 📝 Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| v0.1 | 2025-01-29 | Initial release - Core mechanics, 1 level |
-| v0.2 | 2025-01-29 | Bug Fixes, Change font family, 1 level |
-| v0.3 | 2025-01-31 | Responsive design, dynamic scaling, UI improvements |
-| v0.4 | 2025-02-01 | Mobile support, buoy sprite fix, touch controls |
-| v0.5 | 2025-02-01 | Clean Code Refactor, OOP Architecture, High DPI Support |
-| v0.6 | 2025-02-01 | Layered Rendering, Settings Menu & Smart Waves |
+| Version |    Date    | Changes |
+|---------|------------|---------|
+| v0.1    | 2025-01-29 | Initial release - Core mechanics, 1 level |
+| v0.2    | 2025-01-29 | Bug Fixes, Change font family, 1 level |
+| v0.3    | 2025-01-31 | Responsive design, dynamic scaling, UI improvements |
+| v0.4    | 2025-02-01 | Mobile support, buoy sprite fix, touch controls |
+| v0.5    | 2025-02-01 | Clean Code Refactor, OOP Architecture, High DPI Support |
+| v0.6    | 2025-02-01 | Layered Rendering, Settings Menu & Smart Waves |
+| v0.6.1  | 2025-02-01 | Added Happy Moby victory state sprite |
 
 ---
 
 ## 📋 Changelog
+
+### v0.6.1 (2026-02-02) - The "Juice" Update 🧃
+- **Visual Feedback:** Moby now displays a happy expression when the level is won!
+
+---
 
 ### v0.6 (2026-02-01) - The Visual Polish Update ✨
 
