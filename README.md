@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.5-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -46,9 +46,9 @@
 - **Non-Blocking Gameplay** — No annoying pop-ups; continue playing even after winning
 
 ### 🎨 Visual Design
+- **High DPI / Retina Support** — Crystal clear rendering on modern screens using `devicePixelRatio` scaling
 - **Dynamic Wave System** — Intense waves outside the play area, calm waters inside
-- **Detailed Islands** — 4 different land tile variations with borders and textures
-- **Layered Rendering** — Win effects render below Moby Dick, grid lines above all elements
+- **Smart Land Borders** — Pixel-perfect borders for islands with auto-tiling logic
 - **Animated Buoys** — Smooth 4-frame spawn animation when placing buoys
 - **Ghost Preview** — Semi-transparent preview shows where buoys will be placed
 
@@ -75,7 +75,7 @@
 | Technology | Usage |
 |------------|-------|
 | HTML5 Canvas | Game rendering |
-| Vanilla JavaScript | Game logic & BFS pathfinding |
+| Vanilla JavaScript | Game logic (OOP Architecture) & BFS pathfinding |
 | CSS3 | UI styling & animations |
 | Base64 | Embedded sprites & assets |
 
@@ -88,6 +88,7 @@
 - [x] Dynamic wave animations
 - [x] Area-based scoring system
 - [x] Mobile touch support
+- [x] **Refactor to OOP Architecture (v0.5)**
 - [ ] Additional levels
 - [ ] Level editor
 - [ ] Leaderboard system
@@ -119,10 +120,27 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.2 | 2025-01-29 | Bug Fixes, Change font family, 1 level |
 | v0.3 | 2025-01-31 | Responsive design, dynamic scaling, UI improvements |
 | v0.4 | 2025-02-01 | Mobile support, buoy sprite fix, touch controls |
+| v0.5 | 2025-02-01 | Clean Code Refactor, OOP Architecture, High DPI Support |
 
 ---
 
 ## 📋 Changelog
+
+### v0.5 (2025-02-01) - The Clean Code Update 🧹
+
+**🛠 Architecture & Refactoring**
+- **OOP Transition:** Converted legacy functional code to a modular Class-based structure (`EncloseMobyGame` class).
+- **Separation of Concerns:** Decoupled Game Logic from UI Management (`UIManager` object).
+- **Code Cleanup:** Removed unused variables (`srcGrass`, etc.), dead code, and magic numbers.
+- **Optimized Assets:** Centralized asset loading with `Promise.all` for better performance.
+
+**✨ Visual & Performance Enhancements**
+- **High DPI Support:** Added `window.devicePixelRatio` scaling to prevent blurriness on Retina/High-Res displays.
+- **Smart Rendering:** Refined `drawLand` logic with pixel-snapping (`+0.5`) for sharper grid lines.
+- **CSS Animations:** Added hover effects and micro-interactions to UI buttons.
+- **Performance:** Optimized `requestAnimationFrame` loop and input handling events.
+
+---
 
 ### v0.4 (2025-02-01)
 
