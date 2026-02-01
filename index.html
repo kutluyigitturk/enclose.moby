@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>enclose.moby</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --bg-color: #142e47;
@@ -28,17 +30,21 @@
             width: 100%; height: 100%;
             z-index: 0; touch-action: none; image-rendering: pixelated;
         }
-        /* UI Elementleri */
-        .ui-layer {
-            position: fixed; z-index: 10; pointer-events: none;
-            width: 100%; display: flex; justify-content: center;
-        }
-        .header { top: 20px; flex-direction: column; align-items: center; text-shadow: 2px 2px 0 #000; }
-        .footer { bottom: 30px; }
         
-        .title { font-size: 26px; color: #fff; letter-spacing: 2px; }
-        .subtitle { font-size: 20px; color: var(--text-color); margin-top: 5px; }
+        /* UI Elementleri */
+        .header-container {
+            position: fixed; top: 20px; left: 50%;
+            transform: translateX(-50%); text-align: center;
+            z-index: 1000; pointer-events: none; width: 90%;
+        }
+        .title { font-size: 26px; color: #fff; letter-spacing: 2px; text-shadow: 2px 2px 0 #000; }
+        .subtitle { font-size: 20px; color: var(--text-color); margin-top: 5px; text-shadow: 1px 1px 0 #000; }
 
+        .controls-container {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%); z-index: 1000; pointer-events: none;
+        }
+        
         button { pointer-events: auto; font-family: var(--ui-font); cursor: pointer; border: none; }
         
         .btn-primary {
@@ -47,76 +53,121 @@
             padding: 12px 30px; text-transform: uppercase;
             box-shadow: 6px 6px 0 #000; transition: transform 0.1s;
         }
-        /* EKLENDİ: Hover Animasyonu */
         .btn-primary:hover {
-            background-color: #f0c040; /* Sarı */
-            transform: translate(-2px, -2px);
-            box-shadow: 8px 8px 0 #000;
+            background-color: #f0c040; transform: translate(-2px, -2px); box-shadow: 8px 8px 0 #000;
         }
         .btn-primary:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 #000; }
 
-        .menu-btn {
-            position: fixed; top: 20px; right: 20px; z-index: 20;
-            background: transparent; color: #fff; font-size: 32px;
-            text-shadow: 2px 2px 0 #000;
+        /* MENÜ SİSTEMİ */
+        .menu-container {
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            display: flex; flex-direction: column; align-items: flex-end;
         }
+        .menu-btn {
+            background: transparent; color: #fff; font-size: 32px;
+            text-shadow: 2px 2px 0 #000; border: none; cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .menu-btn:active { transform: scale(0.9); }
 
+        .dropdown-content {
+            display: none; position: absolute;
+            top: 100%; right: 0;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border: 2px solid #000;
+            flex-direction: column; z-index: 2001; margin-top: 5px;
+        }
+        .dropdown-content.show { display: flex; }
+        
+        .menu-item {
+            padding: 12px 16px; width: 100%; text-align: left;
+            background: none; border: none; border-bottom: 1px solid #ccc;
+            font-family: var(--ui-font); font-size: 18px; cursor: pointer; color: black;
+        }
+        .menu-item:hover { background-color: #f0c040; color: white; }
+        .menu-item:last-child { border-bottom: none; }
+
+        /* MODAL PENCERELER */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.5); z-index: 30;
+            background: rgba(0,0,0,0.5); z-index: 2005;
             align-items: center; justify-content: center;
             backdrop-filter: blur(2px);
         }
         .modal-box {
             background: #fff; width: 300px; border: 4px solid #000;
             box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
         }
         .modal-header {
             background: #000; color: #fff; padding: 10px;
-            font-size: 20px; display: flex; justify-content: space-between;
+            font-size: 20px; display: flex; justify-content: space-between; align-items: center;
         }
         .level-list { max-height: 60vh; overflow-y: auto; padding: 10px; background: #f1f1f1; }
         .level-item {
             width: 100%; padding: 10px; margin-bottom: 5px;
             background: #fff; border: 1px solid #ccc; text-align: left;
-            font-size: 16px;
+            font-size: 16px; cursor: pointer; color: black;
         }
         .level-item:hover { background: #66bb6a; color: white; }
+        .close-modal-btn { color: #ff5252; background: none; font-weight: bold; font-size: 18px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="ui-layer header">
+    <div class="header-container">
         <div class="title">enclose.moby</div>
-        <div class="subtitle" id="level-name-display">Yükleniyor...</div>
+        <div class="subtitle" id="level-name-display">Level 1</div>
     </div>
 
-    <button class="menu-btn" id="menu-toggle-btn">☰</button>
+    <div class="menu-container">
+        <button class="menu-btn" onclick="toggleDropdown()">☰</button>
+        <div id="dropdown-menu" class="dropdown-content">
+            <button class="menu-item" onclick="openLevelSelector()">Past Puzzles</button>
+            <button class="menu-item" onclick="openSettings()">Settings</button>
+        </div>
+    </div>
 
-    <div class="modal-overlay" id="level-modal">
-        <div class="modal-box">
+    <div class="modal-overlay" id="level-modal" onclick="closeLevelSelector()">
+        <div class="modal-box" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <span>Past Puzzles</span>
-                <button style="color:red; background:none; font-weight:bold;" id="close-modal-btn">X</button>
+                <button class="close-modal-btn" onclick="closeLevelSelector()">X</button>
             </div>
             <div class="level-list" id="level-list-container"></div>
         </div>
     </div>
 
+    <div class="modal-overlay" id="settings-overlay" onclick="closeSettings()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span>Settings</span>
+                <button class="close-modal-btn" onclick="closeSettings()">X</button>
+            </div>
+            <div style="padding: 20px;">
+                <label style="display:block; margin-bottom:10px; font-size: 18px; color:black;">
+                    Grid Visibility: <span id="grid-val-display">15%</span>
+                </label>
+                <input type="range" id="grid-opacity-slider" min="0" max="100" value="15" style="width: 100%; cursor: pointer;">
+            </div>
+        </div>
+    </div>
+
     <canvas id="gameCanvas"></canvas>
 
-    <div class="ui-layer footer">
+    <div class="controls-container">
         <button class="btn-primary" id="reset-btn">RESET</button>
     </div>
 
 <script>
 /**
- * ENCLOSE.MOBY - FINAL REFACTOR
+ * ENCLOSE.MOBY - FUNCTIONAL CLEAN CODE (LAYERED RENDERING)
  */
 
-// --- 1. CONSTANTS ---
+// --- 1. GLOBAL DEĞİŞKENLER VE AYARLAR ---
 const TILE_TYPE = { WATER: 0, LAND: 1, BUOY: 2, MOBY: 3 };
-
 const GAME_CONFIG = {
     TILE_SIZE_MIN: 15,
     TILE_SIZE_MAX: 60,
@@ -172,403 +223,478 @@ const LEVELS = [
     }
 ];
 
-// --- 2. GAME ENGINE ---
-class EncloseMobyGame {
-    constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d', { alpha: false });
-        
-        this.currentLevelIndex = 0;
-        this.grid = [];
-        this.playerWalls = []; 
-        this.mobyPos = { x: 0, y: 0 };
-        this.waves = [];
-        
-        this.gameState = {
-            isWon: false,
-            winningPath: null,
-            winAlpha: 0,
-            hoverPos: { x: -1, y: -1 },
-            tileSize: 50,
-            offsetX: 0,
-            offsetY: 0,
-            rows: 0,
-            cols: 0,
-            maxWalls: 10
-        };
+// OYUN DURUMU (State)
+let gameState = {
+    currentLevelIndex: 0,
+    grid: [],
+    playerWalls: [],
+    mobyPos: { x: 0, y: 0 },
+    waves: [],
+    isWon: false,
+    winningPath: null,
+    winAlpha: 0,
+    hoverPos: { x: -1, y: -1 },
+    tileSize: 50,
+    offsetX: 0,
+    offsetY: 0,
+    rows: 0,
+    cols: 0,
+    maxWalls: 10,
+    lastScore: 0,
+    // Grid Opaklığı (Varsayılan 0.15)
+    gridOpacity: localStorage.getItem('enclose_grid_opacity') 
+                 ? parseFloat(localStorage.getItem('enclose_grid_opacity')) 
+                 : 0.15 
+};
 
-        this.sprites = {};
-        
-        this.resize = this.resize.bind(this);
-        this.handleInput = this.handleInput.bind(this);
-        this.loop = this.loop.bind(this);
-        
-        this.init();
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d', { alpha: false });
+const sprites = {};
+
+// --- 2. YARDIMCI FONKSİYONLAR (UI & MENU) ---
+
+function toggleDropdown() {
+    document.getElementById("dropdown-menu").classList.toggle("show");
+}
+
+function openLevelSelector() {
+    document.getElementById("dropdown-menu").classList.remove("show");
+    const container = document.getElementById('level-list-container');
+    container.innerHTML = '';
+    
+    LEVELS.forEach((lvl, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'level-item';
+        btn.textContent = `${idx + 1}. ${lvl.name}`;
+        btn.onclick = () => { loadLevel(idx); closeLevelSelector(); };
+        container.appendChild(btn);
+    });
+    
+    document.getElementById("level-modal").style.display = "flex";
+}
+
+function closeLevelSelector() {
+    document.getElementById("level-modal").style.display = "none";
+}
+
+function openSettings() {
+    document.getElementById("dropdown-menu").classList.remove("show");
+    document.getElementById("settings-overlay").style.display = "flex";
+    
+    const slider = document.getElementById('grid-opacity-slider');
+    const label = document.getElementById('grid-val-display');
+    const currentVal = Math.round(gameState.gridOpacity * 100);
+    
+    slider.value = currentVal;
+    label.textContent = currentVal + "%";
+    
+    slider.oninput = function(e) {
+        const val = e.target.value;
+        label.textContent = val + "%";
+        gameState.gridOpacity = val / 100;
+        localStorage.setItem('enclose_grid_opacity', gameState.gridOpacity);
+        draw(); // Anlık güncelleme
+    };
+}
+
+function closeSettings() {
+    document.getElementById("settings-overlay").style.display = "none";
+}
+
+// Menü dışına tıklama kontrolü
+window.onclick = function(event) {
+    if (event.target.id === 'gameCanvas') return;
+    if (!event.target.matches('.menu-btn')) {
+        const dropdown = document.getElementById("dropdown-menu");
+        if (dropdown.classList.contains('show')) dropdown.classList.remove('show');
     }
+};
 
-    async init() {
-        this.setupEventListeners();
-        await this.loadAssets();
-        this.loadLevel(0);
-        this.loop();
-    }
+// --- 3. OYUN MOTORU (LOGIC) ---
 
-    setupEventListeners() {
-        window.addEventListener('resize', this.resize);
-        ['mousedown', 'touchstart'].forEach(evt => 
-            this.canvas.addEventListener(evt, (e) => this.handleInput(e, 'click'), { passive: false })
-        );
-        ['mousemove', 'touchmove'].forEach(evt => 
-            this.canvas.addEventListener(evt, (e) => this.handleInput(e, 'hover'), { passive: false })
-        );
-        this.canvas.addEventListener('mouseleave', () => this.gameState.hoverPos = {x: -1, y: -1});
-        document.getElementById('reset-btn').onclick = () => this.loadLevel(this.currentLevelIndex);
-    }
+async function initGame() {
+    window.addEventListener('resize', resize);
+    
+    ['mousedown', 'touchstart'].forEach(evt => 
+        canvas.addEventListener(evt, (e) => handleInput(e, 'click'), { passive: false })
+    );
+    ['mousemove', 'touchmove'].forEach(evt => 
+        canvas.addEventListener(evt, (e) => handleInput(e, 'hover'), { passive: false })
+    );
+    canvas.addEventListener('mouseleave', () => gameState.hoverPos = {x: -1, y: -1});
+    document.getElementById('reset-btn').onclick = () => loadLevel(gameState.currentLevelIndex);
 
-    async loadAssets() {
-        const loadImg = (src) => new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = () => { console.error("Resim yüklenemedi"); resolve(null); }; 
-            img.src = src;
-        });
+    await loadAssets();
+    loadLevel(0);
+    loop();
+}
 
-        const keys = Object.keys(ASSETS);
-        const images = await Promise.all(keys.map(k => loadImg(ASSETS[k])));
-        
-        keys.forEach((key, i) => { this.sprites[key] = images[i]; });
-        this.sprites.buoys = [this.sprites.buoy0, this.sprites.buoy1, this.sprites.buoy2, this.sprites.buoy3];
-    }
+async function loadAssets() {
+    const loadImg = (src) => new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => { console.error("Resim yüklenemedi"); resolve(null); }; 
+        img.src = src;
+    });
 
-    loadLevel(index) {
-        this.currentLevelIndex = index;
-        const levelData = LEVELS[index];
-        this.grid = levelData.map.map(row => [...row]);
-        this.gameState.rows = this.grid.length;
-        this.gameState.cols = this.grid[0].length;
-        this.gameState.maxWalls = levelData.maxWalls;
-        
-        for(let y=0; y<this.gameState.rows; y++) {
-            for(let x=0; x<this.gameState.cols; x++) {
-                if(this.grid[y][x] === TILE_TYPE.MOBY) this.mobyPos = {x, y};
-            }
-        }
+    const keys = Object.keys(ASSETS);
+    const images = await Promise.all(keys.map(k => loadImg(ASSETS[k])));
+    
+    keys.forEach((key, i) => { sprites[key] = images[i]; });
+    sprites.buoys = [sprites.buoy0, sprites.buoy1, sprites.buoy2, sprites.buoy3];
+}
 
-        this.playerWalls = [];
-        this.gameState.isWon = false;
-        this.gameState.winningPath = null;
-        this.gameState.winAlpha = 0;
-
-        UIManager.updateLevelName(levelData.name, index);
-        this.resize();
-    }
-
-    // GÜNCELLENDİ: High DPI / Retina Desteği
-    resize() {
-        const dpr = window.devicePixelRatio || 1;
-        const displayWidth = window.innerWidth;
-        const displayHeight = window.innerHeight;
-
-        // Fiziksel Boyut (Netlik için)
-        this.canvas.width = displayWidth * dpr;
-        this.canvas.height = displayHeight * dpr;
-
-        // CSS Boyutu (Görünüm için)
-        this.canvas.style.width = displayWidth + "px";
-        this.canvas.style.height = displayHeight + "px";
-
-        // Çizim Motorunu Ölçekle
-        this.ctx.scale(dpr, dpr);
-        this.ctx.imageSmoothingEnabled = false;
-
-        // Oyun Mantığı
-        const safeW = displayWidth - 20; 
-        const safeH = displayHeight - 180; 
-
-        const tileW = Math.floor(safeW / this.gameState.cols);
-        const tileH = Math.floor(safeH / this.gameState.rows);
-        
-        let ts = Math.min(tileW, tileH);
-        ts = Math.max(GAME_CONFIG.TILE_SIZE_MIN, Math.min(GAME_CONFIG.TILE_SIZE_MAX, ts));
-        
-        this.gameState.tileSize = ts;
-        
-        const mapW = this.gameState.cols * ts;
-        const mapH = this.gameState.rows * ts;
-
-        this.gameState.offsetX = Math.floor((displayWidth - mapW) / 2);
-        this.gameState.offsetY = 80 + Math.floor((safeH - mapH) / 2);
-        
-        if(this.grid.length > 0) this.generateWaves();
-        this.draw();
-    }
-
-    generateWaves() {
-        this.waves = [];
-        const { cols, rows, tileSize, offsetX, offsetY } = this.gameState;
-        // Not: generateWaves için this.canvas.width artık fiziksel boyut, 
-        // ama scale kullandığımız için mantıksal değerler lazım. 
-        // Ancak dalgalar rastgele olduğu için görsel hataya yol açmaz, 
-        // daha temiz olması için window.innerWidth kullanabiliriz ama bu hali de çalışır.
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        const mapRect = {
-            left: offsetX, right: offsetX + (cols * tileSize),
-            top: offsetY, bottom: offsetY + (rows * tileSize)
-        };
-
-        for(let i = 0; i < GAME_CONFIG.WAVE_COUNT_OUTER; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
-            if (!(x > mapRect.left && x < mapRect.right && y > mapRect.top && y < mapRect.bottom)) {
-                this.waves.push({x, y});
-            }
-        }
-        
-        for(let i=0; i < GAME_CONFIG.WAVE_COUNT_INNER; i++) {
-            const rx = Math.floor(Math.random() * cols);
-            const ry = Math.floor(Math.random() * rows);
-            if(this.grid[ry][rx] === TILE_TYPE.WATER) {
-                this.waves.push({ x: offsetX + rx * tileSize, y: offsetY + ry * tileSize });
-            }
+function loadLevel(index) {
+    gameState.currentLevelIndex = index;
+    const levelData = LEVELS[index];
+    gameState.grid = levelData.map.map(row => [...row]);
+    gameState.rows = gameState.grid.length;
+    gameState.cols = gameState.grid[0].length;
+    gameState.maxWalls = levelData.maxWalls;
+    
+    for(let y=0; y<gameState.rows; y++) {
+        for(let x=0; x<gameState.cols; x++) {
+            if(gameState.grid[y][x] === TILE_TYPE.MOBY) gameState.mobyPos = {x, y};
         }
     }
 
-    handleInput(e, type) {
-        if (e.cancelable) e.preventDefault();
-        const rect = this.canvas.getBoundingClientRect();
-        let clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
-        let clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+    gameState.playerWalls = [];
+    gameState.isWon = false;
+    gameState.winningPath = null;
+    gameState.winAlpha = 0;
 
-        const x = Math.floor((clientX - rect.left - this.gameState.offsetX) / this.gameState.tileSize);
-        const y = Math.floor((clientY - rect.top - this.gameState.offsetY) / this.gameState.tileSize);
+    document.getElementById('level-name-display').textContent = `Level ${index + 1} - ${levelData.name}`;
+    resize();
+}
 
-        if (type === 'hover') {
-            this.gameState.hoverPos = { x, y };
-            return;
-        }
+function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    const displayWidth = window.innerWidth;
+    const displayHeight = window.innerHeight;
 
-        if (x < 0 || x >= this.gameState.cols || y < 0 || y >= this.gameState.rows) return;
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+    canvas.style.width = displayWidth + "px";
+    canvas.style.height = displayHeight + "px";
 
-        if (this.gameState.isWon) {
-            const wallIndex = this.playerWalls.findIndex(w => w.x === x && w.y === y);
-            if (wallIndex !== -1) {
-                this.removeWall(x, y, wallIndex);
-                this.gameState.isWon = false;
-                this.gameState.winningPath = null;
-            }
-            return;
-        }
+    ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = false;
 
-        const cell = this.grid[y][x];
-        if ((cell === TILE_TYPE.WATER || cell === TILE_TYPE.MOBY) && this.playerWalls.length < this.gameState.maxWalls) {
-            if (cell === TILE_TYPE.MOBY) return;
-            this.grid[y][x] = TILE_TYPE.BUOY;
-            this.playerWalls.push({ x, y, spawnTime: Date.now() });
-            this.checkWinCondition();
-        } else if (cell === TILE_TYPE.BUOY) {
-            const idx = this.playerWalls.findIndex(w => w.x === x && w.y === y);
-            if (idx !== -1) this.removeWall(x, y, idx);
-        }
-    }
+    const safeW = displayWidth - 20; 
+    const safeH = displayHeight - 180; 
 
-    removeWall(x, y, index) {
-        this.grid[y][x] = TILE_TYPE.WATER;
-        this.playerWalls.splice(index, 1);
-    }
+    const tileW = Math.floor(safeW / gameState.cols);
+    const tileH = Math.floor(safeH / gameState.rows);
+    
+    let ts = Math.min(tileW, tileH);
+    ts = Math.max(GAME_CONFIG.TILE_SIZE_MIN, Math.min(GAME_CONFIG.TILE_SIZE_MAX, ts));
+    
+    gameState.tileSize = ts;
+    
+    const mapW = gameState.cols * ts;
+    const mapH = gameState.rows * ts;
 
-    checkWinCondition() {
-        const { rows, cols } = this.gameState;
-        const visited = Array.from({ length: rows }, () => new Uint8Array(cols).fill(0));
-        const queue = [this.mobyPos];
-        visited[this.mobyPos.y][this.mobyPos.x] = 1;
+    gameState.offsetX = Math.floor((displayWidth - mapW) / 2);
+    gameState.offsetY = 80 + Math.floor((safeH - mapH) / 2);
+    
+    if(gameState.grid.length > 0) generateWaves();
+    draw();
+}
 
-        let escaped = false;
-        let areaSize = 0;
+function generateWaves() {
+    gameState.waves = []; // Dış dalgalar
+    const { cols, rows, tileSize, offsetX, offsetY } = gameState;
+        
+    // Ekranın tamamını kapsayacak sanal grid sınırlarını hesapla
+    // offsetX'i baz alarak geriye ve ileriye doğru kaç kare sığar?
+    const startCol = Math.floor(-offsetX / tileSize);
+    const endCol = cols + Math.floor((window.innerWidth - (offsetX + cols * tileSize)) / tileSize) + 1;
+        
+    const startRow = Math.floor(-offsetY / tileSize);
+    const endRow = rows + Math.floor((window.innerHeight - (offsetY + rows * tileSize)) / tileSize) + 1;
 
-        while(queue.length > 0) {
-            const {x, y} = queue.shift();
-            areaSize++;
-            if (x === 0 || x === cols - 1 || y === 0 || y === rows - 1) escaped = true;
+    // İç dalga haritasını sıfırla
+    gameState.waveMap = Array.from({ length: rows }, () => new Array(cols).fill(false));
 
-            const dirs = [[0,1], [0,-1], [1,0], [-1,0]];
-            for(let d of dirs) {
-                const nx = x + d[0];
-                const ny = y + d[1];
-                if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
-                    if (visited[ny][nx] === 0 && this.grid[ny][nx] !== TILE_TYPE.LAND && this.grid[ny][nx] !== TILE_TYPE.BUOY) {
-                        visited[ny][nx] = 1;
-                        queue.push({x: nx, y: ny});
-                    }
+    // Tüm ekranı grid grid tara
+    for (let c = startCol; c <= endCol; c++) {
+        for (let r = startRow; r <= endRow; r++) {
+                
+            // Bu koordinat oyun alanının (Map) içinde mi?
+            const isInsideMap = (c >= 0 && c < cols && r >= 0 && r < rows);
+
+            // Rastgelelik (Yoğunluk ayarı: %10 şansla dalga koy)
+            if (Math.random() > 0.10) continue; 
+
+            if (isInsideMap) {
+                // --- İÇ DALGA ---
+                // Sadece su olan yere koy
+                if (gameState.grid[r][c] === TILE_TYPE.WATER) {
+                        gameState.waveMap[r][c] = true;
                 }
-            }
-        }
-
-        if (!escaped) {
-            this.gameState.isWon = true;
-            this.gameState.winningPath = visited;
-            UIManager.updateScore(areaSize);
-        }
-    }
-
-    loop() {
-        this.draw();
-        requestAnimationFrame(this.loop);
-    }
-
-    draw() {
-        const { ctx, canvas } = this;
-        const { tileSize, offsetX, offsetY, rows, cols } = this.gameState;
-        const now = Date.now();
-
-        ctx.fillStyle = GAME_CONFIG.BG_COLOR;
-        // Retina desteği için canvas.width yerine mantıksal boyutlar
-        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-        if (this.sprites.wave) {
-            ctx.globalAlpha = 0.6;
-            for (const w of this.waves) ctx.drawImage(this.sprites.wave, w.x, w.y, tileSize, tileSize);
-            ctx.globalAlpha = 1.0;
-        }
-
-        for (let y = 0; y < rows; y++) {
-            for (let x = 0; x < cols; x++) {
-                const px = x * tileSize + offsetX;
-                const py = y * tileSize + offsetY;
-                const cell = this.grid[y][x];
-
-                if (this.gameState.isWon && this.gameState.winningPath[y][x]) {
-                    const pulse = Math.sin(now / 500) * 0.1 + 0.5;
-                    ctx.fillStyle = `rgba(0, 210, 255, ${pulse})`;
-                    ctx.fillRect(px, py, tileSize, tileSize);
-                }
-
-                if (cell === TILE_TYPE.WATER) {
-                    ctx.strokeStyle = "rgba(0,0,0,0.08)";
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(px, py, tileSize, tileSize);
-                }
-
-                if (cell === TILE_TYPE.LAND) this.drawLand(ctx, x, y, px, py, tileSize);
-                if (x === this.mobyPos.x && y === this.mobyPos.y) {
-                     if(this.sprites.moby) ctx.drawImage(this.sprites.moby, px+2, py+2, tileSize-4, tileSize-4);
-                }
-                if (cell === TILE_TYPE.BUOY) this.drawBuoy(ctx, x, y, px, py, tileSize, now);
-
-                const hx = this.gameState.hoverPos.x;
-                const hy = this.gameState.hoverPos.y;
-                if (!this.gameState.isWon && x === hx && y === hy && cell === TILE_TYPE.WATER && this.playerWalls.length < this.gameState.maxWalls) {
-                     if(x !== this.mobyPos.x || y !== this.mobyPos.y) {
-                         ctx.save();
-                         ctx.globalAlpha = 0.5;
-                         if(this.sprites.buoys[0]) this.drawSpriteAspect(ctx, this.sprites.buoys[0], px, py, tileSize);
-                         ctx.restore();
-                     }
-                }
-            }
-        }
-        UIManager.updateStats(this.gameState.maxWalls - this.playerWalls.length, this.gameState.maxWalls, this.gameState.isWon);
-    }
-
-    // GÜNCELLENDİ: Grid Çizgileri Geri Geldi
-    drawLand(ctx, x, y, px, py, size) {
-        const isLandBelow = (y < this.gameState.rows - 1 && this.grid[y+1][x] === TILE_TYPE.LAND);
-        
-        if (isLandBelow) {
-            if(this.sprites.grassMiddle) {
-                ctx.drawImage(this.sprites.grassMiddle, px, py, size, size);
-            } else { 
-                ctx.fillStyle = "#35693f"; 
-                ctx.fillRect(px, py, size, size); 
-            }
-        } else {
-            const hasLandLeft = (x > 0 && this.grid[y][x-1] === TILE_TYPE.LAND);
-            const hasLandRight = (x < this.gameState.cols - 1 && this.grid[y][x+1] === TILE_TYPE.LAND);
-            
-            if (!hasLandLeft && !hasLandRight) {
-                if(this.sprites.grassSingle) ctx.drawImage(this.sprites.grassSingle, px, py, size, size);
             } else {
-                const img = (x % 2 === 0) ? this.sprites.grassSide1 : this.sprites.grassSide2;
-                if(img) ctx.drawImage(img, px, py, size, size);
+                // --- DIŞ DALGA ---
+                // Izgaraya tam oturan koordinatları hesapla
+                const x = offsetX + (c * tileSize);
+                const y = offsetY + (r * tileSize);
+                gameState.waves.push({ x, y });
             }
         }
-        
-        // Gölgeler
-        ctx.fillStyle = "rgba(20, 40, 30, 0.5)";
-        if(y===0 || this.grid[y-1][x] === 0) ctx.fillRect(px, py, size, 4);
-        if(x===0 || this.grid[y][x-1] === 0) ctx.fillRect(px, py, 4, size);
-        if(x===this.gameState.cols-1 || this.grid[y][x+1] === 0) ctx.fillRect(px+size-4, py, 4, size);
-
-        // Çerçeve (Grid Lines)
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.15)";
-        ctx.lineWidth = 0.5;
-        // Pixel Snapping (+0.5) ile keskinlik
-        ctx.strokeRect(px + 0.5, py + 0.5, size - 1, size - 1);
-    }
-
-    drawBuoy(ctx, x, y, px, py, size, now) {
-        const wall = this.playerWalls.find(w => w.x === x && w.y === y);
-        const elapsed = now - (wall ? wall.spawnTime : 0);
-        let frame = Math.floor(elapsed / 50);
-        if(frame > 3) frame = 3;
-        ctx.fillStyle = "rgba(0,0,0,0.3)";
-        ctx.fillRect(px + 4, py + size - 6, size - 8, 4);
-        const img = this.sprites.buoys[frame];
-        if (img) this.drawSpriteAspect(ctx, img, px, py, size);
-    }
-
-    drawSpriteAspect(ctx, img, x, y, size) {
-        const ratio = img.height / img.width;
-        const h = size * ratio;
-        ctx.drawImage(img, x, y + size - h, size, h);
     }
 }
 
-// --- 3. UI MANAGER ---
-const UIManager = {
-    modal: document.getElementById('level-modal'),
-    levelList: document.getElementById('level-list-container'),
-    lastScore: 0,
+function handleInput(e, type) {
+    if (e.cancelable) e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    let clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+    let clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+
+    const x = Math.floor((clientX - rect.left - gameState.offsetX) / gameState.tileSize);
+    const y = Math.floor((clientY - rect.top - gameState.offsetY) / gameState.tileSize);
+
+    if (type === 'hover') {
+        gameState.hoverPos = { x, y };
+        return;
+    }
+
+    if (x < 0 || x >= gameState.cols || y < 0 || y >= gameState.rows) return;
+
+    if (gameState.isWon) {
+        const wallIndex = gameState.playerWalls.findIndex(w => w.x === x && w.y === y);
+        if (wallIndex !== -1) {
+            gameState.grid[y][x] = TILE_TYPE.WATER;
+            gameState.playerWalls.splice(wallIndex, 1);
+            gameState.isWon = false;
+            gameState.winningPath = null;
+        }
+        return;
+    }
+
+    const cell = gameState.grid[y][x];
+    if ((cell === TILE_TYPE.WATER || cell === TILE_TYPE.MOBY) && gameState.playerWalls.length < gameState.maxWalls) {
+        if (cell === TILE_TYPE.MOBY) return;
+        gameState.grid[y][x] = TILE_TYPE.BUOY;
+        gameState.playerWalls.push({ x, y, spawnTime: Date.now() });
+        checkWinCondition();
+    } else if (cell === TILE_TYPE.BUOY) {
+        const idx = gameState.playerWalls.findIndex(w => w.x === x && w.y === y);
+        if (idx !== -1) {
+            gameState.grid[y][x] = TILE_TYPE.WATER;
+            gameState.playerWalls.splice(idx, 1);
+        }
+    }
+}
+
+function checkWinCondition() {
+    const { rows, cols } = gameState;
+    const visited = Array.from({ length: rows }, () => new Uint8Array(cols).fill(0));
+    const queue = [gameState.mobyPos];
+    visited[gameState.mobyPos.y][gameState.mobyPos.x] = 1;
+
+    let escaped = false;
+    let areaSize = 0;
+
+    while(queue.length > 0) {
+        const {x, y} = queue.shift();
+        areaSize++;
+        if (x === 0 || x === cols - 1 || y === 0 || y === rows - 1) escaped = true;
+
+        const dirs = [[0,1], [0,-1], [1,0], [-1,0]];
+        for(let d of dirs) {
+            const nx = x + d[0];
+            const ny = y + d[1];
+            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+                if (visited[ny][nx] === 0 && gameState.grid[ny][nx] !== TILE_TYPE.LAND && gameState.grid[ny][nx] !== TILE_TYPE.BUOY) {
+                    visited[ny][nx] = 1;
+                    queue.push({x: nx, y: ny});
+                }
+            }
+        }
+    }
+
+    if (!escaped) {
+        gameState.isWon = true;
+        gameState.winningPath = visited;
+        gameState.lastScore = areaSize;
+    }
+}
+
+function loop() {
+    draw();
+    requestAnimationFrame(loop);
+}
+
+// --- RENDERING (KATMANLI ÇİZİM) ---
+function draw() {
+    const { tileSize, offsetX, offsetY, rows, cols } = gameState;
+    const now = Date.now();
+
+    // 1. KATMAN: ARKAPLAN
+    ctx.fillStyle = GAME_CONFIG.BG_COLOR;
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+    if (sprites.wave) {
+        ctx.globalAlpha = 0.6;
+        for (const w of gameState.waves) {
+            ctx.drawImage(sprites.wave, w.x, w.y, tileSize, tileSize);
+        }
+        ctx.globalAlpha = 1.0;
+    }
+
+    // 2. KATMAN: ZEMİN (SU VE KARA) - Çizgi Yok!
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const px = x * tileSize + offsetX;
+            const py = y * tileSize + offsetY;
+            const cell = gameState.grid[y][x];
+
+            // Kazanma Efekti (Zemine basılmalı)
+            if (gameState.isWon && gameState.winningPath[y][x]) {
+                const pulse = Math.sin(now / 500) * 0.1 + 0.5;
+                ctx.fillStyle = `rgba(0, 210, 255, ${pulse})`;
+                ctx.fillRect(px, py, tileSize, tileSize);
+            }
+
+            // İÇ DALGA ÇİZİMİ (Grid'e Hizalı & Tam Boyut)
+            if (gameState.waveMap && gameState.waveMap[y][x] && sprites.wave) {
+                ctx.globalAlpha = 0.6; // Dış dalgalarla aynı şeffaflık
+                ctx.drawImage(
+                    sprites.wave,
+                    px,      // Ofset yok, tam köşeye
+                    py,      // Ofset yok, tam köşeye
+                    tileSize,// Tam boyut
+                    tileSize // Tam boyut
+                );
+                ctx.globalAlpha = 1.0;
+            }
+
+            // Kara Çizimi
+            if (cell === TILE_TYPE.LAND) {
+                drawLandOnly(x, y, px, py, tileSize);
+            }
+        }
+    }
+
+    // 3. KATMAN: GLOBAL GRID (EN TEMİZ ÇİZGİLER)
+    drawGridLayer();
+
+    // 4. KATMAN: NESNELER (ÜSTTE DURUR)
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const px = x * tileSize + offsetX;
+            const py = y * tileSize + offsetY;
+            const cell = gameState.grid[y][x];
+
+            // Moby Dick
+            if (x === gameState.mobyPos.x && y === gameState.mobyPos.y) {
+                 if(sprites.moby) ctx.drawImage(sprites.moby, px+2, py+2, tileSize-4, tileSize-4);
+            }
+            
+            // Şamandıra (Buoy)
+            if (cell === TILE_TYPE.BUOY) {
+                const wall = gameState.playerWalls.find(w => w.x === x && w.y === y);
+                const elapsed = now - (wall ? wall.spawnTime : 0);
+                let frame = Math.floor(elapsed / 50);
+                if(frame > 3) frame = 3;
+                
+                ctx.fillStyle = "rgba(0,0,0,0.3)";
+                ctx.fillRect(px + 4, py + tileSize - 6, tileSize - 8, 4);
+                
+                const img = sprites.buoys[frame];
+                if (img) drawSpriteAspect(img, px, py, tileSize);
+            }
+
+            // Ghost Preview
+            const hx = gameState.hoverPos.x;
+            const hy = gameState.hoverPos.y;
+            if (!gameState.isWon && x === hx && y === hy && cell === TILE_TYPE.WATER && gameState.playerWalls.length < gameState.maxWalls) {
+                 if(x !== gameState.mobyPos.x || y !== gameState.mobyPos.y) {
+                     ctx.save();
+                     ctx.globalAlpha = 0.5;
+                     if(sprites.buoys[0]) drawSpriteAspect(sprites.buoys[0], px, py, tileSize);
+                     ctx.restore();
+                 }
+            }
+        }
+    }
     
-    init(gameInstance) {
-        document.getElementById('menu-toggle-btn').onclick = () => {
-            this.modal.style.display = 'flex';
-            this.renderLevelList(gameInstance);
-        };
-        document.getElementById('close-modal-btn').onclick = () => this.modal.style.display = 'none';
-        this.modal.onclick = (e) => { if(e.target === this.modal) this.modal.style.display = 'none'; };
-    },
+    // UI Update
+    const bottomY = offsetY + (rows * tileSize) + 30;
+    ctx.save();
+    ctx.font = "22px 'Schoolbell'";
+    ctx.textAlign = "left"; ctx.fillStyle = "#66bb6a";
+    ctx.fillText(`Buoy: ${gameState.maxWalls - gameState.playerWalls.length}/${gameState.maxWalls}`, offsetX, bottomY);
+    ctx.textAlign = "right"; ctx.fillStyle = "#fff";
+    const scoreStr = gameState.isWon ? `Area: ${gameState.lastScore}` : "Area: -";
+    ctx.fillText(scoreStr, offsetX + (cols * tileSize), bottomY);
+    ctx.restore();
+}
 
-    renderLevelList(game) {
-        this.levelList.innerHTML = '';
-        LEVELS.forEach((lvl, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'level-item';
-            btn.textContent = `${idx + 1}. ${lvl.name}`;
-            btn.onclick = () => { game.loadLevel(idx); this.modal.style.display = 'none'; };
-            this.levelList.appendChild(btn);
-        });
-    },
+// Sadece Zemin (Çizgisiz)
+function drawLandOnly(x, y, px, py, size) {
+    const isLandBelow = (y < gameState.rows - 1 && gameState.grid[y+1][x] === TILE_TYPE.LAND);
+    
+    if (isLandBelow) {
+        if(sprites.grassMiddle) {
+            ctx.drawImage(sprites.grassMiddle, px, py, size, size);
+        } else { 
+            ctx.fillStyle = "#35693f"; 
+            ctx.fillRect(px, py, size, size); 
+        }
+    } else {
+        const hasLandLeft = (x > 0 && gameState.grid[y][x-1] === TILE_TYPE.LAND);
+        const hasLandRight = (x < gameState.cols - 1 && gameState.grid[y][x+1] === TILE_TYPE.LAND);
+        
+        if (!hasLandLeft && !hasLandRight) {
+            if(sprites.grassSingle) ctx.drawImage(sprites.grassSingle, px, py, size, size);
+        } else {
+            const img = (x % 2 === 0) ? sprites.grassSide1 : sprites.grassSide2;
+            if(img) ctx.drawImage(img, px, py, size, size);
+        }
+    }
+    
+    // Gölgeler
+    ctx.fillStyle = "rgba(20, 40, 30, 0.5)";
+    if(y===0 || gameState.grid[y-1][x] === 0) ctx.fillRect(px, py, size, 4);
+    if(x===0 || gameState.grid[y][x-1] === 0) ctx.fillRect(px, py, 4, size);
+    if(x===gameState.cols-1 || gameState.grid[y][x+1] === 0) ctx.fillRect(px+size-4, py, 4, size);
+}
 
-    updateStats(remaining, total, isWon) {
-        const ctx = game.ctx;
-        const { offsetX, offsetY, rows, tileSize, cols } = game.gameState;
-        const bottomY = offsetY + (rows * tileSize) + 30;
+// Global Grid Çizici
+function drawGridLayer() {
+    if (gameState.gridOpacity <= 0) return;
 
-        ctx.save();
-        ctx.font = "22px 'Schoolbell'";
-        ctx.textAlign = "left"; ctx.fillStyle = "#66bb6a";
-        ctx.fillText(`Buoy: ${remaining}/${total}`, offsetX, bottomY);
-        ctx.textAlign = "right"; ctx.fillStyle = "#fff";
-        const score = isWon ? `Area: ${this.lastScore}` : "Area: -";
-        ctx.fillText(score, offsetX + (cols * tileSize), bottomY);
-        ctx.restore();
-    },
+    const { cols, rows, tileSize, offsetX, offsetY, gridOpacity } = gameState;
+    const width = cols * tileSize;
+    const height = rows * tileSize;
+    
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(0, 0, 0, ${gridOpacity})`;
+    ctx.lineWidth = 0.5;
 
-    updateScore(score) { this.lastScore = score; },
-    updateLevelName(name, index) { document.getElementById('level-name-display').textContent = `Level ${index + 1} - ${name}`; }
-};
+    // Dikey
+    for (let x = 0; x <= cols; x++) {
+        const xPos = offsetX + (x * tileSize) + 0.5;
+        ctx.moveTo(xPos, offsetY);
+        ctx.lineTo(xPos, offsetY + height);
+    }
+    // Yatay
+    for (let y = 0; y <= rows; y++) {
+        const yPos = offsetY + (y * tileSize) + 0.5;
+        ctx.moveTo(offsetX, yPos);
+        ctx.lineTo(offsetX + width, yPos);
+    }
+    ctx.stroke();
+}
+
+function drawSpriteAspect(img, x, y, size) {
+    const ratio = img.height / img.width;
+    const h = size * ratio;
+    ctx.drawImage(img, x, y + size - h, size, h);
+}
+
+// Başlat
+window.onload = initGame;
 
 // --- 4. ASSETS ---
 const ASSETS = {
@@ -587,15 +713,7 @@ const ASSETS = {
     grassSide1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAKOmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAASImdU3dYU3cXPvfe7MFKiICMsJdsgQAiI+whU5aoxCRAGCGGBNwDERWsKCqyFEWqAhasliF1IoqDgqjgtiBFRK3FKi4cfaLP09o+/b6vX98/7n2f8zvn3t9533MAaAEhInEWqgKQKZZJI/292XHxCWxiD6BABgLYAfD42ZLQKL9oAIBAXy47O9LfG/6ElwOAKN5XrQLC2Wz4/6DKl0hlAEg4ADgIhNl8ACQfADJyZRJFfBwAmAvSFRzFKbg0Lj4BANVQ8JTPfNqnnM/cU8EFmWIBAKq4s0SQKVDwTgBYnyMXCgCwEAAoyBEJcwGwawBglCHPFAFgrxW1mUJeNgCOpojLhPxUAJwtANCk0ZFcANwMABIt5Qu+4AsuEy6SKZriZkkWS0UpqTK2Gd+cbefiwmEHCHMzhDKZVTiPn86TCtjcrEwJT7wY4HPPn6Cm0JYd6Mt1snNxcrKyt7b7Qqj/evgPofD2M3se8ckzhNX9R+zv8rJqADgTANjmP2ILygFa1wJo3PojZrQbQDkfoKX3i35YinlJlckkrjY2ubm51iIh31oh6O/4nwn/AF/8z1rxud/lYfsIk3nyDBlboRs/KyNLLmVnS3h8Idvqr0P8rwv//h7TIoXJQqlQzBeyY0TCXJE4hc3NEgtEMlGWmC0S/ycT/2XZX/B5rgGAUfsBmPOtQaWXCdjP3YBjUAFL3KVw/XffQsgxoNi8WL3Rz3P/CZ+2+c9AixWPbFHKpzpuZDSbL5fmfD5TrCXggQLKwARN0AVDMAMrsAdncANP8IUgCINoiId5wIdUyAQp5MIyWA0FUASbYTtUQDXUQh00wmFohWNwGs7BJbgM/XAbBmEEHsM4vIRJBEGICB1hIJqIHmKMWCL2CAeZifgiIUgkEo8kISmIGJEjy5A1SBFSglQge5A65FvkKHIauYD0ITeRIWQM+RV5i2IoDWWiOqgJaoNyUC80GI1G56Ip6EJ0CZqPbkLL0Br0INqCnkYvof3oIPoYncAAo2IsTB+zwjgYFwvDErBkTIqtwAqxUqwGa8TasS7sKjaIPcHe4Ag4Bo6Ns8K54QJws3F83ELcCtxGXAXuAK4F14m7ihvCjeM+4Ol4bbwl3hUfiI/Dp+Bz8QX4Uvw+fDP+LL4fP4J/SSAQWARTgjMhgBBPSCMsJWwk7CQ0EU4R+gjDhAkikahJtCS6E8OIPKKMWEAsJx4kniReIY4QX5OoJD2SPcmPlEASk/JIpaR60gnSFdIoaZKsQjYmu5LDyALyYnIxuZbcTu4lj5AnKaoUU4o7JZqSRllNKaM0Us5S7lCeU6lUA6oLNYIqoq6illEPUc9Th6hvaGo0CxqXlkiT0zbR9tNO0W7SntPpdBO6Jz2BLqNvotfRz9Dv0V8rMZSslQKVBEorlSqVWpSuKD1VJisbK3spz1NeolyqfES5V/mJClnFRIWrwlNZoVKpclTlusqEKkPVTjVMNVN1o2q96gXVh2pENRM1XzWBWr7aXrUzasMMjGHI4DL4jDWMWsZZxgiTwDRlBjLTmEXMb5g9zHF1NfXp6jHqi9Qr1Y+rD7IwlgkrkJXBKmYdZg2w3k7RmeI1RThlw5TGKVemvNKYquGpIdQo1GjS6Nd4q8nW9NVM19yi2ap5VwunZaEVoZWrtUvrrNaTqcypblP5UwunHp56SxvVttCO1F6qvVe7W3tCR1fHX0eiU65zRueJLkvXUzdNd5vuCd0xPYbeTD2R3ja9k3qP2OpsL3YGu4zdyR7X19YP0Jfr79Hv0Z80MDWYbZBn0GRw15BiyDFMNtxm2GE4bqRnFGq0zKjB6JYx2ZhjnGq8w7jL+JWJqUmsyTqTVpOHphqmgaZLTBtM75jRzTzMFprVmF0zJ5hzzNPNd5pftkAtHC1SLSotei1RSydLkeVOy75p+Gku08TTaqZdt6JZeVnlWDVYDVmzrEOs86xbrZ/aGNkk2Gyx6bL5YOtom2Fba3vbTs0uyC7Prt3uV3sLe759pf01B7qDn8NKhzaHZ9Mtpwun75p+w5HhGOq4zrHD8b2Ts5PUqdFpzNnIOcm5yvk6h8kJ52zknHfBu3i7rHQ55vLG1clV5nrY9Rc3K7d0t3q3hzNMZwhn1M4Ydjdw57nvcR+cyZ6ZNHP3zEEPfQ+eR43HfU9DT4HnPs9RL3OvNK+DXk+9bb2l3s3er7iu3OXcUz6Yj79PoU+Pr5rvbN8K33t+Bn4pfg1+4/6O/kv9TwXgA4IDtgRcD9QJ5AfWBY4HOQctD+oMpgVHBVcE3w+xCJGGtIeioUGhW0PvzDKeJZ7VGgZhgWFbw+6Gm4YvDP8+ghARHlEZ8SDSLnJZZFcUI2p+VH3Uy2jv6OLo27PNZstnd8QoxyTG1MW8ivWJLYkdjLOJWx53KV4rXhTflkBMiEnYlzAxx3fO9jkjiY6JBYkDc03nLpp7YZ7WvIx5x+crz+fNP5KET4pNqk96xwvj1fAmFgQuqFowzufyd/AfCzwF2wRjQndhiXA02T25JPlhinvK1pSxVI/U0tQnIq6oQvQsLSCtOu1Velj6/vSPGbEZTZmkzKTMo2I1cbq4M0s3a1FWn8RSUiAZXOi6cPvCcWmwdF82kj03u03GlElk3XIz+Vr5UM7MnMqc17kxuUcWqS4SL+pebLF4w+LRJX5Lvl6KW8pf2rFMf9nqZUPLvZbvWYGsWLCiY6XhyvyVI6v8Vx1YTVmdvvqHPNu8krwXa2LXtOfr5K/KH17rv7ahQKlAWnB9ndu66vW49aL1PRscNpRv+FAoKLxYZFtUWvRuI3/jxa/svir76uOm5E09xU7FuzYTNos3D2zx2HKgRLVkScnw1tCtLdvY2wq3vdg+f/uF0uml1TsoO+Q7BstCytrKjco3l7+rSK3or/SubKrSrtpQ9WqnYOeVXZ67Gqt1qouq3+4W7b6xx39PS41JTelewt6cvQ9qY2q7vuZ8XbdPa1/Rvvf7xfsHD0Qe6Kxzrqur164vbkAb5A1jBxMPXv7G55u2RqvGPU2spqJDcEh+6NG3Sd8OHA4+3HGEc6TxO+PvqpoZzYUtSMvilvHW1NbBtvi2vqNBRzva3dqbv7f+fv8x/WOVx9WPF5+gnMg/8fHkkpMTpySnnpxOOT3cMb/j9pm4M9c6Izp7zgafPX/O79yZLq+uk+fdzx+74Hrh6EXOxdZLTpdauh27m39w/KG5x6mnpde5t+2yy+X2vhl9J654XDl91efquWuB1y71z+rvG5g9cON64vXBG4IbD29m3Hx2K+fW5O1Vd/B3Cu+q3C29p32v5kfzH5sGnQaPD/kMdd+Pun97mD/8+Kfsn96N5D+gPygd1Rute2j/8NiY39jlR3MejTyWPJ58UvCz6s9VT82efveL5y/d43HjI8+kzz7+uvG55vP9L6a/6JgIn7j3MvPl5KvC15qvD7zhvOl6G/t2dDL3HfFd2Xvz9+0fgj/c+Zj58eNv94Tz+8WoiUIAAAAJcEhZcwAACxMAAAsTAQCanBgAAADTSURBVGiB3doxSgNAEEDRn4+d2Ch2KWOVWiw9j4fzDNZWVmnSCekkFoqNjYJIkLCCQUHyXzXF7M7CzG61k/OryzcCJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJEIiJOJgvVp9BEe3D8OE54vTTXwynQ5zzm6Wm3jx+PKj9a/XdzvV+K5eriMSIRGT0V+Ur/M7Pz78VYHtOzPad9ec+eBMmY5IbbTWn8/wtqf7GftAIvzvA/yVd7yiKCCa9UrXAAAAAElFTkSuQmCC",
     grassSide2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAKOmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAASImdU3dYU3cXPvfe7MFKiICMsJdsgQAiI+whU5aoxCRAGCGGBNwDERWsKCqyFEWqAhasliF1IoqDgqjgtiBFRK3FKi4cfaLP09o+/b6vX98/7n2f8zvn3t9533MAaAEhInEWqgKQKZZJI/292XHxCWxiD6BABgLYAfD42ZLQKL9oAIBAXy47O9LfG/6ElwOAKN5XrQLC2Wz4/6DKl0hlAEg4ADgIhNl8ACQfADJyZRJFfBwAmAvSFRzFKbg0Lj4BANVQ8JTPfNqnnM/cU8EFmWIBAKq4s0SQKVDwTgBYnyMXCgCwEAAoyBEJcwGwawBglCHPFAFgrxW1mUJeNgCOpojLhPxUAJwtANCk0ZFcANwMABIt5Qu+4AsuEy6SKZriZkkWS0UpqTK2Gd+cbefiwmEHCHMzhDKZVTiPn86TCtjcrEwJT7wY4HPPn6Cm0JYd6Mt1snNxcrKyt7b7Qqj/evgPofD2M3se8ckzhNX9R+zv8rJqADgTANjmP2ILygFa1wJo3PojZrQbQDkfoKX3i35YinlJlckkrjY2ubm51iIh31oh6O/4nwn/AF/8z1rxud/lYfsIk3nyDBlboRs/KyNLLmVnS3h8Idvqr0P8rwv//h7TIoXJQqlQzBeyY0TCXJE4hc3NEgtEMlGWmC0S/ycT/2XZX/B5rgGAUfsBmPOtQaWXCdjP3YBjUAFL3KVw/XffQsgxoNi8WL3Rz3P/CZ+2+c9AixWPbFHKpzpuZDSbL5fmfD5TrCXggQLKwARN0AVDMAMrsAdncANP8IUgCINoiId5wIdUyAQp5MIyWA0FUASbYTtUQDXUQh00wmFohWNwGs7BJbgM/XAbBmEEHsM4vIRJBEGICB1hIJqIHmKMWCL2CAeZifgiIUgkEo8kISmIGJEjy5A1SBFSglQge5A65FvkKHIauYD0ITeRIWQM+RV5i2IoDWWiOqgJaoNyUC80GI1G56Ip6EJ0CZqPbkLL0Br0INqCnkYvof3oIPoYncAAo2IsTB+zwjgYFwvDErBkTIqtwAqxUqwGa8TasS7sKjaIPcHe4Ag4Bo6Ns8K54QJws3F83ELcCtxGXAXuAK4F14m7ihvCjeM+4Ol4bbwl3hUfiI/Dp+Bz8QX4Uvw+fDP+LL4fP4J/SSAQWARTgjMhgBBPSCMsJWwk7CQ0EU4R+gjDhAkikahJtCS6E8OIPKKMWEAsJx4kniReIY4QX5OoJD2SPcmPlEASk/JIpaR60gnSFdIoaZKsQjYmu5LDyALyYnIxuZbcTu4lj5AnKaoUU4o7JZqSRllNKaM0Us5S7lCeU6lUA6oLNYIqoq6illEPUc9Th6hvaGo0CxqXlkiT0zbR9tNO0W7SntPpdBO6Jz2BLqNvotfRz9Dv0V8rMZSslQKVBEorlSqVWpSuKD1VJisbK3spz1NeolyqfES5V/mJClnFRIWrwlNZoVKpclTlusqEKkPVTjVMNVN1o2q96gXVh2pENRM1XzWBWr7aXrUzasMMjGHI4DL4jDWMWsZZxgiTwDRlBjLTmEXMb5g9zHF1NfXp6jHqi9Qr1Y+rD7IwlgkrkJXBKmYdZg2w3k7RmeI1RThlw5TGKVemvNKYquGpIdQo1GjS6Nd4q8nW9NVM19yi2ap5VwunZaEVoZWrtUvrrNaTqcypblP5UwunHp56SxvVttCO1F6qvVe7W3tCR1fHX0eiU65zRueJLkvXUzdNd5vuCd0xPYbeTD2R3ja9k3qP2OpsL3YGu4zdyR7X19YP0Jfr79Hv0Z80MDWYbZBn0GRw15BiyDFMNtxm2GE4bqRnFGq0zKjB6JYx2ZhjnGq8w7jL+JWJqUmsyTqTVpOHphqmgaZLTBtM75jRzTzMFprVmF0zJ5hzzNPNd5pftkAtHC1SLSotei1RSydLkeVOy75p+Gku08TTaqZdt6JZeVnlWDVYDVmzrEOs86xbrZ/aGNkk2Gyx6bL5YOtom2Fba3vbTs0uyC7Prt3uV3sLe759pf01B7qDn8NKhzaHZ9Mtpwun75p+w5HhGOq4zrHD8b2Ts5PUqdFpzNnIOcm5yvk6h8kJ52zknHfBu3i7rHQ55vLG1clV5nrY9Rc3K7d0t3q3hzNMZwhn1M4Ydjdw57nvcR+cyZ6ZNHP3zEEPfQ+eR43HfU9DT4HnPs9RL3OvNK+DXk+9bb2l3s3er7iu3OXcUz6Yj79PoU+Pr5rvbN8K33t+Bn4pfg1+4/6O/kv9TwXgA4IDtgRcD9QJ5AfWBY4HOQctD+oMpgVHBVcE3w+xCJGGtIeioUGhW0PvzDKeJZ7VGgZhgWFbw+6Gm4YvDP8+ghARHlEZ8SDSLnJZZFcUI2p+VH3Uy2jv6OLo27PNZstnd8QoxyTG1MW8ivWJLYkdjLOJWx53KV4rXhTflkBMiEnYlzAxx3fO9jkjiY6JBYkDc03nLpp7YZ7WvIx5x+crz+fNP5KET4pNqk96xwvj1fAmFgQuqFowzufyd/AfCzwF2wRjQndhiXA02T25JPlhinvK1pSxVI/U0tQnIq6oQvQsLSCtOu1Velj6/vSPGbEZTZmkzKTMo2I1cbq4M0s3a1FWn8RSUiAZXOi6cPvCcWmwdF82kj03u03GlElk3XIz+Vr5UM7MnMqc17kxuUcWqS4SL+pebLF4w+LRJX5Lvl6KW8pf2rFMf9nqZUPLvZbvWYGsWLCiY6XhyvyVI6v8Vx1YTVmdvvqHPNu8krwXa2LXtOfr5K/KH17rv7ahQKlAWnB9ndu66vW49aL1PRscNpRv+FAoKLxYZFtUWvRuI3/jxa/svir76uOm5E09xU7FuzYTNos3D2zx2HKgRLVkScnw1tCtLdvY2wq3vdg+f/uF0uml1TsoO+Q7BstCytrKjco3l7+rSK3or/SubKrSrtpQ9WqnYOeVXZ67Gqt1qouq3+4W7b6xx39PS41JTelewt6cvQ9qY2q7vuZ8XbdPa1/Rvvf7xfsHD0Qe6Kxzrqur164vbkAb5A1jBxMPXv7G55u2RqvGPU2spqJDcEh+6NG3Sd8OHA4+3HGEc6TxO+PvqpoZzYUtSMvilvHW1NbBtvi2vqNBRzva3dqbv7f+fv8x/WOVx9WPF5+gnMg/8fHkkpMTpySnnpxOOT3cMb/j9pm4M9c6Izp7zgafPX/O79yZLq+uk+fdzx+74Hrh6EXOxdZLTpdauh27m39w/KG5x6mnpde5t+2yy+X2vhl9J654XDl91efquWuB1y71z+rvG5g9cON64vXBG4IbD29m3Hx2K+fW5O1Vd/B3Cu+q3C29p32v5kfzH5sGnQaPD/kMdd+Pun97mD/8+Kfsn96N5D+gPygd1Rute2j/8NiY39jlR3MejTyWPJ58UvCz6s9VT82efveL5y/d43HjI8+kzz7+uvG55vP9L6a/6JgIn7j3MvPl5KvC15qvD7zhvOl6G/t2dDL3HfFd2Xvz9+0fgj/c+Zj58eNv94Tz+8WoiUIAAAAJcEhZcwAACxMAAAsTAQCanBgAAADRSURBVGiB7doxSkNBEIDh//3Y2UUtAmkFQbALlpbewRt4OM+QI1il8RA2YpMmdvIMeUWIoPzkq5ZldmZhdrsZls8PWwIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIkQiIk4ux69fZjY/3+uTfw4/7qe32xWOyNGefazTN1fvPyelCNqXqZjkiERAxPN/PJWZTxO7+dnR9VaOrvjfOuD4wZ72c6IhHD5d3jaczpP/GvL/BbvgBlliMgI41faAAAAABJRU5ErkJggg==",
     grassMiddle: "data:image/png;base64,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",
-
 };
-
-// --- OYUNU BAŞLAT ---
-// Oyun motorunu oluştur
-const game = new EncloseMobyGame('gameCanvas');
-
-// Arayüz yöneticisini bağla
-UIManager.init(game);
 
 </script>
 </body>

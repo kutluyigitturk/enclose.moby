@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.5-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.6-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -33,7 +33,7 @@
 - 🌊 Click/tap on sea tiles to place buoys (walls)
 - 🚫 You have limited buoys per level
 - 🐋 Moby Dick cannot swim diagonally or over walls
-- 📏 Smaller enclosure = Higher score
+- 📏 Bigger enclosure = Higher score
 - ✨ The game auto-detects when Moby is trapped
 
 ---
@@ -45,12 +45,11 @@
 - **Area-Based Scoring** — Score is determined by how small the enclosed area is, not by buoys used
 - **Non-Blocking Gameplay** — No annoying pop-ups; continue playing even after winning
 
-### 🎨 Visual Design
-- **High DPI / Retina Support** — Crystal clear rendering on modern screens using `devicePixelRatio` scaling
-- **Dynamic Wave System** — Intense waves outside the play area, calm waters inside
-- **Smart Land Borders** — Pixel-perfect borders for islands with auto-tiling logic
-- **Animated Buoys** — Smooth 4-frame spawn animation when placing buoys
-- **Ghost Preview** — Semi-transparent preview shows where buoys will be placed
+### 🎨 Visual & UI Enhancements
+- **Layered Rendering System** — Distinct layers for terrain, grid, entities, and UI to prevent visual artifacts.
+- **Global Grid System** — Pixel-perfect grid lines with adjustable opacity (0% - 100%) via Settings.
+- **Smart Wave Logic** — Inner waves align perfectly to grid cells; outer waves respect a buffer zone.
+- **Menu System** — Consolidated UI with a dropdown menu and dedicated Settings modal.
 
 ### 📱 Cross-Platform Support
 - **Full Mobile Support** — Touch controls work seamlessly on iOS and Android
@@ -121,10 +120,26 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.3 | 2025-01-31 | Responsive design, dynamic scaling, UI improvements |
 | v0.4 | 2025-02-01 | Mobile support, buoy sprite fix, touch controls |
 | v0.5 | 2025-02-01 | Clean Code Refactor, OOP Architecture, High DPI Support |
+| v0.6 | 2025-02-01 | Layered Rendering, Settings Menu & Smart Waves |
 
 ---
 
 ## 📋 Changelog
+
+### v0.6 (2026-02-01) - The Visual Polish Update ✨
+
+**🚀 Major Features**
+- **Settings Menu:** Added a slider to control Grid Visibility dynamically.
+- **Layered Rendering:** Rewrote the `draw()` loop to render layers sequentially (Background > Terrain > Global Grid > Entities > UI). This fixes all opacity overlapping issues.
+- **Perfect Waves:** - Inner waves are now centered within their tiles.
+    - Outer waves utilize a virtual grid to prevent overlapping with the map area.
+
+**🛠 Tech & Cleanup**
+- **Architecture:** Finalized on a "Clean Functional" approach for simplicity and performance.
+- **Grid Optimization:** Replaced per-cell `strokeRect` with a global path-based grid drawer for better performance.
+- **Asset Management:** Moved all Base64 assets to a dedicated structure at the end of the file for better code readability.
+
+---
 
 ### v0.5 (2025-02-01) - The Clean Code Update 🧹
 
