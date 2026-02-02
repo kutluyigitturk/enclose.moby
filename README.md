@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.6-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.6.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -87,8 +87,8 @@
 - [x] Dynamic wave animations
 - [x] Area-based scoring system
 - [x] Mobile touch support
-- [x] **Refactor to OOP Architecture (v0.5)**
-- [ ] Additional levels
+- [x] Refactor to OOP Architecture (v0.5)
+- [x] Additional levels
 - [ ] Level editor
 - [ ] Leaderboard system
 
@@ -115,17 +115,30 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 
 | Version |    Date    | Changes |
 |---------|------------|---------|
-| v0.1    | 2025-01-29 | Initial release - Core mechanics, 1 level |
-| v0.2    | 2025-01-29 | Bug Fixes, Change font family, 1 level |
-| v0.3    | 2025-01-31 | Responsive design, dynamic scaling, UI improvements |
-| v0.4    | 2025-02-01 | Mobile support, buoy sprite fix, touch controls |
-| v0.5    | 2025-02-01 | Clean Code Refactor, OOP Architecture, High DPI Support |
-| v0.6    | 2025-02-01 | Layered Rendering, Settings Menu & Smart Waves |
-| v0.6.1  | 2025-02-01 | Added Happy Moby victory state sprite |
+| v0.1    | 2026-01-29 | Initial release - Core mechanics, 1 level |
+| v0.2    | 2026-01-29 | Bug Fixes, Change font family, 1 level |
+| v0.3    | 2026-01-31 | Responsive design, dynamic scaling, UI improvements |
+| v0.4    | 2026-02-01 | Mobile support, buoy sprite fix, touch controls |
+| v0.5    | 2026-02-01 | Clean Code Refactor, OOP Architecture, High DPI Support |
+| v0.6    | 2026-02-01 | Layered Rendering, Settings Menu & Smart Waves |
+| v0.6.1  | 2026-02-02 | Added Happy Moby victory state sprite |
+| v0.6.2  | 2026-02-02 | Added New Level, Bug Fixes |
 
 ---
 
 ## 📋 Changelog
+
+### v0.6.2 (2026-02-02) - The "Tidebound" Content Update
+
+**🚀 New Content & Logic** 
+- **New Level:** Added "Tidebound", a challenging new puzzle layout (Level 3).
+- **Smart Startup: The game now automatically loads the latest added level upon launch or reset, giving players immediate access to new content.
+
+**🎨 UI & Visual Polish** 
+- **Header Typography:**  Increased the main title font size to 32px for a bolder, more prominent look.
+- **Compact Layout:**  Adjusted the subtitle margin (-10px) to visually group the level name tighter with the game title.
+
+---
 
 ### v0.6.1 (2026-02-02) - The "Juice" Update 🧃
 - **Visual Feedback:** Moby now displays a happy expression when the level is won!
