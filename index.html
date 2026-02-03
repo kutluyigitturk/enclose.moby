@@ -114,6 +114,9 @@
         }
         .level-item:hover { background: #66bb6a; color: white; }
         .close-modal-btn { color: #ff5252; background: none; font-weight: bold; font-size: 18px; border: none; cursor: pointer; }
+        /* About Metni Stili */
+        .about-text { padding: 20px; color: #333; line-height: 1.5; font-size: 16px; }
+        .about-text hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -128,6 +131,7 @@
         <div id="dropdown-menu" class="dropdown-content">
             <button class="menu-item" onclick="openLevelSelector()">Past Puzzles</button>
             <button class="menu-item" onclick="openSettings()">Settings</button>
+            <button class="menu-item" onclick="openAbout()">About</button>
         </div>
     </div>
 
@@ -152,6 +156,22 @@
                     Grid Visibility: <span id="grid-val-display">15%</span>
                 </label>
                 <input type="range" id="grid-opacity-slider" min="0" max="100" value="15" style="width: 100%; cursor: pointer;">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="about-overlay" onclick="closeAbout()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span>About</span>
+                <button class="close-modal-btn" onclick="closeAbout()">X</button>
+            </div>
+            <div class="about-text">
+                <p><b>Enclose.moby</b> is a simple puzzle game about enclosing the maximum area with a limited number of walls.</p>
+                <p>I initially designed this as an interesting GitHub project. However, after playing around with it a bit, I thought it was interesting enough to be turned into a full-fledged game.</p>
+                <p>Have fun!</p>
+                <hr>
+                <p style="text-align: center;">Made with 🔥 by <b>Kutlu</b></p>
             </div>
         </div>
     </div>
@@ -317,6 +337,15 @@ function openSettings() {
 
 function closeSettings() {
     document.getElementById("settings-overlay").style.display = "none";
+}
+
+function openAbout() {
+    document.getElementById("dropdown-menu").classList.remove("show");
+    document.getElementById("about-overlay").style.display = "flex";
+}
+
+function closeAbout() {
+    document.getElementById("about-overlay").style.display = "none";
 }
 
 // Menü dışına tıklama kontrolü
