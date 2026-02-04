@@ -39,7 +39,7 @@
             z-index: 1000; pointer-events: none; width: 90%;
         }
         .title { font-size: 32px; color: #fff; letter-spacing: 2px; text-shadow: 2px 2px 0 #000; }
-        .subtitle { font-size: 20px; color: var(--text-color); margin-top: -7px; text-shadow: 1px 1px 0 #000; }
+        .subtitle { font-size: 18px; color: var(--text-color); margin-top: -7px; text-shadow: 1px 1px 0 #000; }
 
         .controls-container {
             position: fixed; bottom: 30px; left: 50%;
@@ -98,84 +98,195 @@
             backdrop-filter: blur(2px);
         }
         .modal-box {
-            background: #fff; width: 300px; border: 4px solid #000;
+            background: #fff;
+            width: 350px; /* Soru işaretiyle aynı genişlik */
+            border: 4px solid #000;
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
             box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
-            display: flex; flex-direction: column;
+        }
+        /* Modal Başlıkları (How to Play başlığına benzer stil) */
+        .modal-header-custom {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
         .modal-header {
             background: #000; color: #fff; padding: 10px;
             font-size: 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .level-list { max-height: 60vh; overflow-y: auto; padding: 10px; background: #f1f1f1; }
-        .level-item {
-            width: 100%; padding: 10px; margin-bottom: 5px;
-            background: #fff; border: 1px solid #ccc; text-align: left;
-            font-size: 16px; cursor: pointer; color: black;
+        /* Past Puzzles Listesi Düzenlemesi */
+        .level-list {
+            max-height: 50vh;
+            overflow-y: auto;
+            padding-right: 5px;
         }
-        .level-item:hover { background: #66bb6a; color: white; }
+        .level-item {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #eee;
+            border: none;
+            font-family: var(--ui-font);
+            font-size: 18px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+        .level-item:hover {
+            background: #f0c040; /* Senin sarı rengin */
+            transform: translateX(5px);
+        }
         .close-modal-btn { color: #ff5252; background: none; font-weight: bold; font-size: 18px; border: none; cursor: pointer; }
         /* About Metni Stili */
         .about-text { padding: 20px; color: #333; line-height: 1.5; font-size: 16px; }
         .about-text hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
+
+        /* Soru işareti butonu için özel konumlandırma (isteğe bağlı) */
+        .left-info-btn {
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 32px;
+        text-shadow: 2px 2px 0 #000;
+        }
+
+        .tab-btn {
+            flex: 1; padding: 10px; border: none; 
+            background: #eee; font-family: var(--ui-font);
+            font-size: 18px; cursor: pointer; transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #f0c040; /* Görseldeki sarı tonu */
+            box-shadow: 2px 2px 0 #000;
+        }
+        .tab-content { 
+            display: none; 
+            color: #333 !important; /* Beyaz üstünde koyu gri metin */
+        }
+        .tab-content.active { display: block; }
+        
+        .stat-line {
+            display: flex; justify-content: space-between;
+            border-bottom: 1px dashed #ccc; margin-bottom: 5px;
+        }
+
+        .close-x-btn {
+            position: absolute;
+            /* Kutunun sağ üst köşesine göre konumlandırır */
+            top: -40px;    /* Kutunun 40px yukarısına taşır */
+            right: -10px;  /* Kutunun sağ kenarıyla hizalar (veya biraz dışarı taşır) */
+            background: none;
+            border: none;
+            font-size: 18px; /* Orantılı boyut */
+            cursor: pointer;
+            color: #fff;
+            font-weight: bold;
+            padding: 5px;
+            line-height: 1;
+            transition: transform 0.1s;
+        }
+
+        .close-x-btn:hover {
+            transform: scale(1.1); /* Üzerine gelince hafif büyüme efekti */
+        }
+
+        .menu-btn.info-active, .menu-btn.menu-open {
+            color: #f0c040 !important; /* Sarı renk */
+            transform: scale(1.1);
+        }
+
+        /* Mobilde kutu daralacağı için X butonunu kutunun içine çekebiliriz */
+        @media (max-width: 600px) {
+            .close-x-btn {
+                top: 5px;
+                right: 5px;
+                color: #000; /* Kutu içine girince siyah yaptık */
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="header-container">
-        <div class="title">enclose.moby</div>
-        <div class="subtitle" id="level-name-display">Level 1</div>
-    </div>
+<div style="position: fixed; top: 20px; left: 20px; z-index: 2000;">
+    <button class="menu-btn" onclick="openInfo()">?</button>
+</div>
 
-    <div class="menu-container">
-        <button class="menu-btn" onclick="toggleDropdown()">☰</button>
-        <div id="dropdown-menu" class="dropdown-content">
-            <button class="menu-item" onclick="openLevelSelector()">Past Puzzles</button>
-            <button class="menu-item" onclick="openSettings()">Settings</button>
-            <button class="menu-item" onclick="openAbout()">About</button>
+<div class="header-container">
+    <div class="title">enclose.moby</div>
+    <div class="subtitle" id="level-name-display">Level 1</div>
+</div>
+
+<div class="menu-container">
+    <button class="menu-btn" onclick="toggleDropdown()">☰</button>
+    <div id="dropdown-menu" class="dropdown-content">
+        <button class="menu-item" onclick="openLevelSelector()">Past Puzzles</button>
+        <button class="menu-item" onclick="openSettings()">Settings</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="info-modal" onclick="closeInfo()">
+    <div class="modal-box" onclick="event.stopPropagation()" style="border-radius: 0; padding: 20px; position: relative; width: 350px;">
+        
+        <button onclick="closeInfo()" class="close-x-btn">✕</button>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
+            <button class="tab-btn active" id="btn-how" onclick="switchTab('how')">How to Play</button>
+            <button class="tab-btn" id="btn-this" onclick="switchTab('this')">This Level</button>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="level-modal" onclick="closeLevelSelector()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <span>Past Puzzles</span>
-                <button class="close-modal-btn" onclick="closeLevelSelector()">X</button>
-            </div>
-            <div class="level-list" id="level-list-container"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="settings-overlay" onclick="closeSettings()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <span>Settings</span>
-                <button class="close-modal-btn" onclick="closeSettings()">X</button>
-            </div>
-            <div style="padding: 20px;">
-                <label style="display:block; margin-bottom:10px; font-size: 18px; color:black;">
-                    Grid Visibility: <span id="grid-val-display">15%</span>
-                </label>
-                <input type="range" id="grid-opacity-slider" min="0" max="100" value="15" style="width: 100%; cursor: pointer;">
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="about-overlay" onclick="closeAbout()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <span>About</span>
-                <button class="close-modal-btn" onclick="closeAbout()">X</button>
-            </div>
-            <div class="about-text">
-                <p><b>Enclose.moby</b> is a simple puzzle game about enclosing the maximum area with a limited number of walls.</p>
-                <p>I initially designed this as an interesting GitHub project. However, after playing around with it a bit, I thought it was interesting enough to be turned into a full-fledged game.</p>
-                <p>Have fun!</p>
-                <hr>
-                <p style="text-align: center;">Made with 🔥 by <b>Kutlu</b></p>
+        <div id="content-how" class="tab-content active">
+            <p style="font-size: 18px; text-align: center; margin-bottom: 20px; color: #333;">Enclose Moby in the biggest possible pen!</p>
+            <h3 style="margin-bottom: 10px; color: #000;">THE RULES</h3>
+            <ul style="padding-left: 20px; line-height: 1.8; color: #333;">
+                <li>Click water tiles to place <b>buoys</b>.</li>
+                <li>You have limited buoys.</li>
+                <li>Moby can't move over land or buoys.</li>
+                <li>Bigger enclosure = bigger score!</li>
+            </ul>
+            <div style="background: #f1f1f1; padding: 15px; margin-top: 20px; font-style: italic; color: #333;">
+                <b>Tip:</b> Hover to see where Moby might escape!
             </div>
         </div>
-    </div>
 
+        <div id="content-this" class="tab-content">
+            <div id="level-stats-container" style="line-height: 2.5; color: #333;">
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="level-modal" onclick="closeLevelSelector()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button onclick="closeLevelSelector()" class="close-x-btn">✕</button>
+        
+        <div class="modal-header-custom">Past Puzzles</div>
+        <div class="level-list" id="level-list-container"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="settings-overlay" onclick="closeSettings()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <button onclick="closeSettings()" class="close-x-btn">✕</button>
+        
+        <div class="modal-header-custom">Settings</div>
+        <div style="padding: 10px; color: #333;">
+            <label style="display:block; margin-bottom:15px; font-size: 18px;">
+                Grid Visibility: <span id="grid-val-display" style="font-weight:bold;">15%</span>
+            </label>
+            <input type="range" id="grid-opacity-slider" min="0" max="100" value="15" style="width: 100%; cursor: pointer; accent-color: #f0c040;">
+        </div>
+    </div>
+</div>
+
+<div id="menu-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.3); backdrop-filter:blur(5px); z-index:1500;" onclick="toggleDropdown()"></div>
     <canvas id="gameCanvas"></canvas>
 
     <div class="controls-container">
@@ -292,14 +403,27 @@ const sprites = {};
 // --- 2. YARDIMCI FONKSİYONLAR (UI & MENU) ---
 
 function toggleDropdown() {
-    document.getElementById("dropdown-menu").classList.toggle("show");
+    const dropdown = document.getElementById("dropdown-menu");
+    const menuBtn = document.querySelector('.menu-container .menu-btn');
+    const menuOverlay = document.getElementById("menu-overlay"); // Blur katmanı
+    
+    dropdown.classList.toggle("show");
+    
+    if (dropdown.classList.contains("show")) {
+        menuBtn.classList.add("menu-open");
+        menuOverlay.style.display = "block"; // Bluru göster
+    } else {
+        menuBtn.classList.remove("menu-open");
+        menuOverlay.style.display = "none"; // Bluru gizle
+    }
 }
 
 function openLevelSelector() {
-    document.getElementById("dropdown-menu").classList.remove("show");
+    // ÖNCE MENÜYÜ VE BLURU TAMAMEN KAPAT
+    forceCloseMenu(); 
+    
     const container = document.getElementById('level-list-container');
     container.innerHTML = '';
-    
     LEVELS.forEach((lvl, idx) => {
         const btn = document.createElement('button');
         btn.className = 'level-item';
@@ -307,7 +431,6 @@ function openLevelSelector() {
         btn.onclick = () => { loadLevel(idx); closeLevelSelector(); };
         container.appendChild(btn);
     });
-    
     document.getElementById("level-modal").style.display = "flex";
 }
 
@@ -316,6 +439,7 @@ function closeLevelSelector() {
 }
 
 function openSettings() {
+    forceCloseMenu(); // MENÜYÜ KAPAT
     document.getElementById("dropdown-menu").classList.remove("show");
     document.getElementById("settings-overlay").style.display = "flex";
     
@@ -339,23 +463,75 @@ function closeSettings() {
     document.getElementById("settings-overlay").style.display = "none";
 }
 
-function openAbout() {
-    document.getElementById("dropdown-menu").classList.remove("show");
-    document.getElementById("about-overlay").style.display = "flex";
-}
-
-function closeAbout() {
-    document.getElementById("about-overlay").style.display = "none";
-}
-
 // Menü dışına tıklama kontrolü
 window.onclick = function(event) {
+    // Eğer tıklanan yer canvas ise (oyun alanı) hiçbir şey yapma
     if (event.target.id === 'gameCanvas') return;
+
+    const dropdown = document.getElementById("dropdown-menu");
+    const menuBtn = document.querySelector('.menu-container .menu-btn');
+    const menuOverlay = document.getElementById("menu-overlay");
+
+    // Menü butonu dışındaki bir yere tıklandığında
     if (!event.target.matches('.menu-btn')) {
-        const dropdown = document.getElementById("dropdown-menu");
-        if (dropdown.classList.contains('show')) dropdown.classList.remove('show');
+        // Eğer bir menü açıksa kapat ve bluru kaldır
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+            menuBtn.classList.remove('menu-open');
+            menuOverlay.style.display = "none";
+        }
     }
 };
+
+function openInfo() {
+    forceCloseMenu();
+    // Dropdown menü açıksa kapat
+    document.getElementById("dropdown-menu")?.classList.remove("show");
+    
+    // Modalı göster
+    document.getElementById("info-modal").style.display = "flex";
+    
+    // BUTONU SARI YAP (Sınıf ekle)
+    // Not: openInfo'yu çağıran butonun seçilmesi için sorgu kullanıyoruz
+    document.querySelector('button[onclick="openInfo()"]').classList.add("info-active");
+    
+    updateLevelStats();
+    switchTab('how');
+}
+
+function closeInfo() {
+    document.getElementById("info-modal").style.display = "none";
+    
+    // BUTONU ESKİ HALİNE GETİR (Sınıfı kaldır)
+    document.querySelector('button[onclick="openInfo()"]').classList.remove("info-active");
+}
+
+function switchTab(tabName) {
+    document.getElementById('content-how').classList.toggle('active', tabName === 'how');
+    document.getElementById('content-this').classList.toggle('active', tabName === 'this');
+    document.getElementById('btn-how').classList.toggle('active', tabName === 'how');
+    document.getElementById('btn-this').classList.toggle('active', tabName === 'this');
+}
+
+function updateLevelStats() {
+    const lvl = LEVELS[gameState.currentLevelIndex];
+    const container = document.getElementById('level-stats-container');
+    if (!container) return;
+    container.innerHTML = `
+        <div class="stat-line" style="color: #333;"><span>Name</span> <b>${lvl.name}</b></div>
+        <div class="stat-line" style="color: #333;"><span>Made by</span> <b>Kutlu</b></div>
+        <div class="stat-line" style="color: #333;"><span>Size</span> <b>${gameState.cols} x ${gameState.rows}</b></div>
+        <div class="stat-line" style="color: #333;"><span>Buoy Budget</span> <b>${lvl.maxWalls}</b></div>
+        <div class="stat-line" style="color: #333;"><span>Level ID</span> <b>#${gameState.currentLevelIndex + 100}</b></div>
+    `;
+}
+
+// Yardımcı Fonksiyon: Menü ve bluru anında temizler
+function forceCloseMenu() {
+    document.getElementById("dropdown-menu").classList.remove("show");
+    document.querySelector('.menu-container .menu-btn').classList.remove("menu-open");
+    document.getElementById("menu-overlay").style.display = "none";
+}
 
 // --- 3. OYUN MOTORU (LOGIC) ---
 
