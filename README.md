@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.6.3-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.6.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -124,10 +124,26 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.6.1  | 2026-02-02 | Added Happy Moby victory state sprite |
 | v0.6.2  | 2026-02-02 | Added New Level, Bug Fixes |
 | v0.6.3  | 2026-02-03 | Added About |
+| v0.6.4  | 2026-02-04 | Professional UI Overhaul, Tabbed Info Panel & UX Fixes |
 
 ---
 
 ## 📋 Changelog
+
+### v0.6.4 (2026-02-04) - The "Professional UI" Update 💎
+
+**🚀 UI/UX Revolution**
+- **Persistent Help Button:** Added a '?' button in the top-left corner that glows yellow when active.
+- **Tabbed Modal System:** Replaced the simple "About" section with a dual-tabbed interface (How to Play / This Level).
+- **Backdrop Blur:** Opening any menu or info panel now applies a sophisticated 5px blur to the game field for better focus.
+- **Unified Design System:** Re-skinned "Past Puzzles" and "Settings" menus to match the new professional aesthetic (white box, sharp borders, external close button).
+
+**🛠 UX Fixes & Polish**
+- **Menu Logic Overhaul:** Fixed a critical bug where closing a modal would accidentally re-open the dropdown menu.
+- **Enhanced Close Interaction:** Closing buttons (✕) are now positioned outside the modal boxes for a more modern, accessible feel.
+- **Visual Feedback:** Main menu buttons now toggle to yellow when active, providing clear state communication.
+
+---
 
 ### v0.6.3 (2026-02-02) - The "Juice" Update 🧃
 - **Settings Menu:** Added a about section.
