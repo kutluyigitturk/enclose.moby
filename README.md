@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/MobyDick.png" width="30" height="30" alt="Enclose Moby Logo" /> # enclose.moby
+<h1 align="center"><img src="assets/MobyDick.png" width="30" height="30" alt="Enclose Moby Logo" /> enclose.moby </h1>
 
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
