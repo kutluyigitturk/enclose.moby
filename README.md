@@ -1,11 +1,11 @@
 <div align="center">
 
-# enclose.moby
+<img src="assets/MobyDick.png" width="30" height="30" alt="Enclose Moby Logo" /> # enclose.moby
 
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.6.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.6.5-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -125,10 +125,22 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.6.2  | 2026-02-02 | Added New Level, Bug Fixes |
 | v0.6.3  | 2026-02-03 | Added About |
 | v0.6.4  | 2026-02-04 | Professional UI Overhaul, Tabbed Info Panel & UX Fixes |
-
+| v0.6.5  | 2026-02-07 | Moby Dick now helps you with buoys. The first AI maps. |
 ---
 
 ## 📋 Changelog
+
+### v0.6.5 (2026-02-04) - The "Professional UI" Update 💎
+
+**🤖 AI-Powered Evolution**
+- **AI-Generated Maps:** For the first time, levels are procedurally generated using Deep Learning models. Powered by the enclose.mobyAi repository, this system creates unique, complex coastal layouts for infinite replayability.
+- **Tactical Foresight:** Hovering over Moby Dick now reveals his calculated escape vector. A dynamic arrow points toward his intended path, allowing players to strategize and cut off his escape routes proactively.
+
+**💬 Immersion & Interaction**
+- **The Voice of the Whale:** The hunt is now personal. Moby Dick communicates directly with the player via pixel-art speech bubbles, reacting to blocked paths or celebrating open escape routes to increase engagement.
+- **Smart UI Positioning:** Speech bubbles are context-aware; they dynamically appear on the opposite side of Moby's movement direction (e.g., if he moves Left, the bubble appears on the Right) to ensure the player's view of the escape path is never obstructed.
+
+---
 
 ### v0.6.4 (2026-02-04) - The "Professional UI" Update 💎
 
