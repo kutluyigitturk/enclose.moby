@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.6.5-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.6.6-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -125,12 +125,30 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.6.2  | 2026-02-02 | Added New Level, Bug Fixes |
 | v0.6.3  | 2026-02-03 | Added About |
 | v0.6.4  | 2026-02-04 | Professional UI Overhaul, Tabbed Info Panel & UX Fixes |
-| v0.6.5  | 2026-02-07 | Moby Dick now helps you with buoys. The first AI maps. |
+| v0.6.5  | 2026-02-07 | Moby Dick now helps you with buoys. The first AI maps |
+| v0.6.6  | 2026-02-08 | The speech bubble feature has been improved |
 ---
 
 ## 📋 Changelog
 
-### v0.6.5 (2026-02-04) - The "Professional UI" Update 💎
+### v0.6.6 (2026-02-08) - The "Responsive Dialogue System" Update 💬
+
+**🧠 Engine-Level UI Refactor**
+- **Content-Driven Speech Bubbles:** Speech bubble sizing has been fully decoupled from tile-based scaling. Bubble width and height are now dynamically calculated using real-time text measurement (CanvasRenderingContext2D.measureText()), enabling true responsive UI behavior.
+- **Pixel-Perfect Rendering Pipeline:** All bubble UI elements now use integer pixel snapping and enforced imageSmoothingEnabled = false to preserve crisp pixel-art visuals across all resolutions and tile sizes.
+- **9-Slice Scalable Bubble Sprites:** Integrated a 9-slice sprite system for speech bubbles, preventing texture distortion during scaling and maintaining consistent pixel-art corners and borders.
+
+**💬 Narrative & Text System Improvements**
+- **Manual Line-Break Control:** Line wrapping is now strictly controlled via \n characters, allowing handcrafted narrative pacing and cinematic dialogue layout.
+- **Optional Emergency Word Wrapping:** A fallback smart-wrap system was introduced to prevent UI overflow when extremely long messages exceed the maximum bubble width (configurable).
+- **Dynamic Text Layout:** Bubble padding, line height, and text centering are now calculated programmatically to ensure consistent visual hierarchy across different message lengths.
+
+**🎯 Direction-Aware UI Behavior**
+- **Contextual Bubble Placement:** Speech bubbles automatically spawn on the opposite side of Moby Dick’s escape direction to avoid obstructing the player’s tactical view.
+
+---
+
+### v0.6.5 (2026-02-07) - The "Professional UI" Update 💎
 
 **🤖 AI-Powered Evolution**
 - **AI-Generated Maps:** For the first time, levels are procedurally generated using Deep Learning models. Powered by the enclose.mobyAi repository, this system creates unique, complex coastal layouts for infinite replayability.
