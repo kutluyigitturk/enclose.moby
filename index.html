@@ -364,7 +364,9 @@ const LEVELS = [
             [1,0,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1],
             [0,0,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1],
             [0,1,1,1,0,0,0,1,1,1,1,0,0,0,1,0,0,1,1]
-        ]
+        ],
+        optimalWalls: [{x:12,y:0}, {x:7,y:3}, {x:6,y:4}, {x:18,y:4}, {x:18,y:5}, {x:17,y:6}, {x:15,y:8}, {x:5,y:9}, {x:11,y:11}, {x:6,y:13}], // ← koordinatlar
+        optimalArea: 68 // ← maksimum hapsedilen alan
     },
     {
         name: "Squares",
@@ -387,7 +389,9 @@ const LEVELS = [
             [1,0,0,1,1,0,0,1,1,1,0,1,0,1,1,1,1],
             [0,0,0,1,1,0,0,1,0,1,0,0,0,1,1,1,1],
             [1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,1,1]
-        ]
+        ],
+        optimalWalls: [{x:5,y:0}, {x:7,y:0}, {x:12,y:0}, {x:15,y:2}, {x:1,y:3}, {x:0,y:4}, {x:16,y:6}, {x:16,y:7}, {x:3,y:9}, {x:13,y:10}, {x:12,y:11}, {x:11,y:12}, {x:7,y:13}, {x:10,y:13}],     // ← koordinatlar
+        optimalArea: 90 // ← maksimum hapsedilen alan
     },
     {
         name: "Tidebound",
@@ -407,7 +411,9 @@ const LEVELS = [
             [1,0,1,0,0,0,0,0,0,0,0,1],
 	        [1,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,1,0,1,0,1,0,0,0,1]
-        ]
+        ],
+        optimalWalls: [{x:7,y:0}, {x:3,y:1}, {x:2,y:2}, {x:11,y:2}, {x:1,y:3}, {x:3,y:5}, {x:11,y:7}, {x:5,y:8}, {x:11,y:8}, {x:8,y:11}, {x:9,y:12}, {x:10,y:13}],     // ← koordinatlar
+        optimalArea: 54 // ← maksimum hapsedilen alan
     },
     {
         name: "First.Ai",
@@ -434,7 +440,9 @@ const LEVELS = [
             [0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,1],
             [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [1,1,0,1,1,0,0,0,1,1,1,1,0,0,0,0,0],
-        ]
+        ],
+        optimalWalls: [{x:12,y:5}, {x:14,y:9}, {x:14,y:13}, {x:3,y:14}, {x:13,y:14}, {x:12,y:15}, {x:11,y:16}, {x:5,y:18}], // ← koordinatlar
+        optimalArea: 47 // ← maksimum hapsedilen alan
     },
     {
         name: "Blind Solver",
@@ -462,10 +470,11 @@ const LEVELS = [
             [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-
-        ]
+        ],
+        optimalWalls: [{x:11,y:1}, {x:14,y:1}, {x:5,y:2}, {x:4,y:3}, {x:17,y:4}, {x:2,y:6}, {x:1,y:9}, {x:18,y:9}, {x:17,y:10}, {x:16,y:11}, {x:2,y:12}, {x:12,y:13}], // ← koordinatlar
+        optimalArea: 109 // ← maksimum hapsedilen alan
     }
-];
+]
 
 // OYUN DURUMU (State)
 let gameState = {
@@ -492,6 +501,17 @@ let gameState = {
                  ? parseFloat(localStorage.getItem('enclose_grid_opacity')) 
                  : 0.15,
     bubbleAnim: { active: false, side: 'right', msgIndex: 0, startTime: 0, sideSet: false },
+    // See Optimal sistemi
+    showingOptimal: false,
+    savedPlayerWalls: [],
+    savedPlayerScore: 0,
+    savedPlayerPath: null,
+    optimalMessage: null,       // "You found the optimal solution!" zamanlayıcı
+    optimalMessageTime: 0,
+    _mouseX: 0,
+    _mouseY: 0,
+    _optBtn: false,
+    optBtnAlpha: 0.6, // Başlangıç opaklığı, butonun anlık opaklık değerini tutacak
 };
 
 const canvas = document.getElementById('gameCanvas');
@@ -828,9 +848,70 @@ function loadLevel(index) {
     gameState.isWon = false;
     gameState.winningPath = null;
     gameState.winAlpha = 0;
+    //  loadLevel'da sıfırla
+    gameState.showingOptimal = false;
+    gameState.savedPlayerWalls = [];
+    gameState.savedPlayerScore = 0;
+    gameState.savedPlayerPath = null;
+    gameState.optimalMessage = null;
+    gameState.optimalMessageTime = 0;
 
     document.getElementById('level-name-display').textContent = `Level ${index + 1} - ${levelData.name}`;
     resize();
+}
+
+function toggleOptimalView() {
+    const level = LEVELS[gameState.currentLevelIndex];
+    if (!level.optimalWalls || level.optimalWalls.length === 0) return;
+
+    // Oyuncu zaten optimali bulduysa
+    if (gameState.lastScore >= level.optimalArea && !gameState.showingOptimal) {
+        gameState.optimalMessage = "You found the optimal solution!";
+        gameState.optimalMessageTime = Date.now();
+        return;
+    }
+
+    if (!gameState.showingOptimal) {
+        // === OPTIMAL'E GEÇ ===
+        // Oyuncunun çözümünü kaydet
+        gameState.savedPlayerWalls = [...gameState.playerWalls];
+        gameState.savedPlayerScore = gameState.lastScore;
+        gameState.savedPlayerPath = gameState.winningPath;
+
+        // Oyuncunun buoy'larını grid'den kaldır
+        for (const w of gameState.playerWalls) {
+            gameState.grid[w.y][w.x] = TILE_TYPE.WATER;
+        }
+
+        // Optimal buoy'ları yerleştir
+        gameState.playerWalls = level.optimalWalls.map(w => ({ x: w.x, y: w.y, spawnTime: Date.now() }));
+        for (const w of gameState.playerWalls) {
+            gameState.grid[w.y][w.x] = TILE_TYPE.BUOY;
+        }
+
+        // Optimal alanı hesapla (checkWinCondition'ı kullan)
+        checkWinCondition();
+        gameState.lastScore = level.optimalArea;
+        gameState.showingOptimal = true;
+
+    } else {
+        // === OYUNCUYA GERİ DÖN ===
+        // Optimal buoy'ları kaldır
+        for (const w of gameState.playerWalls) {
+            gameState.grid[w.y][w.x] = TILE_TYPE.WATER;
+        }
+
+        // Oyuncunun buoy'larını geri koy
+        gameState.playerWalls = [...gameState.savedPlayerWalls];
+        for (const w of gameState.playerWalls) {
+            gameState.grid[w.y][w.x] = TILE_TYPE.BUOY;
+        }
+
+        gameState.lastScore = gameState.savedPlayerScore;
+        gameState.winningPath = gameState.savedPlayerPath;
+        gameState.isWon = true;
+        gameState.showingOptimal = false;
+    }
 }
 
 function resize() {
@@ -1099,8 +1180,12 @@ function generateWaves() {
 function handleInput(e, type) {
     if (e.cancelable) e.preventDefault();
     const rect = canvas.getBoundingClientRect();
+    // ÖNCE koordinatları al
     let clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
     let clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+    // SONRA gameState'e ata
+    gameState._mouseX = clientX - rect.left;
+    gameState._mouseY = clientY - rect.top;
 
     const x = Math.floor((clientX - rect.left - gameState.offsetX) / gameState.tileSize);
     const y = Math.floor((clientY - rect.top - gameState.offsetY) / gameState.tileSize);
@@ -1131,10 +1216,15 @@ function handleInput(e, type) {
         gameState.hoverPos = { x, y };
         return;
     }
+    // See Optimal tıklama
+    if (gameState._optBtn && gameState.isWon) {
+        toggleOptimalView();
+        return;
+    }
 
     if (x < 0 || x >= gameState.cols || y < 0 || y >= gameState.rows) return;
 
-    if (gameState.isWon) {
+    if (gameState.isWon && !gameState.showingOptimal) {
         const wallIndex = gameState.playerWalls.findIndex(w => w.x === x && w.y === y);
         if (wallIndex !== -1) {
             gameState.grid[y][x] = TILE_TYPE.WATER;
@@ -1361,6 +1451,54 @@ function draw() {
     ctx.textAlign = "right"; ctx.fillStyle = "#fff";
     const scoreStr = gameState.isWon ? `Area: ${gameState.lastScore}` : "Area: -";
     ctx.fillText(scoreStr, offsetX + (cols * tileSize), bottomY);
+
+    // See Optimal butonu (sadece kazanıldıysa)
+    if (gameState.isWon) {
+        const optY = bottomY + 24;
+        ctx.font = "16px 'Schoolbell'";
+        ctx.textAlign = "right";
+
+        // "You found optimal" mesajı aktifse
+        if (gameState.optimalMessage && (Date.now() - gameState.optimalMessageTime) < 2500) {
+            ctx.fillStyle = "#f0c040";
+            ctx.fillText(gameState.optimalMessage, offsetX + (cols * tileSize), optY);
+        } else {
+            gameState.optimalMessage = null;
+
+            const label = gameState.showingOptimal ? "Your Solution" : "See Optimal";
+
+            // Hover kontrolü
+            const labelWidth = ctx.measureText(label).width;
+            const labelX = offsetX + (cols * tileSize) - labelWidth;
+            const isHovering = gameState._mouseX >= labelX
+                            && gameState._mouseX <= labelX + labelWidth
+                            && gameState._mouseY >= optY - 14
+                            && gameState._mouseY <= optY + 4;
+            
+                            // --- YENİ ANİMASYON KODU BAŞLANGICI ---
+            
+            // 1. Hedef opaklığı belirle (Hover ise 1.0, değilse 0.6)
+            const targetAlpha = isHovering ? 1.0 : 0.6;
+
+            // 2. Mevcut opaklığı hedefe doğru yavaşça kaydır (0.1 hızıyla)
+            // Bu formül yumuşak bir geçiş sağlar. 0.1'i düşürürsen yavaşlar, artırırsan hızlanır.
+            gameState.optBtnAlpha += (targetAlpha - gameState.optBtnAlpha) * 0.1;
+
+            // 3. Rengi hesaplanan opaklık ile ayarla
+            ctx.fillStyle = `rgba(255, 255, 255, ${gameState.optBtnAlpha})`;
+            
+            // --- YENİ ANİMASYON KODU BİTİŞİ ---
+
+            ctx.fillText(label, offsetX + (cols * tileSize), optY);
+            
+            // Cursor değiştir
+            canvas.style.cursor = isHovering ? "pointer" : "default";
+
+            // Tıklama alanını kaydet
+            gameState._optBtn = isHovering;
+        }
+    }
+
     ctx.restore();
 }
 

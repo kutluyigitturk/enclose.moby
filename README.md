@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.6.7-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.6.8-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -125,11 +125,25 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.6.2  | 2026-02-02 | Added New Level, Bug Fixes |
 | v0.6.3  | 2026-02-03 | Added About |
 | v0.6.4  | 2026-02-04 | Professional UI Overhaul, Tabbed Info Panel & UX Fixes |
-| v0.6.5  | 2026-02-07 | Moby Dick now helps you with buoys. The first AI maps |
-| v0.6.6  | 2026-02-08 | The speech bubble feature has been improved |
+| v0.6.5  | 2026-02-07 | Moby Dick Now Helps You With Buoys. The first AI maps |
+| v0.6.6  | 2026-02-08 | The Speech Bubble Feature Has Been Improved |
+| v0.6.8  | 2026-02-08 | Implement Optimal Solution Preview and Player Solution Toggle |
 ---
 
 ## 📋 Changelog
+
+### v0.6.8 (2026-02-10) - The "Optimal Solution Visualizer" Update 🧠
+
+**👁️ Interactive Optimal Solution Viewer**
+- **See Optimal Section:** Introduced a clickable “See Optimal” text under the Area score display. Styled with the game’s native pixel font and subtle opacity-based hover feedback (60% → 100%). Not a button—designed as an immersive in-world UI element.
+
+**🔁 Dual-Solution Toggle System**
+- **Solution Toggling** After viewing the optimal solution, players can switch back to their own layout via “Your Solution” toggle. Enables direct comparison between player strategy and the optimal enclosure.
+
+**🎯 Smart Optimal Detection Logic**
+- **Strong Deteciton** If the player already found the optimal solution, “See Optimal” displays a confirmation message instead of modifying the map. Prevents redundant visualization and reinforces player achievement.
+
+---
 
 ### v0.6.6 (2026-02-08) - The "Responsive Dialogue System" Update 💬
 
