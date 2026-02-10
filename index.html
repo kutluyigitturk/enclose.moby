@@ -800,14 +800,36 @@ function resolveBubbleSide(escapePath, mobyPos, cols) {
 
 async function initGame() {
     window.addEventListener('resize', resize);
-    
-    ['mousedown', 'touchstart'].forEach(evt => 
-        canvas.addEventListener(evt, (e) => handleInput(e, 'click'), { passive: false })
-    );
-    ['mousemove', 'touchmove'].forEach(evt => 
-        canvas.addEventListener(evt, (e) => handleInput(e, 'hover'), { passive: false })
-    );
+
+    // --- MOUSE OLAYLARI (Masaüstü için) ---
+    // Masaüstünde tıklama ve gezme ayrıdır, basitçe ekliyoruz.
+    canvas.addEventListener('mousedown', (e) => handleInput(e, 'click'));
+    canvas.addEventListener('mousemove', (e) => handleInput(e, 'hover'));
+
+    // --- DOKUNMATİK OLAYLARI (Mobil/iOS için) ---
+    // Burası kritik: Dokunma başladığında HEM hover HEM click gönderiyoruz.
+    // Böylece Moby'ye dokunursan 'hover' tetiklenip balon açılıyor.
+    canvas.addEventListener('touchstart', (e) => {
+        if (e.cancelable) e.preventDefault(); // Sayfanın kaymasını engelle
+        
+        // 1. Önce parmağın olduğu yeri 'hover' olarak işaretle (Balon için)
+        handleInput(e, 'hover'); 
+        
+        // 2. Sonra tıklama işlemini yap (Şamandıra koymak için)
+        handleInput(e, 'click'); 
+    }, { passive: false });
+
+    // Parmağı sürüklerken de hover konumunu güncelle
+    canvas.addEventListener('touchmove', (e) => {
+        if (e.cancelable) e.preventDefault();
+        handleInput(e, 'hover');
+    }, { passive: false });
+
+
+    // Mouse oyun alanından çıkarsa hover'ı sıfırla
     canvas.addEventListener('mouseleave', () => gameState.hoverPos = {x: -1, y: -1});
+    
+    // Reset butonu ve diğer yüklemeler
     document.getElementById('reset-btn').onclick = () => loadLevel(gameState.currentLevelIndex);
 
     await loadAssets();
@@ -1040,38 +1062,54 @@ function renderSpeechBubble(ctx, gs, assets) {
     const oX = gs.offsetX;
     const oY = gs.offsetY;
     const elapsed = Date.now() - anim.startTime;
+    
+    // Moby'nin ekran koordinatları
     const mobyScreenX = oX + gs.mobyPos.x * ts;
     const mobyScreenY = oY + gs.mobyPos.y * ts;
     const mobyCenterX = mobyScreenX + ts / 2;
     const mobyCenterY = mobyScreenY + ts / 2;
 
-    // === KÜÇÜK DÜŞÜNCE NOKTASI (0ms+) ===
+    // --- ORANLAR (Sabit pikseller yerine ts çarpanları) ---
+    // Noktaların boyutunu kare boyutunun (ts) %30'u ve %40'ı olarak ayarlayalım
+    const smallDotSize = ts * 0.30; 
+    const bigDotSize = ts * 0.45;
+    
+    // --- KÜÇÜK DÜŞÜNCE NOKTASI (0ms+) ---
     const dotSmall = (anim.side === 'right') ? assets.rightDotSmall : assets.leftDotSmall;
     if (dotSmall && elapsed >= 0) {
         const alpha = Math.min(1, elapsed / 150);
+        
+        // Konum hesaplamasını da ts'ye göre yapıyoruz
+        // smallDotSize kadar kaydırıyoruz ki üst üste binmesin
         let dotX = (anim.side === 'right')
-            ? mobyCenterX + ts * 0.3
-            : mobyCenterX - ts * 0.3 - 13;
-        const dotY = mobyCenterY - ts * 0.9;
+            ? mobyCenterX + (ts * 0.25)
+            : mobyCenterX - (ts * 0.25) - smallDotSize;
+            
+        const dotY = mobyCenterY - (ts * 0.8); // Moby'nin biraz yukarısı
+
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(dotSmall, Math.round(dotX), Math.round(dotY), 13, 16);
+        // drawImage parametrelerini dinamik boyutlarla değiştirdik
+        ctx.drawImage(dotSmall, Math.round(dotX), Math.round(dotY), Math.round(smallDotSize), Math.round(smallDotSize * 1.2)); // 1.2 aspect ratio korumak için
         ctx.restore();
     }
 
-    // === BÜYÜK DÜŞÜNCE NOKTASI (120ms+) ===
+    // --- BÜYÜK DÜŞÜNCE NOKTASI (120ms+) ---
     const dotBig = (anim.side === 'right') ? assets.rightDotBig : assets.leftDotBig;
     if (dotBig && elapsed >= 120) {
         const alpha = Math.min(1, (elapsed - 120) / 150);
+        
         let dotX = (anim.side === 'right')
-            ? mobyCenterX + ts * 0.5
-            : mobyCenterX - ts * 0.5 - 20;
-        const dotY = mobyCenterY - ts * 1.35;
+            ? mobyCenterX + (ts * 0.5)
+            : mobyCenterX - (ts * 0.5) - bigDotSize;
+            
+        const dotY = mobyCenterY - (ts * 1.2); // Daha da yukarıda
+
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(dotBig, Math.round(dotX), Math.round(dotY), 20, 20);
+        ctx.drawImage(dotBig, Math.round(dotX), Math.round(dotY), Math.round(bigDotSize), Math.round(bigDotSize));
         ctx.restore();
     }
 
