@@ -663,8 +663,8 @@ function drawAnimatedPath(path) {
     
     // Kesik çizgilerin sıklığını mobilde daha sık, masaüstünde daha geniş yaptık
     const dashLen = Math.floor(tileSize * 0.3);  
-    const gapLen = Math.floor(tileSize * 0.2);
-    const arrowLen = tileSize * 0.4; 
+    const gapLen = Math.floor(tileSize * 0.3);
+    const arrowLen = tileSize * 0.3; 
 
     const pathKey = path[path.length - 1].x + "," + path[path.length - 1].y + ":" + path.length;
     if (gameState.escapeAnim.pathKey !== pathKey) {
