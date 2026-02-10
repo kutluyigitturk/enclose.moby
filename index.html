@@ -655,6 +655,17 @@ function drawAnimatedPath(path) {
     if (!path || path.length < 2) return;
     const { tileSize, offsetX, offsetY } = gameState;
 
+    // --- GÜNCEL AYAR (Line Thickness) ---
+    // Masaüstü (50px tile): ~4px kalınlık
+    // Mobil (20px tile): ~2px kalınlık
+    // Math.floor(tileSize / 12) oranı genellikle pixel-art için en temiz sonucu verir.
+    const lineWidth = Math.max(2, Math.floor(tileSize / 12));
+    
+    // Kesik çizgilerin sıklığını mobilde daha sık, masaüstünde daha geniş yaptık
+    const dashLen = Math.floor(tileSize * 0.3);  
+    const gapLen = Math.floor(tileSize * 0.2);
+    const arrowLen = tileSize * 0.4; 
+
     const pathKey = path[path.length - 1].x + "," + path[path.length - 1].y + ":" + path.length;
     if (gameState.escapeAnim.pathKey !== pathKey) {
         gameState.escapeAnim = { pathKey, progress: 0, complete: false };
@@ -672,12 +683,10 @@ function drawAnimatedPath(path) {
     const fullTiles = Math.floor(gameState.escapeAnim.progress);
     const frac = gameState.escapeAnim.progress - fullTiles;
     const pathColor = "rgba(255, 255, 255, 0.8)";
-
     const getPos = (p) => ({
         px: p.x * tileSize + offsetX + tileSize / 2,
         py: p.y * tileSize + offsetY + tileSize / 2
     });
-
     const pts = [];
     const drawEnd = gameState.escapeAnim.complete ? path.length : fullTiles + 2;
     for (let i = 0; i < Math.min(drawEnd, path.length); i++) {
@@ -686,32 +695,27 @@ function drawAnimatedPath(path) {
 
     if (pts.length < 2) return;
 
-    // --- Animasyon bittiyse son noktayı ok boyu kadar geri çek ---
-    const arrowLen = 18;
     let drawPts = pts;
     if (gameState.escapeAnim.complete && pts.length >= 2) {
-        drawPts = pts.map(p => ({ ...p })); // kopyala
+        drawPts = pts.map(p => ({ ...p }));
         const last = drawPts[drawPts.length - 1];
         const prev = drawPts[drawPts.length - 2];
         const angle = Math.atan2(last.py - prev.py, last.px - prev.px);
-        // Son noktayı ok boyu kadar geri al
         drawPts[drawPts.length - 1] = {
             px: last.px - arrowLen * Math.cos(angle),
             py: last.py - arrowLen * Math.sin(angle)
         };
     }
 
-    // --- ÇİZGİ ---
     ctx.save();
     ctx.beginPath();
-    ctx.lineWidth = 5;
+    ctx.lineWidth = lineWidth;
     ctx.strokeStyle = pathColor;
-    ctx.setLineDash([16, 14]);
+    ctx.setLineDash([dashLen, gapLen]);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 
     ctx.moveTo(drawPts[0].px, drawPts[0].py);
-
     if (drawPts.length === 2) {
         let endX = drawPts[1].px, endY = drawPts[1].py;
         if (!gameState.escapeAnim.complete && fullTiles < 1) {
@@ -726,7 +730,6 @@ function drawAnimatedPath(path) {
             const p1 = drawPts[i];
             const p2 = drawPts[i + 1];
             const p3 = drawPts[Math.min(drawPts.length - 1, i + 2)];
-
             let targetP2 = p2;
             if (!gameState.escapeAnim.complete && i === drawPts.length - 2 && fullTiles + 1 < path.length) {
                 targetP2 = {
@@ -734,18 +737,15 @@ function drawAnimatedPath(path) {
                     py: p1.py + (p2.py - p1.py) * frac
                 };
             }
-
             const cp1x = p1.px + (targetP2.px - p0.px) * tension;
             const cp1y = p1.py + (targetP2.py - p0.py) * tension;
             const cp2x = targetP2.px - (p3.px - p1.px) * tension;
             const cp2y = targetP2.py - (p3.py - p1.py) * tension;
-
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, targetP2.px, targetP2.py);
         }
     }
     ctx.stroke();
 
-    // --- OK UCU ---
     if (gameState.escapeAnim.complete && path.length >= 2) {
         const last = getPos(path[path.length - 1]);
         const prev = getPos(path[path.length - 2]);
@@ -754,7 +754,7 @@ function drawAnimatedPath(path) {
 
         ctx.beginPath();
         ctx.setLineDash([]);
-        ctx.lineWidth = 5;
+        ctx.lineWidth = lineWidth;
         ctx.strokeStyle = pathColor;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
@@ -771,9 +771,9 @@ function drawAnimatedPath(path) {
         ctx.lineTo(rightX, rightY);
         ctx.stroke();
     }
-
     ctx.restore();
 }
+
 function resolveBubbleSide(escapePath, mobyPos, cols) {
     if (!escapePath || escapePath.length < 2) {
         return BUBBLE_SIDE.RIGHT;
@@ -1062,49 +1062,45 @@ function renderSpeechBubble(ctx, gs, assets) {
     const oX = gs.offsetX;
     const oY = gs.offsetY;
     const elapsed = Date.now() - anim.startTime;
-    
-    // Moby'nin ekran koordinatları
+
     const mobyScreenX = oX + gs.mobyPos.x * ts;
     const mobyScreenY = oY + gs.mobyPos.y * ts;
     const mobyCenterX = mobyScreenX + ts / 2;
     const mobyCenterY = mobyScreenY + ts / 2;
 
-    // --- ORANLAR (Sabit pikseller yerine ts çarpanları) ---
-    // Noktaların boyutunu kare boyutunun (ts) %30'u ve %40'ı olarak ayarlayalım
-    const smallDotSize = ts * 0.30; 
-    const bigDotSize = ts * 0.45;
-    
-    // --- KÜÇÜK DÜŞÜNCE NOKTASI (0ms+) ---
+    const smallDotSize = ts * 0.35; 
+    const bigDotSize = ts * 0.55;   
+
+    // === KÜÇÜK NOKTA (Small Dot) ===
+    // Konum: Moby'nin kafasına yakın
     const dotSmall = (anim.side === 'right') ? assets.rightDotSmall : assets.leftDotSmall;
     if (dotSmall && elapsed >= 0) {
         const alpha = Math.min(1, elapsed / 150);
-        
-        // Konum hesaplamasını da ts'ye göre yapıyoruz
-        // smallDotSize kadar kaydırıyoruz ki üst üste binmesin
+
         let dotX = (anim.side === 'right')
-            ? mobyCenterX + (ts * 0.25)
+            ? mobyCenterX + (ts * 0.25)  // Sağa hafif kayık
             : mobyCenterX - (ts * 0.25) - smallDotSize;
-            
-        const dotY = mobyCenterY - (ts * 0.8); // Moby'nin biraz yukarısı
+
+        const dotY = mobyCenterY - (ts * 0.9); // 0.9 birim yukarıda
 
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.imageSmoothingEnabled = false;
-        // drawImage parametrelerini dinamik boyutlarla değiştirdik
-        ctx.drawImage(dotSmall, Math.round(dotX), Math.round(dotY), Math.round(smallDotSize), Math.round(smallDotSize * 1.2)); // 1.2 aspect ratio korumak için
+        ctx.drawImage(dotSmall, Math.round(dotX), Math.round(dotY), Math.round(smallDotSize), Math.round(smallDotSize * 1.2));
         ctx.restore();
     }
 
-    // --- BÜYÜK DÜŞÜNCE NOKTASI (120ms+) ---
+    // === BÜYÜK NOKTA (Big Dot) ===
+    // Konum: Küçük nokta ile Balonun arasında, daha yukarıda ve daha dışarıda
     const dotBig = (anim.side === 'right') ? assets.rightDotBig : assets.leftDotBig;
     if (dotBig && elapsed >= 120) {
         const alpha = Math.min(1, (elapsed - 120) / 150);
-        
+
         let dotX = (anim.side === 'right')
-            ? mobyCenterX + (ts * 0.5)
-            : mobyCenterX - (ts * 0.5) - bigDotSize;
-            
-        const dotY = mobyCenterY - (ts * 1.2); // Daha da yukarıda
+            ? mobyCenterX + (ts * 0.60)  // Küçük noktadan (0.25) daha sağda (0.60)
+            : mobyCenterX - (ts * 0.60) - bigDotSize;
+
+        const dotY = mobyCenterY - (ts * 1.45); // Küçük noktadan (0.9) daha yukarıda (1.45)
 
         ctx.save();
         ctx.globalAlpha = alpha;
@@ -1113,22 +1109,21 @@ function renderSpeechBubble(ctx, gs, assets) {
         ctx.restore();
     }
 
-    // Balon henüz açılmadıysa sadece noktaları göster
+    // === BALON ===
     if (elapsed < 250) return;
     const side = anim.side;
-
     const bubbleSprite = (side === 'left') ? assets.bubbleLeft : assets.bubbleRight;
     if (!bubbleSprite) return;
 
     const fadeT = Math.min(1, (elapsed - 250) / 200);
     const message = MOBY_MESSAGES[anim.msgIndex % MOBY_MESSAGES.length];
-
+    
     const fontSize = Math.max(10, Math.floor(ts * BUBBLE_CONFIG.LAYOUT.TEXT_SIZE));
     ctx.font = `bold ${fontSize}px "Schoolbell", cursive`;
+    
     const padX = ts * BUBBLE_CONFIG.LAYOUT.PADDING_X + 8;
     const minW = ts * BUBBLE_CONFIG.LAYOUT.MIN_WIDTH;
 
-    // Satır kırma hesabı
     const testMaxW = ts * BUBBLE_CONFIG.LAYOUT.MAX_WIDTH - padX * 2;
     const segments = message.split('\n');
     const lines = [];
@@ -1147,7 +1142,6 @@ function renderSpeechBubble(ctx, gs, assets) {
         if (line) lines.push(line);
     }
 
-    // Balon boyutu satır sayısına göre
     let maxLineW = 0;
     for (const l of lines) {
         const w = ctx.measureText(l).width;
@@ -1159,11 +1153,13 @@ function renderSpeechBubble(ctx, gs, assets) {
     const lineH = fontSize * 1.3;
     const bubbleH = Math.max(ts * 1.2, lines.length * lineH + ts * 0.6);
 
-    // Konum (sallanma yok)
+    // Balon Konumu
     let bubbleX = (side === 'right')
         ? mobyCenterX + ts * 0.5
         : mobyCenterX - ts * 0.5 - bubbleW;
-    const bubbleY = mobyCenterY - ts * 1.5 - bubbleH;
+        
+    // Balonu Big Dot'un üzerine binmemesi için iyice yukarı alıyoruz (1.8 birim)
+    const bubbleY = mobyCenterY - (ts * 1.65) - bubbleH;
 
     ctx.save();
     ctx.globalAlpha = fadeT;
