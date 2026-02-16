@@ -344,6 +344,15 @@ const MOBY_MESSAGES = [
 
 ];
 
+const MOBY_WIN_MESSAGES = [
+    "Get me outta here!",
+    "I find myself in prison even though I committed no crime.",
+    "By what right do you imprison me within these walls?",
+    "I am capable of so much more than being an enclosed whale. There has to be more to this world.",
+    "I don't like being enclosed.",
+    "Do you think I might be living in a realm of eternal frost?",
+];
+
 const LEVELS = [
     {
         name: "Pathfinder",
@@ -1165,7 +1174,8 @@ function renderSpeechBubble(ctx, gs, assets) {
     if (!bubbleSprite) return;
 
     const fadeT = Math.min(1, (elapsed - 250) / 200);
-    const message = MOBY_MESSAGES[anim.msgIndex % MOBY_MESSAGES.length];
+    const msgList = gs.isWon ? MOBY_WIN_MESSAGES : MOBY_MESSAGES;
+    const message = msgList[anim.msgIndex % msgList.length];
     
     const fontSize = Math.max(10, Math.floor(ts * BUBBLE_CONFIG.LAYOUT.TEXT_SIZE));
     ctx.font = `bold ${fontSize}px "Schoolbell", cursive`;
@@ -1287,12 +1297,13 @@ function handleInput(e, type) {
 
             // Moby'ye giriyorsak balonu başlat
             if (!wasMoby && isMoby) {
+                const msgList = gameState.isWon ? MOBY_WIN_MESSAGES : MOBY_MESSAGES;
                 gameState.bubbleAnim = {
                     active: true,
-                    side: 'right',
-                    msgIndex: Math.floor(Math.random() * MOBY_MESSAGES.length),
+                    side: gameState.isWon ? (gameState.mobyPos.x < gameState.cols / 2 ? 'right' : 'left') : 'right',
+                    msgIndex: Math.floor(Math.random() * msgList.length),
                     startTime: Date.now(),
-                    sideSet: false
+                    sideSet: gameState.isWon
                 };
             }
         }
@@ -1645,7 +1656,7 @@ function draw() {
                         if (c) { ctx.fillStyle = c; ctx.fillRect(px + tileSize - edge, py + tileSize - edge, edge, edge); }
                     }
                 }
-                drawLandTile(x, y, px, py, tileSize);
+                drawLandTile(x, y, px, py, tileSize);    
             }
         }
     }
@@ -1699,19 +1710,17 @@ function draw() {
     }
 
     // 5. KATMAN: KAÇIŞ YOLU + KONUŞMA BALONU
+    const isHoveringMoby = gameState.hoverPos.x === gameState.mobyPos.x && 
+                        gameState.hoverPos.y === gameState.mobyPos.y;
+
     if (!gameState.isWon) {
-        const isHoveringMoby = gameState.hoverPos.x === gameState.mobyPos.x && 
-                            gameState.hoverPos.y === gameState.mobyPos.y;
         if (isHoveringMoby) {
             const escapePath = findEscapePath();
             if (escapePath && escapePath.length >= 3) {
-                // Balon yönünü belirle (sadece bir kere)
                 if (gameState.bubbleAnim.active && !gameState.bubbleAnim.sideSet) {
                     gameState.bubbleAnim.side = resolveBubbleSide(escapePath, gameState.mobyPos, gameState.cols);
                     gameState.bubbleAnim.sideSet = true;
                 }
-
-                // Ok çizimi
                 const moby = escapePath[0];
                 const next = escapePath[1];
                 const border = {
@@ -1720,6 +1729,11 @@ function draw() {
                 };
                 drawAnimatedPath([border, ...escapePath.slice(1)]);
             }
+            renderSpeechBubble(ctx, gameState, sprites);
+        }
+    } else {
+        // Kazanma durumunda sadece konuşma balonu (ok yok)
+        if (isHoveringMoby) {
             renderSpeechBubble(ctx, gameState, sprites);
         }
     }
