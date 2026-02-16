@@ -5,13 +5,13 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.7.1-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.7.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_5.jpg" alt="enclose.moby gameplay" width="600">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_6.jpg" alt="enclose.moby gameplay" width="600">
 
 *A strategic puzzle game where you trap the legendary white whale*
 </div>
@@ -131,6 +131,7 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.6.9  | 2026-02-10 | Fix Mobile Touch Interactions & Best Escape Way Arrow |
 | v0.7    | 2026-02-14 | Major visual improvements |
 | v0.7.1  | 2026-02-15 | Grass Tile Set Improvement |
+| v0.7.2  | 2026-02-16 | Visual Improvements: Winning Prize, Bug Fixes |
 ---
 
 ## 📋 Changelog

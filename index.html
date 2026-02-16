@@ -1429,79 +1429,220 @@ function draw() {
             if (gameState.isWon && gameState.winningPath[y][x] >= 0) {
                 const tileDist = gameState.winningPath[y][x];
                 const elapsed = (now - gameState.winTime) / 1000;
-                const tileDelay = tileDist * 0.07;
-                const tileProgress = Math.min(1, Math.max(0, (elapsed - tileDelay) / 0.4));
+                const tileDelay = tileDist * 0.06;
+                const tileProgress = Math.min(1, Math.max(0, (elapsed - tileDelay) / 0.5));
 
                 if (tileProgress > 0) {
-                    // Aşama 1: Su rengi koyulaşır → buzlu maviye geçiş
-                    const r = Math.floor(180 + 55 * tileProgress);
-                    const g = Math.floor(220 + 30 * tileProgress);
-                    const b = Math.floor(240 + 15 * tileProgress);
-                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${0.3 + tileProgress * 0.5})`;
-                    ctx.fillRect(px, py, tileSize, tileSize);
+                    const seed = (x * 7 + y * 13) % 17;
+                    const seed2 = (x * 11 + y * 3) % 23;
+                    const ts = tileSize;
 
-                    // Aşama 2: Buz çatlakları (tile tamamen donduğunda)
-                    if (tileProgress > 0.8) {
-                        const crackAlpha = (tileProgress - 0.8) / 0.2;
-                        ctx.save();
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${crackAlpha * 0.6})`;
-                        ctx.lineWidth = 1;
+                    ctx.save();
+
+                    // ─── AŞAMA 1: Kenarlardan içe doğru buzlanma ───
+                    // Her tile'ın donması kenarlardan merkeze doğru ilerler
+                    if (tileProgress < 0.6) {
+                        const edgeP = tileProgress / 0.6;
+                        const inset = ts * 0.5 * (1 - edgeP);
+                        ctx.fillStyle = `rgba(225, 240, 255, ${edgeP * 0.35})`;
+                        ctx.fillRect(px, py, ts, ts);
+
+                        // Kenar frost — dış kenarlarda daha yoğun
+                        const frostW = ts * edgeP * 0.5;
+                        const gradient1 = ctx.createLinearGradient(px, py, px + frostW, py);
+                        gradient1.addColorStop(0, `rgba(235, 245, 255, ${edgeP * 0.5})`);
+                        gradient1.addColorStop(1, 'rgba(235, 245, 255, 0)');
+                        ctx.fillStyle = gradient1;
+                        ctx.fillRect(px, py, frostW, ts);
+
+                        const gradient2 = ctx.createLinearGradient(px + ts, py, px + ts - frostW, py);
+                        gradient2.addColorStop(0, `rgba(235, 245, 255, ${edgeP * 0.5})`);
+                        gradient2.addColorStop(1, 'rgba(235, 245, 255, 0)');
+                        ctx.fillStyle = gradient2;
+                        ctx.fillRect(px + ts - frostW, py, frostW, ts);
+
+                        const gradient3 = ctx.createLinearGradient(px, py, px, py + frostW);
+                        gradient3.addColorStop(0, `rgba(235, 245, 255, ${edgeP * 0.5})`);
+                        gradient3.addColorStop(1, 'rgba(235, 245, 255, 0)');
+                        ctx.fillStyle = gradient3;
+                        ctx.fillRect(px, py, ts, frostW);
+
+                        const gradient4 = ctx.createLinearGradient(px, py + ts, px, py + ts - frostW);
+                        gradient4.addColorStop(0, `rgba(235, 245, 255, ${edgeP * 0.5})`);
+                        gradient4.addColorStop(1, 'rgba(235, 245, 255, 0)');
+                        ctx.fillStyle = gradient4;
+                        ctx.fillRect(px, py + ts - frostW, ts, frostW);
+                    }
+
+                    // ─── AŞAMA 2: Tam buz katmanı ───
+                    if (tileProgress >= 0.3) {
+                        const iceP = Math.min(1, (tileProgress - 0.3) / 0.5);
+                        ctx.fillStyle = `rgba(230, 245, 255, ${iceP * 0.55})`;
+                        ctx.fillRect(px, py, ts, ts);
+
+                        // Yüzey dokusu — ince frost kristalleri
+                        ctx.strokeStyle = `rgba(240, 248, 255, ${iceP * 0.3})`;
+                        ctx.lineWidth = 0.5;
+                        for (let i = 0; i < 3; i++) {
+                            const fx = px + ((seed + i * 7) % 10) / 10 * ts;
+                            const fy = py + ((seed2 + i * 5) % 10) / 10 * ts;
+                            const fLen = ts * 0.1 + (seed % 5) * ts * 0.02;
+                            ctx.beginPath();
+                            ctx.moveTo(fx, fy);
+                            ctx.lineTo(fx + fLen, fy - fLen * 0.7);
+                            ctx.moveTo(fx, fy);
+                            ctx.lineTo(fx - fLen * 0.5, fy + fLen * 0.4);
+                            ctx.stroke();
+                        }
+                    }
+
+                    // ─── AŞAMA 3: Çatlaklar ───
+                    if (tileProgress > 0.7) {
+                        const crackP = (tileProgress - 0.7) / 0.3;
+                        const cx = px + ts * 0.5;
+                        const cy = py + ts * 0.5;
+
+                        // Ana çatlaklar (koyu)
+                        ctx.strokeStyle = `rgba(150, 195, 220, ${crackP * 0.7})`;
+                        ctx.lineWidth = 1.5;
                         ctx.beginPath();
 
-                        // Her tile'a benzersiz çatlak deseni (seed = x*y)
-                        const seed = (x * 7 + y * 13) % 17;
-                        const cx = px + tileSize * 0.5;
-                        const cy = py + tileSize * 0.5;
-
-                        // Çatlak 1
+                        // Ana çatlak — benzersiz yön
+                        const angle1 = (seed / 17) * Math.PI * 2;
+                        const len1 = ts * (0.25 + (seed % 5) * 0.04);
                         ctx.moveTo(cx, cy);
-                        ctx.lineTo(cx + tileSize * 0.3 * ((seed % 3) - 1), cy + tileSize * 0.4);
+                        ctx.lineTo(cx + Math.cos(angle1) * len1, cy + Math.sin(angle1) * len1);
 
-                        // Çatlak 2
+                        // Dallanma
+                        const bx = cx + Math.cos(angle1) * len1 * 0.6;
+                        const by = cy + Math.sin(angle1) * len1 * 0.6;
+                        const angle1b = angle1 + 0.8 + (seed2 % 5) * 0.1;
+                        ctx.moveTo(bx, by);
+                        ctx.lineTo(bx + Math.cos(angle1b) * len1 * 0.4, by + Math.sin(angle1b) * len1 * 0.4);
+
+                        // İkinci ana çatlak
+                        const angle2 = angle1 + Math.PI * 0.6 + (seed2 / 23) * Math.PI * 0.5;
+                        const len2 = ts * (0.2 + (seed2 % 4) * 0.04);
                         ctx.moveTo(cx, cy);
-                        ctx.lineTo(cx - tileSize * 0.35, cy - tileSize * 0.2 * ((seed % 2) + 0.5));
-
-                        // Çatlak 3 (bazen)
-                        if (seed > 8) {
-                            ctx.moveTo(cx + tileSize * 0.1, cy + tileSize * 0.1);
-                            ctx.lineTo(cx + tileSize * 0.4, cy - tileSize * 0.3);
-                        }
+                        ctx.lineTo(cx + Math.cos(angle2) * len2, cy + Math.sin(angle2) * len2);
 
                         ctx.stroke();
-                        ctx.restore();
+
+                        // İnce çatlaklar (açık)
+                        ctx.strokeStyle = `rgba(220, 240, 255, ${crackP * 0.5})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        if (seed > 5) {
+                            const angle3 = angle1 + Math.PI * 1.2;
+                            ctx.moveTo(cx + ts * 0.05, cy - ts * 0.05);
+                            ctx.lineTo(cx + Math.cos(angle3) * ts * 0.22, cy + Math.sin(angle3) * ts * 0.22);
+                        }
+                        if (seed2 > 10) {
+                            const angle4 = angle2 - 0.9;
+                            ctx.moveTo(cx - ts * 0.03, cy + ts * 0.03);
+                            ctx.lineTo(cx + Math.cos(angle4) * ts * 0.18, cy + Math.sin(angle4) * ts * 0.18);
+                        }
+                        ctx.stroke();
                     }
+
+                    // ─── AŞAMA 4: Parıltılar (tam donmuş) ───
+                    if (tileProgress > 0.9) {
+                        const sparkleP = (tileProgress - 0.9) / 0.1;
+                        // Hafif titreşen parıltı noktaları
+                        const sparkle = Math.sin(now / 300 + seed * 2) * 0.3 + 0.7;
+                        ctx.fillStyle = `rgba(255, 255, 255, ${sparkleP * sparkle * 0.6})`;
+                        const sx1 = px + ((seed * 3) % 10) / 10 * ts;
+                        const sy1 = py + ((seed2 * 2) % 10) / 10 * ts;
+                        ctx.fillRect(Math.floor(sx1), Math.floor(sy1), 2, 2);
+
+                        if (seed > 4) {
+                            const sparkle2 = Math.sin(now / 400 + seed2) * 0.3 + 0.7;
+                            ctx.fillStyle = `rgba(255, 255, 255, ${sparkleP * sparkle2 * 0.4})`;
+                            const sx2 = px + ((seed2 * 4 + 7) % 10) / 10 * ts;
+                            const sy2 = py + ((seed * 5 + 3) % 10) / 10 * ts;
+                            ctx.fillRect(Math.floor(sx2), Math.floor(sy2), 1.5, 1.5);
+                        }
+                    }
+
+                    ctx.restore();
                 }
             }
 
-            // İÇ DALGA ÇİZİMİ (Grid'e Hizalı & Tam Boyut)
+            // İÇ DALGA ÇİZİMİ (donmuş alanlarda gösterme)
             if (gameState.waveMap && gameState.waveMap[y][x] && sprites.wave) {
-                ctx.globalAlpha = 0.6; // Dış dalgalarla aynı şeffaflık
-                ctx.drawImage(
-                    sprites.wave,
-                    px,      // Ofset yok, tam köşeye
-                    py,      // Ofset yok, tam köşeye
-                    tileSize,// Tam boyut
-                    tileSize // Tam boyut
-                );
-                ctx.globalAlpha = 1.0;
+                const isFrozen = gameState.isWon && gameState.winningPath && gameState.winningPath[y][x] >= 0;
+                if (!isFrozen) {
+                    ctx.globalAlpha = 0.6;
+                    ctx.drawImage(sprites.wave, px, py, tileSize, tileSize);
+                    ctx.globalAlpha = 1.0;
+                }
             }
 
             // Kara Çizimi
             if (cell === TILE_TYPE.LAND) {
                 if (gameState.isWon && gameState.winningPath) {
-                    let adjWin = false;
-                    if (x > 0 && gameState.winningPath[y][x-1] >= 0) adjWin = true;
-                    if (x < cols-1 && gameState.winningPath[y][x+1] >= 0) adjWin = true;
-                    if (y > 0 && gameState.winningPath[y-1][x] >= 0) adjWin = true;
-                    if (y < rows-1 && gameState.winningPath[y+1][x] >= 0) adjWin = true;
-                    if (y > 0 && x > 0 && gameState.winningPath[y-1][x-1] >= 0) adjWin = true;
-                    if (y > 0 && x < cols-1 && gameState.winningPath[y-1][x+1] >= 0) adjWin = true;
-                    if (y < rows-1 && x > 0 && gameState.winningPath[y+1][x-1] >= 0) adjWin = true;
-                    if (y < rows-1 && x < cols-1 && gameState.winningPath[y+1][x+1] >= 0) adjWin = true;
-                    if (adjWin) {
-                        const pulse = Math.sin(now / 500) * 0.1 + 0.5;
-                        ctx.fillStyle = `rgba(0, 210, 255, ${pulse})`;
-                        ctx.fillRect(px, py, tileSize, tileSize);
+                    const edgeW = 4; // grass'ın kenar boşluğu (piksel)
+                    const scale = tileSize / 50;
+                    const edge = Math.ceil(edgeW * scale);
+
+                    // Sadece donmuş komşunun olduğu kenara renk bas
+                    const frozenLeft  = x > 0 && gameState.winningPath[y][x-1] >= 0;
+                    const frozenRight = x < cols-1 && gameState.winningPath[y][x+1] >= 0;
+                    const frozenUp    = y > 0 && gameState.winningPath[y-1][x] >= 0;
+                    const frozenDown  = y < rows-1 && gameState.winningPath[y+1][x] >= 0;
+
+                    // Çaprazlar
+                    const frozenNW = y > 0 && x > 0 && gameState.winningPath[y-1][x-1] >= 0;
+                    const frozenNE = y > 0 && x < cols-1 && gameState.winningPath[y-1][x+1] >= 0;
+                    const frozenSW = y < rows-1 && x > 0 && gameState.winningPath[y+1][x-1] >= 0;
+                    const frozenSE = y < rows-1 && x < cols-1 && gameState.winningPath[y+1][x+1] >= 0;
+
+                    // Buz rengini hesapla (en yakın donmuş komşunun progress'ine göre)
+                    const elapsed = (now - gameState.winTime) / 1000;
+                    const getIceColor = (dist) => {
+                        if (dist < 0) return null;
+                        const tp = Math.min(1, Math.max(0, (elapsed - dist * 0.06) / 0.5));
+                        if (tp <= 0) return null;
+                        return `rgba(230, 245, 255, ${tp * 0.55})`;
+                    };
+
+                    // Sol kenar
+                    if (frozenLeft) {
+                        const c = getIceColor(gameState.winningPath[y][x-1]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px, py, edge, tileSize); }
+                    }
+                    // Sağ kenar
+                    if (frozenRight) {
+                        const c = getIceColor(gameState.winningPath[y][x+1]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px + tileSize - edge, py, edge, tileSize); }
+                    }
+                    // Üst kenar
+                    if (frozenUp) {
+                        const c = getIceColor(gameState.winningPath[y-1][x]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px, py, tileSize, edge); }
+                    }
+                    // Alt kenar
+                    if (frozenDown) {
+                        const c = getIceColor(gameState.winningPath[y+1][x]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px + edge, py + tileSize - edge, tileSize - edge * 2, edge); }
+                    }
+
+                    // Köşeler (çapraz donmuşsa)
+                    if (frozenNW && !frozenLeft && !frozenUp) {
+                        const c = getIceColor(gameState.winningPath[y-1][x-1]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px, py, edge, edge); }
+                    }
+                    if (frozenNE && !frozenRight && !frozenUp) {
+                        const c = getIceColor(gameState.winningPath[y-1][x+1]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px + tileSize - edge, py, edge, edge); }
+                    }
+                    if (frozenSW && !frozenLeft && !frozenDown) {
+                        const c = getIceColor(gameState.winningPath[y+1][x-1]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px, py + tileSize - edge, edge, edge); }
+                    }
+                    if (frozenSE && !frozenRight && !frozenDown) {
+                        const c = getIceColor(gameState.winningPath[y+1][x+1]);
+                        if (c) { ctx.fillStyle = c; ctx.fillRect(px + tileSize - edge, py + tileSize - edge, edge, edge); }
                     }
                 }
                 drawLandTile(x, y, px, py, tileSize);
