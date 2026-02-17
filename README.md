@@ -5,13 +5,13 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.7.3-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.7.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_6.jpg" alt="enclose.moby gameplay" width="600">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_7.jpg" alt="enclose.moby gameplay" width="600">
 
 *A strategic puzzle game where you trap the legendary white whale*
 </div>
@@ -133,6 +133,7 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.7.1  | 2026-02-15 | Grass Tile Set Improvement |
 | v0.7.2  | 2026-02-16 | Visual Improvements: Winning Prize, Bug Fixes |
 | v0.7.3  | 2026-02-16 | Moby Dick Speec Bubbles, New Features Added |
+| v0.7.4  | 2026-02-17 | Sound Element Added For Moby Dick | Test |
 ---
 
 ## 📋 Changelog
