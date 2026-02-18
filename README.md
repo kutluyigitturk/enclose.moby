@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.7.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.8.0-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -59,7 +59,7 @@
 ### 🖥️ User Interface
 - **Integrated Scoreboard** — Score displayed as `Area: X` in the bottom-right corner
 - **Custom Favicon** — Moby Dick icon in browser tab
-- **Single File Architecture** — All assets embedded as Base64, no external dependencies
+- **Modular Architecture** — Codebase split into 9 dedicated JS modules for maintainability and scalability
 - **Dropdown Menu** — Access past puzzles via hamburger menu
 
 ---
@@ -67,8 +67,19 @@
 ## 🛠️ Technical Details
 
 ```
-├── index.html    # Single-file game (HTML + CSS + JS + Base64 assets)
-└── README.md     # This file
+├── index.html        # Entry point
+├── style.css         # All UI styles
+├── README.md         # This file
+└── js/
+    ├── config.js     # Constants & game configuration
+    ├── levels.js     # Level data
+    ├── assets.js     # Base64 sprites & audio
+    ├── bubble.js     # Speech bubble config, messages & rendering
+    ├── state.js      # Game state, sound management, asset loading
+    ├── ui.js         # Menus, modals, input handling & resize
+    ├── game.js       # Core logic: waves, win condition, pathfinding
+    ├── renderer.js   # Rendering pipeline & draw loop
+    └── main.js       # Entry point: initGame & event listeners
 ```
 
 | Technology | Usage |
@@ -89,6 +100,7 @@
 - [x] Mobile touch support
 - [x] Refactor to OOP Architecture (v0.5)
 - [x] Additional levels
+- [x] Modular JS architecture — 9 dedicated modules (v0.8)
 - [ ] Level editor
 - [ ] Leaderboard system
 
@@ -134,9 +146,30 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.7.2  | 2026-02-16 | Visual Improvements: Winning Prize, Bug Fixes |
 | v0.7.3  | 2026-02-16 | Moby Dick Speec Bubbles, New Features Added |
 | v0.7.4  | 2026-02-17 | Sound Element Added For Moby Dick | Test |
+| v0.8.0  | 2026-02-18 | Modular Architecture Refactor — Monolithic HTML split into 9 JS modules |
 ---
 
 ## 📋 Changelog
+
+### v0.8.0 (2026-02-18) - The "Modular Architecture" Update 🏗️
+
+**🗂️ Full Codebase Restructure**
+- **Monolith → Modules:** The single-file `index.html` (2000+ lines) has been split into 9 dedicated JavaScript modules, each with a single responsibility.
+- **`config.js`** — All constants and game configuration (`TILE_TYPE`, `GAME_CONFIG`)
+- **`levels.js`** — Level data isolated for easy addition of new puzzles
+- **`assets.js`** — All Base64 sprites and audio in one place
+- **`bubble.js`** — Speech bubble config, message arrays and all bubble rendering logic
+- **`state.js`** — Game state object, sound management, asset loading and level management
+- **`ui.js`** — Menus, modals, settings panel, input handling and canvas resize
+- **`game.js`** — Core logic: wave generation, BFS win detection, escape pathfinding
+- **`renderer.js`** — Full rendering pipeline, draw loop and all sprite helpers
+- **`main.js`** — Minimal entry point: event listeners and `window.onload`
+
+**🎨 UI Polish**
+- Sound and hamburger menu buttons now have consistent size, alignment and hover opacity transition
+- `lang` attribute corrected from `tr` to `en` to match the game's language
+
+---
 
 ### v0.6.8 (2026-02-10) - The "Optimal Solution Visualizer" Update 🧠
 
