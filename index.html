@@ -84,7 +84,7 @@
     </div>
 </div>
 
-<!-- ── MENÜ BLUR KATLANI ──────────────────────────────────────────────────── -->
+<!-- ── MENU BLUR LAYER ──────────────────────────────────────────────────── -->
 <div id="menu-overlay"
      style="display:none; position:fixed; inset:0;
             background:rgba(0,0,0,0.3); backdrop-filter:blur(5px);
@@ -92,30 +92,30 @@
      onclick="toggleDropdown()">
 </div>
 
-<!-- ── OYUN CANVAS ────────────────────────────────────────────────────────── -->
+<!-- ── GAME CANVAS ────────────────────────────────────────────────────────── -->
 <canvas id="gameCanvas"></canvas>
 
-<!-- ── ALT: Reset Butonu ─────────────────────────────────────────────────── -->
+<!-- ── ALT: Reset Button ─────────────────────────────────────────────────── -->
 <div class="controls-container">
     <button class="btn-primary" id="reset-btn">RESET</button>
 </div>
 
-<!-- ── MODALler ──────────────────────────────────────────────────────────── -->
+<!-- ── MODALS ──────────────────────────────────────────────────────────── -->
 
-<!-- Bilgi / Nasıl Oynanır -->
+<!-- Information / How to Play -->
 <div class="modal-overlay" id="info-modal" onclick="closeInfo()">
     <div class="modal-box" onclick="event.stopPropagation()"
          style="border-radius:0; padding:20px; position:relative; width:350px;">
 
         <button onclick="closeInfo()" class="close-x-btn">✕</button>
 
-        <!-- Sekmeler -->
+        <!-- Tabs -->
         <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:10px;">
             <button class="tab-btn active" id="btn-how" onclick="switchTab('how')">How to Play</button>
             <button class="tab-btn"        id="btn-this" onclick="switchTab('this')">This Level</button>
         </div>
 
-        <!-- Nasıl Oynanır -->
+        <!-- How to Play -->
         <div id="content-how" class="tab-content active">
             <p style="font-size:18px; text-align:center; margin-bottom:20px; color:#333;">
                 Enclose Moby in the biggest possible pen!
@@ -132,14 +132,14 @@
             </div>
         </div>
 
-        <!-- Bu Seviye -->
+        <!-- This Level -->
         <div id="content-this" class="tab-content">
             <div id="level-stats-container" style="line-height:2.5; color:#333;"></div>
         </div>
     </div>
 </div>
 
-<!-- Geçmiş Bulmacalar -->
+<!-- Past Puzzles -->
 <div class="modal-overlay" id="level-modal" onclick="closeLevelSelector()">
     <div class="modal-box" onclick="event.stopPropagation()">
         <button onclick="closeLevelSelector()" class="close-x-btn">✕</button>
@@ -148,7 +148,7 @@
     </div>
 </div>
 
-<!-- Ayarlar -->
+<!-- Settings -->
 <div class="modal-overlay" id="settings-overlay" onclick="closeSettings()">
     <div class="modal-box" onclick="event.stopPropagation()">
         <button onclick="closeSettings()" class="close-x-btn">✕</button>
@@ -165,35 +165,35 @@
     </div>
 </div>
 
-<!-- ================================================================
-     JAVASCRIPT — Yükleme sırası bağımlılık zincirine göre düzenlenmiştir
-     ================================================================ -->
+<!-- ============================================================================
+     JAVASCRIPT — The loading order is arranged according to the dependency chain.
+     ============================================================================ -->
 
-<!-- 1. Sabitler ve yapılandırma -->
+<!-- 1. Constants and configuration -->
 <script src="js/config.js" defer></script>
 
-<!-- 2. Seviye verileri -->
+<!-- 2. Level data -->
 <script src="js/levels.js" defer></script>
 
-<!-- 3. Varlık tanımları (base64) -->
+<!-- 3. Asset definitions (base64) -->
 <script src="js/assets.js" defer></script>
 
-<!-- 4. Konuşma balonu sabitleri, mesajlar ve render fonksiyonları -->
+<!-- 4. Speech bubble constants, messages, and render functions -->
 <script src="js/bubble.js" defer></script>
 
-<!-- 5. Oyun durumu, ses, canvas referansları, loadAssets, loadLevel -->
+<!-- 5. Game state, sound, canvas references, loadAssets, loadLevel -->
 <script src="js/state.js" defer></script>
 
-<!-- 6. UI, menü, modal, input ve resize -->
+<!-- 6. UI, menu, modal, input, and resize -->
 <script src="js/ui.js" defer></script>
 
-<!-- 7. Render döngüsü ve tüm çizim fonksiyonları -->
+<!-- 7. Render loop and all drawing functions -->
 <script src="js/renderer.js" defer></script>
 
-<!-- 8. Oyun mantığı: dalga üretimi, kazanma koşulu, kaçış yolu -->
+<!-- 8. Game mechanics: wave generation, winning condition, escape route -->
 <script src="js/game.js" defer></script>
 
-<!-- 9. Giriş noktası: initGame ve window.onload -->
+<!-- 9. Entry point: initGame and window.onload -->
 <script src="js/main.js" defer></script>
 
 </body>
