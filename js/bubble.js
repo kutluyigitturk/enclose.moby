@@ -1,86 +1,86 @@
 // =============================================================================
-// bubble.js — Konuşma balonu yapılandırması, mesajlar ve render fonksiyonları
+// bubble.js — Speech bubble configuration, messages, and render functions
 // =============================================================================
 
 // -----------------------------------------------------------------------------
-// 9-SLICE BALON ÇERÇEVE ÇİZİCİSİ
+// 9-SLICE BUBBLE FRAME DRAWER
 // -----------------------------------------------------------------------------
 
 /**
- * Verilen sprite'ı bozmadan keyfi boyuta uzatarak çizer.
- * Köşeler olduğu gibi kalır; kenarlar ve merkez esnetilir.
+ * Draws the given sprite by stretching it to any size without distorting it.
+ * The corners remain as they are; the edges and center are stretched.
  *
  * @param {CanvasRenderingContext2D} ctx
- * @param {HTMLImageElement} img   - Balon sprite'ı
- * @param {number} x               - Hedef sol üst X
- * @param {number} y               - Hedef sol üst Y
- * @param {number} width           - İstenen genişlik
- * @param {number} height          - İstenen yükseklik
+ * @param {HTMLImageElement} img   - Balloon sprite
+ * @param {number} x               - Target top left X
+ * @param {number} y               - Target top left Y
+ * @param {number} width           - Desired width
+ * @param {number} height          - Desired height
  */
 function draw9Slice(ctx, img, x, y, width, height) {
     const { SLICE, WIDTH, HEIGHT } = BUBBLE_CONFIG.SPRITE;
 
-    // Orijinal sprite'daki orta bölüm boyutları
+    // Dimensions of the middle section in the original sprite
     const centerW = WIDTH  - SLICE.LEFT - SLICE.RIGHT;
     const centerH = HEIGHT - SLICE.TOP  - SLICE.BOTTOM;
 
-    // Ekranda kaplanacak orta bölüm boyutları
+    // Dimensions of the center section to be covered on the screen
     const targetCenterW = width  - SLICE.LEFT - SLICE.RIGHT;
     const targetCenterH = height - SLICE.TOP  - SLICE.BOTTOM;
 
-    // 1. Sol Üst Köşe
+    // 1. Top Left Corner
     ctx.drawImage(img, 0, 0, SLICE.LEFT, SLICE.TOP,
                         x, y, SLICE.LEFT, SLICE.TOP);
 
-    // 2. Üst Kenar (yatay uzatma)
+    // 2. Top Edge (horizontal extension)
     ctx.drawImage(img, SLICE.LEFT, 0, centerW, SLICE.TOP,
                         x + SLICE.LEFT, y, targetCenterW, SLICE.TOP);
 
-    // 3. Sağ Üst Köşe
+    // 3. Top Right Corner
     ctx.drawImage(img, WIDTH - SLICE.RIGHT, 0, SLICE.RIGHT, SLICE.TOP,
                         x + width - SLICE.RIGHT, y, SLICE.RIGHT, SLICE.TOP);
 
-    // 4. Sol Kenar (dikey uzatma)
+    // 4. Left Edge (vertical extension)
     ctx.drawImage(img, 0, SLICE.TOP, SLICE.LEFT, centerH,
                         x, y + SLICE.TOP, SLICE.LEFT, targetCenterH);
 
-    // 5. Merkez (her iki yönde uzatma)
+    // 5. Center (extension in both directions)
     ctx.drawImage(img, SLICE.LEFT, SLICE.TOP, centerW, centerH,
                         x + SLICE.LEFT, y + SLICE.TOP, targetCenterW, targetCenterH);
 
-    // 6. Sağ Kenar (dikey uzatma)
+    // 6. Right Edge (vertical extension)
     ctx.drawImage(img, WIDTH - SLICE.RIGHT, SLICE.TOP, SLICE.RIGHT, centerH,
                         x + width - SLICE.RIGHT, y + SLICE.TOP, SLICE.RIGHT, targetCenterH);
 
-    // 7. Sol Alt Köşe
+    // 7. Bottom Left Corner
     ctx.drawImage(img, 0, HEIGHT - SLICE.BOTTOM, SLICE.LEFT, SLICE.BOTTOM,
                         x, y + height - SLICE.BOTTOM, SLICE.LEFT, SLICE.BOTTOM);
 
-    // 8. Alt Kenar (yatay uzatma)
+    // 8. Bottom Edge (horizontal extension)
     ctx.drawImage(img, SLICE.LEFT, HEIGHT - SLICE.BOTTOM, centerW, SLICE.BOTTOM,
                         x + SLICE.LEFT, y + height - SLICE.BOTTOM, targetCenterW, SLICE.BOTTOM);
 
-    // 9. Sağ Alt Köşe
+    // 9. Bottom Right Corner
     ctx.drawImage(img, WIDTH - SLICE.RIGHT, HEIGHT - SLICE.BOTTOM, SLICE.RIGHT, SLICE.BOTTOM,
                         x + width - SLICE.RIGHT, y + height - SLICE.BOTTOM, SLICE.RIGHT, SLICE.BOTTOM);
 }
 
 
 // -----------------------------------------------------------------------------
-// BALON METİN YAZICI
+// BUBBLE TEXT PRINTER
 // -----------------------------------------------------------------------------
 
 /**
- * Metni pixel-art kalitesinde bulanıklaşmadan çizer.
- * Kelime kaydırma (word-wrap) ve tam sayı koordinat oturturma içerir.
+ * It draws text in pixel-art quality without blurring.
+ * Includes word-wrap and integer coordinate positioning.
  *
  * @param {CanvasRenderingContext2D} ctx
- * @param {string} text       - Görüntülenecek metin (\n ile satır kırılabilir)
- * @param {number} centerX    - Metnin yatay merkezi
- * @param {number} centerY    - Metnin dikey merkezi
- * @param {number} maxWidth   - Maksimum satır genişliği (px)
- * @param {number} ts         - Tile boyutu (font ölçeklemesi için)
- * @returns {number}          - Oluşturulan satır sayısı
+ * @param {string} text       - Text to be displayed (lines can be broken with \n)
+ * @param {number} centerX    - Horizontal center of the text
+ * @param {number} centerY    - Vertical center of the text
+ * @param {number} maxWidth   - Maximum line width (px)
+ * @param {number} ts         - Tile size (for font scaling)
+ * @returns {number}          - Number of rows created
  */
 function renderBubbleText(ctx, text, centerX, centerY, maxWidth, ts) {
     const fontSize = Math.max(10, Math.floor(ts * BUBBLE_CONFIG.LAYOUT.TEXT_SIZE));
@@ -90,7 +90,7 @@ function renderBubbleText(ctx, text, centerX, centerY, maxWidth, ts) {
     ctx.textBaseline  = 'middle';
     ctx.imageSmoothingEnabled = false;
 
-    // Kelime kaydırma
+    // Word shift
     const lines = [];
     for (const seg of text.split('\n')) {
         const words = seg.split(' ');
@@ -120,18 +120,18 @@ function renderBubbleText(ctx, text, centerX, centerY, maxWidth, ts) {
 
 
 // -----------------------------------------------------------------------------
-// ANA KONUŞMA BALONU YÖNETİCİSİ
+// MAIN SPEECH BUBBLE MANAGER
 // -----------------------------------------------------------------------------
 
 /**
- * Moby'nin konumuna ve kaçış yönüne göre bütün balon sistemini çizer:
- *   1. Küçük nokta  (150 ms gecikmeli)
- *   2. Büyük nokta  (270 ms gecikmeli)
- *   3. Balon çerçevesi + metin  (450 ms gecikmeli, fade-in)
+ * Draws the entire balloon system based on Moby's position and escape direction:
+ *   1. Small dot (150 ms delay)
+ *   2. Large dot (270 ms delay)
+ *   3. Balloon frame + text (450 ms delay, fade-in)
  *
  * @param {CanvasRenderingContext2D} ctx
- * @param {object} gs      - gameState referansı
- * @param {object} assets  - sprites nesnesi
+ * @param {object} gs      - gameState reference
+ * @param {object} assets  - sprite object
  */
 function renderSpeechBubble(ctx, gs, assets) {
     const anim = gs.bubbleAnim;
@@ -151,7 +151,7 @@ function renderSpeechBubble(ctx, gs, assets) {
     const bigDotSize   = ts * 0.55;
     const side         = anim.side;
 
-    // ---- 1. KÜÇÜK NOKTA ----
+    // ---- 1. SMALL DOT ----
     const dotSmall = (side === 'right') ? assets.rightDotSmall : assets.leftDotSmall;
     if (dotSmall && elapsed >= 0) {
         const alpha = Math.min(1, elapsed / 150);
@@ -171,7 +171,7 @@ function renderSpeechBubble(ctx, gs, assets) {
         ctx.restore();
     }
 
-    // ---- 2. BÜYÜK NOKTA ----
+    // ---- 2. BIG DOT ----
     const dotBig = (side === 'right') ? assets.rightDotBig : assets.leftDotBig;
     if (dotBig && elapsed >= 120) {
         const alpha = Math.min(1, (elapsed - 120) / 150);
@@ -191,7 +191,7 @@ function renderSpeechBubble(ctx, gs, assets) {
         ctx.restore();
     }
 
-    // ---- 3. BALON ----
+    // ---- 3. BUBBLE ----
     if (elapsed < 250) return;
 
     const bubbleSprite = (side === 'left') ? assets.bubbleLeft : assets.bubbleRight;
@@ -208,7 +208,7 @@ function renderSpeechBubble(ctx, gs, assets) {
     const minW     = ts * BUBBLE_CONFIG.LAYOUT.MIN_WIDTH;
     const testMaxW = ts * BUBBLE_CONFIG.LAYOUT.MAX_WIDTH - padX * 2;
 
-    // Kelime kaydırma (balon genişliğini ölçmek için)
+    // Word shift (to measure balloon width)
     const lines = [];
     for (const seg of message.split('\n')) {
         const words = seg.split(' ');
