@@ -1,19 +1,19 @@
 // =============================================================================
-// main.js — Oyunun giriş noktası; olay dinleyicileri ve başlatma sırası
+// main.js — The game's entry point; event listeners and launch order
 // =============================================================================
 
 
 /**
- * Tüm modüller yüklendikten sonra çağrılır.
- * Olay dinleyicilerini bağlar, varlıkları yükler ve oyun döngüsünü başlatır.
+ * It is called after all modules have been loaded.
+ * The event binds listeners, loads assets, and starts the game loop.
  */
 async function initGame() {
 
-    // ── EKRAN YENİDEN BOYUTLANDIRMA ──────────────────────────────────────────
+    // SCREEN RESIZING
     window.addEventListener('resize', resize);
 
-    // ── MOUSE OLAYLARI (Masaüstü) ────────────────────────────────────────────
-    // İlk kullanıcı etkileşiminde (click) audio'yu unlock etmeye çalışıyoruz.
+    //  MOUSE EVENTS (Desktop)
+    // We are trying to unlock the audio upon the first user interaction (click).
     canvas.addEventListener('mousedown', async (e) => {
         await unlockAudio();
         handleInput(e, 'click');
@@ -21,14 +21,14 @@ async function initGame() {
 
     canvas.addEventListener('mousemove', (e) => handleInput(e, 'hover'));
 
-    // Mouse oyun alanından çıkınca hover'ı sıfırla
+    // Reset the hover when the mouse leaves the play area
     canvas.addEventListener('mouseleave', () => gameState.hoverPos = { x: -1, y: -1 });
 
-    // ── DOKUNMATİK OLAYLAR (Mobil / iOS) ────────────────────────────────────
-    // touchstart'ta hem hover hem click gönderiyoruz:
-    //   → hover: Moby'ye dokunulunca konuşma balonu açılsın
-    //   → click: şamandıra yerleştirme/kaldırma tetiklensin
-    // Ayrıca touchstart bir "gesture" sayıldığı için audio unlock burada da yapılır.
+    // TOUCH EVENTS (Mobile / iOS) 
+    // We send both hover and click events on touchstart:
+    //   → hover: When you hover over Moby, a speech bubble should appear.
+    //   → click: trigger buoy placement/removal
+    // Additionally, since touchstart is considered a “gesture,” audio unlock is also performed here.
     canvas.addEventListener('touchstart', async (e) => {
         if (e.cancelable) e.preventDefault();
         await unlockAudio();
@@ -36,23 +36,23 @@ async function initGame() {
         handleInput(e, 'click');
     }, { passive: false });
 
-    // Parmak sürüklenirken hover konumunu güncelle
+    // Update the hover position while swiping
     canvas.addEventListener('touchmove', (e) => {
         if (e.cancelable) e.preventDefault();
         handleInput(e, 'hover');
     }, { passive: false });
 
-    // ── BUTONLAR ─────────────────────────────────────────────────────────────
+    // BUTTONS 
     document.getElementById('reset-btn').onclick = () => loadLevel(gameState.currentLevelIndex);
 
-    // ── BAŞLATMA SIRASI ──────────────────────────────────────────────────────
-    await loadAssets();            // 1. Görselleri ve sesleri yükle
-    initMobySounds();              // 2. Ses nesnelerini hazırla
-    initSoundButton();             // 3. Ses butonunun durumunu ayarla
-     loadLevel(LEVELS.length - 1);  // 5. Son seviyeyi yükle
-    loop();                        // 6. Render döngüsünü başlat
+    // STARTUP ORDER
+    await loadAssets();              // 1. Upload images and sounds
+    initMobySounds();                // 2. Prepare the sound objects
+    initSoundButton();               // 3. Set the status of the sound button
+     loadLevel(LEVELS.length - 1);   // 5. Load the final level
+    loop();                          // 6. Start the rendering cycle
 }
 
 
-// Sayfa tamamen yüklenince oyunu başlat
+// Start the game once the page has fully loaded
 window.onload = initGame;
