@@ -1,10 +1,10 @@
 // =============================================================================
-// state.js — Oyun durumu, ses yönetimi, varlık yükleme ve seviye yönetimi
+// state.js — Game state, sound management, asset loading and level management
 // =============================================================================
 
 
 // -----------------------------------------------------------------------------
-// SES YÖNETİMİ
+// SOUND MANAGEMENT
 // -----------------------------------------------------------------------------
 
 let isMuted = localStorage.getItem('enclose_muted') === 'true';
@@ -14,7 +14,7 @@ function toggleSound() {
     isMuted = !isMuted;
     localStorage.setItem('enclose_muted', isMuted);
     document.getElementById('sound-toggle-btn').classList.toggle('muted', isMuted);
-    
+
     if (!isMuted) unlockAudio();
 }
 
@@ -40,14 +40,14 @@ async function unlockAudio() {
 
     try {
         const a = MOBY_SOUNDS[0];
-        a.volume = 0;              // sessiz “unlock” denemesi
+        a.volume = 0;              // silent "unlock" attempt
         await a.play();
         a.pause();
         a.currentTime = 0;
-        a.volume = 0.15;           // geri normale
+        a.volume = 0.15;           // restore volume
         audioUnlocked = true;
     } catch (e) {
-        // Bazı tarayıcılarda yine gesture bekler; sorun değil.
+        // Some browsers still require a gesture; that's fine.
     }
 }
 
@@ -61,7 +61,7 @@ function playMobySound() {
 
 
 // -----------------------------------------------------------------------------
-// OYUN DURUMU (gameState)
+// GAME STATE
 // -----------------------------------------------------------------------------
 
 let gameState = {
@@ -85,32 +85,35 @@ let gameState = {
     lastScore:           0,
     escapeAnim:          { pathKey: null, progress: 0, complete: false, arrowAge: 0 },
 
-    // Grid opaklığı (varsayılan 0.15, localStorage'dan okunur)
+    // Grid opacity (default 0.15, read from localStorage)
     gridOpacity: localStorage.getItem('enclose_grid_opacity')
                      ? parseFloat(localStorage.getItem('enclose_grid_opacity'))
                      : 0.15,
 
-    // Konuşma balonu animasyonu
+    // Speech bubble animation
     bubbleAnim: { active: false, side: 'right', msgIndex: 0, startTime: 0, sideSet: false },
 
-    // "See Optimal" sistemi
+    // "See Optimal" system
     showingOptimal:      false,
     savedPlayerWalls:    [],
     savedPlayerScore:    0,
     savedPlayerPath:     null,
-    optimalMessage:      null,   // "You found the optimal solution!" bildirimi
+    optimalMessage:      null,   // "You found the optimal solution!" notification
     optimalMessageTime:  0,
 
-    // Dahili fare konumu ve buton durumu
+    // Internal mouse position and button state
     _mouseX:    0,
     _mouseY:    0,
     _optBtn:    false,
-    optBtnAlpha: 0.6,            // Optimal butonunun anlık opaklık değeri
+    optBtnAlpha: 0.6,            // Current opacity of the optimal button
+
+    // Buoy limit feedback (shake + red flash)
+    buoyLimitFeedback: 0,        // Timestamp of last trigger (Date.now())
 };
 
 
 // -----------------------------------------------------------------------------
-// CANVAS & SPRITE REFERANSLARI
+// CANVAS & SPRITE REFERENCES
 // -----------------------------------------------------------------------------
 
 const canvas  = document.getElementById('gameCanvas');
@@ -119,14 +122,14 @@ const sprites = {};
 
 
 // -----------------------------------------------------------------------------
-// VARLIK YÜKLEME
+// ASSET LOADING
 // -----------------------------------------------------------------------------
 
 async function loadAssets() {
     const loadImg = (src) => new Promise((resolve) => {
         const img = new Image();
         img.onload  = () => resolve(img);
-        img.onerror = () => { console.error('Resim yüklenemedi'); resolve(null); };
+        img.onerror = () => { console.error('Failed to load image'); resolve(null); };
         img.src = src;
     });
 
@@ -135,26 +138,26 @@ async function loadAssets() {
 
     keys.forEach((key, i) => { sprites[key] = images[i]; });
 
-    // Buoy dizisini kısayol olarak hazırla
+    // Shortcut array for buoy animation frames
     sprites.buoys = [sprites.buoy0, sprites.buoy1, sprites.buoy2, sprites.buoy3];
 }
 
 
 // -----------------------------------------------------------------------------
-// SEVİYE YÜKLEME
+// LEVEL LOADING
 // -----------------------------------------------------------------------------
 
 function loadLevel(index) {
     gameState.currentLevelIndex = index;
     const levelData = LEVELS[index];
 
-    // Grid'i derin kopyala
+    // Deep copy the grid
     gameState.grid = levelData.map.map(row => [...row]);
     gameState.rows = gameState.grid.length;
     gameState.cols = gameState.grid[0].length;
     gameState.maxWalls = levelData.maxWalls;
 
-    // Moby'nin başlangıç konumunu bul
+    // Find Moby's starting position
     for (let y = 0; y < gameState.rows; y++) {
         for (let x = 0; x < gameState.cols; x++) {
             if (gameState.grid[y][x] === TILE_TYPE.MOBY) {
@@ -163,18 +166,19 @@ function loadLevel(index) {
         }
     }
 
-    // Durum sıfırlama
-    gameState.playerWalls       = [];
-    gameState.isWon             = false;
-    gameState.winningPath       = null;
-    gameState.winAlpha          = 0;
-    gameState.winTime           = 0;
-    gameState.showingOptimal    = false;
-    gameState.savedPlayerWalls  = [];
-    gameState.savedPlayerScore  = 0;
-    gameState.savedPlayerPath   = null;
-    gameState.optimalMessage    = null;
+    // Reset state
+    gameState.playerWalls        = [];
+    gameState.isWon              = false;
+    gameState.winningPath        = null;
+    gameState.winAlpha           = 0;
+    gameState.winTime            = 0;
+    gameState.showingOptimal     = false;
+    gameState.savedPlayerWalls   = [];
+    gameState.savedPlayerScore   = 0;
+    gameState.savedPlayerPath    = null;
+    gameState.optimalMessage     = null;
     gameState.optimalMessageTime = 0;
+    gameState.buoyLimitFeedback  = 0;
 
     document.getElementById('level-name-display').textContent =
         `Level ${index + 1} - ${levelData.name}`;
@@ -184,14 +188,14 @@ function loadLevel(index) {
 
 
 // -----------------------------------------------------------------------------
-// OPTIMAL GÖRÜNÜM TOGGLE
+// OPTIMAL VIEW TOGGLE
 // -----------------------------------------------------------------------------
 
 function toggleOptimalView() {
     const level = LEVELS[gameState.currentLevelIndex];
     if (!level.optimalWalls || level.optimalWalls.length === 0) return;
 
-    // Oyuncu zaten optimali bulduysa bildirim göster
+    // If the player already found the optimal solution, show a notification
     if (gameState.lastScore >= level.optimalArea && !gameState.showingOptimal) {
         gameState.optimalMessage     = 'You found the optimal solution!';
         gameState.optimalMessageTime = Date.now();
@@ -199,19 +203,19 @@ function toggleOptimalView() {
     }
 
     if (!gameState.showingOptimal) {
-        // === OPTIMAL GÖRÜNÜME GEÇ ===
+        // === SWITCH TO OPTIMAL VIEW ===
 
-        // Oyuncunun mevcut çözümünü kaydet
+        // Save the player's current solution
         gameState.savedPlayerWalls  = [...gameState.playerWalls];
         gameState.savedPlayerScore  = gameState.lastScore;
         gameState.savedPlayerPath   = gameState.winningPath;
 
-        // Oyuncunun şamandıralarını grid'den kaldır
+        // Remove player buoys from grid
         for (const w of gameState.playerWalls) {
             gameState.grid[w.y][w.x] = TILE_TYPE.WATER;
         }
 
-        // Optimal şamandıraları yerleştir
+        // Place optimal buoys
         gameState.playerWalls = level.optimalWalls.map(w => ({
             x: w.x, y: w.y, spawnTime: Date.now()
         }));
@@ -220,18 +224,18 @@ function toggleOptimalView() {
         }
 
         checkWinCondition();
-        gameState.lastScore     = level.optimalArea;
+        gameState.lastScore      = level.optimalArea;
         gameState.showingOptimal = true;
 
     } else {
-        // === OYUNCU GÖRÜNÜMÜNE GERİ DÖN ===
+        // === RETURN TO PLAYER VIEW ===
 
-        // Optimal şamandıraları kaldır
+        // Remove optimal buoys
         for (const w of gameState.playerWalls) {
             gameState.grid[w.y][w.x] = TILE_TYPE.WATER;
         }
 
-        // Oyuncunun şamandıralarını geri koy
+        // Restore player's buoys
         gameState.playerWalls = [...gameState.savedPlayerWalls];
         for (const w of gameState.playerWalls) {
             gameState.grid[w.y][w.x] = TILE_TYPE.BUOY;

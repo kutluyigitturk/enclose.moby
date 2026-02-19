@@ -1,10 +1,10 @@
 // =============================================================================
-// ui.js — Menü, modal, ayarlar, giriş (input) ve ekran yeniden boyutlandırma
+// ui.js — Menus, modals, settings, input handling and screen resize
 // =============================================================================
 
 
 // -----------------------------------------------------------------------------
-// MENÜ YÖNETİMİ
+// MENU MANAGEMENT
 // -----------------------------------------------------------------------------
 
 function toggleDropdown() {
@@ -23,16 +23,16 @@ function toggleDropdown() {
     }
 }
 
-/** Menüyü ve blur katmanını anında kapatır. */
+/** Instantly closes the menu and removes the blur overlay. */
 function forceCloseMenu() {
     document.getElementById('dropdown-menu').classList.remove('show');
     document.querySelector('.menu-container .menu-btn').classList.remove('menu-open');
     document.getElementById('menu-overlay').style.display = 'none';
 }
 
-// Menü dışına tıklanınca kapat
+// Close menu when clicking outside
 window.onclick = function (event) {
-    // Canvas tıklamalarını yoksay (oyun giriş olayları ayrıca yönetilir)
+    // Ignore canvas clicks — game input is handled separately
     if (event.target.id === 'gameCanvas') return;
 
     const dropdown    = document.getElementById('dropdown-menu');
@@ -50,7 +50,7 @@ window.onclick = function (event) {
 
 
 // -----------------------------------------------------------------------------
-// SEVİYE SEÇİCİ MODALİ
+// LEVEL SELECTOR MODAL
 // -----------------------------------------------------------------------------
 
 function openLevelSelector() {
@@ -76,7 +76,7 @@ function closeLevelSelector() {
 
 
 // -----------------------------------------------------------------------------
-// AYARLAR PANELİ
+// SETTINGS PANEL
 // -----------------------------------------------------------------------------
 
 function openSettings() {
@@ -84,11 +84,11 @@ function openSettings() {
     document.getElementById('dropdown-menu').classList.remove('show');
     document.getElementById('settings-overlay').style.display = 'flex';
 
-    const slider = document.getElementById('grid-opacity-slider');
-    const label  = document.getElementById('grid-val-display');
+    const slider     = document.getElementById('grid-opacity-slider');
+    const label      = document.getElementById('grid-val-display');
     const currentVal = Math.round(gameState.gridOpacity * 100);
 
-    slider.value    = currentVal;
+    slider.value      = currentVal;
     label.textContent = currentVal + '%';
 
     slider.oninput = function (e) {
@@ -96,7 +96,7 @@ function openSettings() {
         label.textContent     = val + '%';
         gameState.gridOpacity = val / 100;
         localStorage.setItem('enclose_grid_opacity', gameState.gridOpacity);
-        draw(); // Anlık önizleme
+        draw(); // Live preview
     };
 }
 
@@ -106,7 +106,7 @@ function closeSettings() {
 
 
 // -----------------------------------------------------------------------------
-// BİLGİ MODALİ (Info / Nasıl Oynanır)
+// INFO MODAL (How to Play)
 // -----------------------------------------------------------------------------
 
 function openInfo() {
@@ -148,11 +148,11 @@ function updateLevelStats() {
 
 
 // -----------------------------------------------------------------------------
-// EKRAN YENİDEN BOYUTLANDIRMA
+// SCREEN RESIZE
 // -----------------------------------------------------------------------------
 
 function resize() {
-    const dpr          = window.devicePixelRatio || 1;
+    const dpr           = window.devicePixelRatio || 1;
     const displayWidth  = window.innerWidth;
     const displayHeight = window.innerHeight;
 
@@ -187,7 +187,7 @@ function resize() {
 
 
 // -----------------------------------------------------------------------------
-// GİRİŞ YÖNETİMİ (Mouse & Dokunmatik)
+// INPUT HANDLING (Mouse & Touch)
 // -----------------------------------------------------------------------------
 
 function handleInput(e, type) {
@@ -210,13 +210,13 @@ function handleInput(e, type) {
                             gameState.hoverPos.y === gameState.mobyPos.y;
             const isMoby  = x === gameState.mobyPos.x && y === gameState.mobyPos.y;
 
-            // Moby'den ayrılınca animasyonları sıfırla
+            // Leaving Moby — reset animations
             if (wasMoby && !isMoby) {
                 gameState.escapeAnim = { pathKey: null, progress: 0, complete: false };
                 gameState.bubbleAnim = { active: false, side: 'right', msgIndex: 0, startTime: 0, sideSet: false };
             }
 
-            // Moby'ye girilince konuşma balonunu başlat
+            // Entering Moby — trigger speech bubble
             if (!wasMoby && isMoby) {
                 playMobySound();
                 const msgList = gameState.isWon ? MOBY_WIN_MESSAGES : MOBY_MESSAGES;
@@ -235,9 +235,9 @@ function handleInput(e, type) {
         return;
     }
 
-    // --- TIKLAMA ---
+    // --- CLICK ---
 
-    // "See Optimal" butonu tıklaması
+    // "See Optimal" button click
     if (gameState._optBtn && gameState.isWon) {
         toggleOptimalView();
         return;
@@ -245,7 +245,7 @@ function handleInput(e, type) {
 
     if (x < 0 || x >= gameState.cols || y < 0 || y >= gameState.rows) return;
 
-    // Kazanılan durumda şamandıra kaldırılabilir
+    // After winning, player can still remove buoys
     if (gameState.isWon && !gameState.showingOptimal) {
         const wallIndex = gameState.playerWalls.findIndex(w => w.x === x && w.y === y);
         if (wallIndex !== -1) {
@@ -259,7 +259,7 @@ function handleInput(e, type) {
 
     const cell = gameState.grid[y][x];
 
-    // Su karosuna tıkla → şamandıra koy
+    // Click on water tile → place buoy
     if ((cell === TILE_TYPE.WATER || cell === TILE_TYPE.MOBY) &&
          gameState.playerWalls.length < gameState.maxWalls) {
         if (cell === TILE_TYPE.MOBY) return;
@@ -267,7 +267,12 @@ function handleInput(e, type) {
         gameState.playerWalls.push({ x, y, spawnTime: Date.now() });
         checkWinCondition();
     }
-    // Şamandıraya tıkla → kaldır
+    // Click on water when buoy limit is reached → trigger feedback
+    else if (cell === TILE_TYPE.WATER &&
+             gameState.playerWalls.length >= gameState.maxWalls) {
+        gameState.buoyLimitFeedback = Date.now();
+    }
+    // Click on existing buoy → remove it
     else if (cell === TILE_TYPE.BUOY) {
         const idx = gameState.playerWalls.findIndex(w => w.x === x && w.y === y);
         if (idx !== -1) {
@@ -279,7 +284,7 @@ function handleInput(e, type) {
 
 
 // -----------------------------------------------------------------------------
-// KAÇIŞ YOLU ANİMASYONU (Kesik çizgi + ok)
+// ESCAPE PATH ANIMATION (dashed line + arrow)
 // -----------------------------------------------------------------------------
 
 function drawAnimatedPath(path) {
@@ -287,19 +292,19 @@ function drawAnimatedPath(path) {
 
     const { tileSize, offsetX, offsetY } = gameState;
 
-    // Tile boyutuna orantılı çizgi kalınlığı ve tire uzunluğu
+    // Line thickness and dash length proportional to tile size
     const lineWidth = Math.max(2, Math.floor(tileSize / 12));
     const dashLen   = Math.floor(tileSize * 0.3);
     const gapLen    = Math.floor(tileSize * 0.3);
     const arrowLen  = tileSize * 0.3;
 
-    // Yol değişti mi? Animasyonu sıfırla
+    // Reset animation if the path changed
     const pathKey = path[path.length - 1].x + ',' + path[path.length - 1].y + ':' + path.length;
     if (gameState.escapeAnim.pathKey !== pathKey) {
         gameState.escapeAnim = { pathKey, progress: 0, complete: false };
     }
 
-    // İlerlemeyi güncelle
+    // Advance progress
     if (!gameState.escapeAnim.complete) {
         const remaining = (path.length - 1) - gameState.escapeAnim.progress;
         gameState.escapeAnim.progress += Math.max(0.08, remaining * 0.09);
@@ -318,7 +323,7 @@ function drawAnimatedPath(path) {
         py: p.y * tileSize + offsetY + tileSize / 2,
     });
 
-    // Çizilecek noktaları topla
+    // Collect points to draw
     const drawEnd = gameState.escapeAnim.complete ? path.length : fullTiles + 2;
     const pts     = [];
     for (let i = 0; i < Math.min(drawEnd, path.length); i++) {
@@ -326,7 +331,7 @@ function drawAnimatedPath(path) {
     }
     if (pts.length < 2) return;
 
-    // Ok başı için son segmenti kısalt
+    // Shorten last segment to make room for arrowhead
     let drawPts = pts;
     if (gameState.escapeAnim.complete && pts.length >= 2) {
         drawPts       = pts.map(p => ({ ...p }));
@@ -339,7 +344,7 @@ function drawAnimatedPath(path) {
         };
     }
 
-    // --- Kesik çizgiyi çiz ---
+    // --- Draw dashed line ---
     ctx.save();
     ctx.beginPath();
     ctx.lineWidth   = lineWidth;
@@ -383,7 +388,7 @@ function drawAnimatedPath(path) {
     }
     ctx.stroke();
 
-    // --- Ok başını çiz (animasyon tamamlandıktan sonra) ---
+    // --- Draw arrowhead (after animation completes) ---
     if (gameState.escapeAnim.complete && path.length >= 2) {
         const last        = getPos(path[path.length - 1]);
         const prev        = getPos(path[path.length - 2]);
@@ -415,28 +420,28 @@ function drawAnimatedPath(path) {
 
 
 // -----------------------------------------------------------------------------
-// BALON TARAFINI BELİRLE
+// RESOLVE BUBBLE SIDE
 // -----------------------------------------------------------------------------
 
 /**
- * Kaçış yoluna ve Moby'nin konumuna bakarak
- * konuşma balonunun hangi tarafta görüneceğini döndürür.
+ * Determines which side the speech bubble should appear on,
+ * based on Moby's escape direction and map position.
  */
 function resolveBubbleSide(escapePath, mobyPos, cols) {
     if (!escapePath || escapePath.length < 2) return BUBBLE_SIDE.RIGHT;
 
-    // İlk adımın yatay yönüne bak
+    // Check horizontal direction of the first step
     const dx = escapePath[1].x - escapePath[0].x;
-    if (dx < 0) return BUBBLE_SIDE.RIGHT;   // Ok sola gidiyorsa → balon sağda
-    if (dx > 0) return BUBBLE_SIDE.LEFT;    // Ok sağa gidiyorsa → balon solda
+    if (dx < 0) return BUBBLE_SIDE.RIGHT;   // Arrow going left → bubble on right
+    if (dx > 0) return BUBBLE_SIDE.LEFT;    // Arrow going right → bubble on left
 
-    // İlk adım dikeyse ikinci adıma bak
+    // First step is vertical — check second step
     if (escapePath.length >= 3) {
         const dx2 = escapePath[2].x - escapePath[1].x;
         if (dx2 < 0) return BUBBLE_SIDE.RIGHT;
         if (dx2 > 0) return BUBBLE_SIDE.LEFT;
     }
 
-    // Tamamen dikey yol → Moby'nin haritadaki konumuna göre karar ver
+    // Fully vertical path — decide based on Moby's position on the map
     return mobyPos.x < cols / 2 ? BUBBLE_SIDE.RIGHT : BUBBLE_SIDE.LEFT;
 }

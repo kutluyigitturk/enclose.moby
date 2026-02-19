@@ -1,21 +1,21 @@
 // =============================================================================
-// renderer.js — Tüm çizim ve render fonksiyonları
+// renderer.js — All drawing and rendering functions
 // =============================================================================
 
 
 // -----------------------------------------------------------------------------
-// ANA ÇIZIM FONKSİYONU
+// MAIN DRAW FUNCTION
 // -----------------------------------------------------------------------------
 
 function draw() {
     const { tileSize, offsetX, offsetY, rows, cols } = gameState;
     const now = Date.now();
 
-    // ── KATMAN 1: ARKAPLAN ──────────────────────────────────────────────────
+    // ── LAYER 1: BACKGROUND ─────────────────────────────────────────────────
     ctx.fillStyle = GAME_CONFIG.BG_COLOR;
     ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
-    // Dış dalgalar
+    // Outer waves
     if (sprites.wave) {
         ctx.globalAlpha = 0.6;
         for (const w of gameState.waves) {
@@ -24,14 +24,14 @@ function draw() {
         ctx.globalAlpha = 1.0;
     }
 
-    // ── KATMAN 2: ZEMİN (SU + KARA) ─────────────────────────────────────────
+    // ── LAYER 2: TERRAIN (WATER + LAND) ─────────────────────────────────────
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
             const px   = x * tileSize + offsetX;
             const py   = y * tileSize + offsetY;
             const cell = gameState.grid[y][x];
 
-            // ---- Buz / Donma Kazanma Efekti ----
+            // ---- Ice / Freeze Win Effect ----
             if (gameState.isWon && gameState.winningPath[y][x] >= 0) {
                 const tileDist     = gameState.winningPath[y][x];
                 const elapsed      = (now - gameState.winTime) / 1000;
@@ -45,7 +45,7 @@ function draw() {
 
                     ctx.save();
 
-                    // Aşama 1 — Kenarlardan içe frost
+                    // Phase 1 — Frost creeping inward from edges
                     if (tileProgress < 0.6) {
                         const edgeP  = tileProgress / 0.6;
                         const frostW = ts * edgeP * 0.5;
@@ -65,7 +65,7 @@ function draw() {
                         ctx.fillStyle = makeGrad(px, py + ts, px, py + ts - frostW); ctx.fillRect(px, py + ts - frostW, ts, frostW);
                     }
 
-                    // Aşama 2 — Tam buz katmanı + kristal doku
+                    // Phase 2 — Full ice layer + crystal texture
                     if (tileProgress >= 0.3) {
                         const iceP = Math.min(1, (tileProgress - 0.3) / 0.5);
                         ctx.fillStyle = `rgba(230, 245, 255, ${iceP * 0.55})`;
@@ -86,7 +86,7 @@ function draw() {
                         }
                     }
 
-                    // Aşama 3 — Çatlaklar
+                    // Phase 3 — Cracks
                     if (tileProgress > 0.7) {
                         const crackP = (tileProgress - 0.7) / 0.3;
                         const cx     = px + ts * 0.5;
@@ -129,7 +129,7 @@ function draw() {
                         ctx.stroke();
                     }
 
-                    // Aşama 4 — Parıltılar (tam donmuş)
+                    // Phase 4 — Sparkles (fully frozen)
                     if (tileProgress > 0.9) {
                         const sparkleP = (tileProgress - 0.9) / 0.1;
                         const sparkle  = Math.sin(now / 300 + seed * 2) * 0.3 + 0.7;
@@ -154,7 +154,7 @@ function draw() {
                 }
             }
 
-            // ---- İç Dalgalar (donmuş alanlarda gösterme) ----
+            // ---- Inner Waves (hidden on frozen tiles) ----
             if (gameState.waveMap && gameState.waveMap[y][x] && sprites.wave) {
                 const isFrozen = gameState.isWon &&
                                  gameState.winningPath &&
@@ -166,9 +166,9 @@ function draw() {
                 }
             }
 
-            // ---- Kara Karosu ----
+            // ---- Land Tile ----
             if (cell === TILE_TYPE.LAND) {
-                // Kazanıldıysa donmuş komşu kenarlarına buz kaplama efekti
+                // Paint ice overlay on land edges adjacent to frozen water
                 if (gameState.isWon && gameState.winningPath) {
                     const edgeW   = 4;
                     const scale   = tileSize / 50;
@@ -211,10 +211,10 @@ function draw() {
         }
     }
 
-    // ── KATMAN 3: GLOBAL GRİD ────────────────────────────────────────────────
+    // ── LAYER 3: GLOBAL GRID ────────────────────────────────────────────────
     drawGridLayer();
 
-    // ── KATMAN 4: NESNELER (MOBY, BUOY, GHOST) ───────────────────────────────
+    // ── LAYER 4: ENTITIES (MOBY, BUOY, GHOST) ───────────────────────────────
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
             const px   = x * tileSize + offsetX;
@@ -227,7 +227,7 @@ function draw() {
                 if (spr) ctx.drawImage(spr, px + 2, py + 2, tileSize - 4, tileSize - 4);
             }
 
-            // Şamandıra (buoy) + gölge
+            // Buoy + drop shadow
             if (cell === TILE_TYPE.BUOY) {
                 const wall    = gameState.playerWalls.find(w => w.x === x && w.y === y);
                 const elapsed = now - (wall ? wall.spawnTime : 0);
@@ -256,7 +256,7 @@ function draw() {
         }
     }
 
-    // ── KATMAN 5: KAÇIŞ YOLU + KONUŞMA BALONU ───────────────────────────────
+    // ── LAYER 5: ESCAPE PATH + SPEECH BUBBLE ────────────────────────────────
     const isHoveringMoby = gameState.hoverPos.x === gameState.mobyPos.x &&
                            gameState.hoverPos.y === gameState.mobyPos.y;
 
@@ -264,10 +264,12 @@ function draw() {
         if (isHoveringMoby) {
             const escapePath = findEscapePath();
             if (escapePath && escapePath.length >= 3) {
+                // Determine bubble side once, based on escape direction
                 if (gameState.bubbleAnim.active && !gameState.bubbleAnim.sideSet) {
                     gameState.bubbleAnim.side    = resolveBubbleSide(escapePath, gameState.mobyPos, gameState.cols);
                     gameState.bubbleAnim.sideSet = true;
                 }
+                // Start the arrow at the midpoint between Moby and the next tile
                 const moby   = escapePath[0];
                 const next   = escapePath[1];
                 const border = { x: (moby.x + next.x) / 2, y: (moby.y + next.y) / 2 };
@@ -276,6 +278,7 @@ function draw() {
             renderSpeechBubble(ctx, gameState, sprites);
         }
     } else {
+        // After winning, only show speech bubble (no arrow)
         if (isHoveringMoby) renderSpeechBubble(ctx, gameState, sprites);
     }
 
@@ -285,17 +288,36 @@ function draw() {
     ctx.save();
     ctx.font = "22px 'Schoolbell'";
 
-    // Buoy sayacı (sol alt)
-    ctx.textAlign = 'left';
-    ctx.fillStyle = '#fff';
-    ctx.fillText(`Buoy: ${gameState.maxWalls - gameState.playerWalls.length}/${gameState.maxWalls}`, offsetX, bottomY);
+    // Buoy counter — shake + red flash feedback when limit is reached
+    const FEEDBACK_DURATION = 500; // ms
+    const feedbackElapsed   = now - (gameState.buoyLimitFeedback || 0);
+    const buoyText          = `Buoy: ${gameState.maxWalls - gameState.playerWalls.length}/${gameState.maxWalls}`;
 
-    // Skor (sağ alt)
+    if (feedbackElapsed < FEEDBACK_DURATION) {
+        const t = feedbackElapsed / FEEDBACK_DURATION; // 0 → 1
+
+        // Shake: damped sine wave → left/right jitter
+        const shakeX = Math.round(Math.sin(t * Math.PI * 6) * (1 - t) * 2);
+
+        // Color: red fading to white (#9b1b22 Red Hex Code)
+        const r = Math.round(155 + (255 - 155) * t); // 155 → 255
+        const g = Math.round(27  + (255 - 27)  * t); //  27 → 255
+        const b = Math.round(34  + (255 - 34)  * t); //  34 → 255
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.textAlign = 'left';
+        ctx.fillText(buoyText, offsetX + shakeX, bottomY);
+    } else {
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'left';
+        ctx.fillText(buoyText, offsetX, bottomY);
+    }
+
+    // Score (bottom right)
     ctx.textAlign = 'right';
     ctx.fillStyle = '#fff';
     ctx.fillText(gameState.isWon ? `Area: ${gameState.lastScore}` : 'Area: -', offsetX + cols * tileSize, bottomY);
 
-    // "See Optimal" butonu (yalnızca kazanıldıysa)
+    // "See Optimal" button (only shown after winning)
     if (gameState.isWon) {
         const optY = bottomY + 24;
         ctx.font      = "16px 'Schoolbell'";
@@ -316,7 +338,7 @@ function draw() {
                                gameState._mouseY >= optY - 14 &&
                                gameState._mouseY <= optY + 4;
 
-            // Yumuşak opaklık geçişi
+            // Smooth opacity transition on hover
             const targetAlpha     = isHovering ? 1.0 : 0.6;
             gameState.optBtnAlpha += (targetAlpha - gameState.optBtnAlpha) * 0.1;
 
@@ -333,7 +355,7 @@ function draw() {
 
 
 // -----------------------------------------------------------------------------
-// ANA OYUN DÖNGÜSÜ
+// MAIN GAME LOOP
 // -----------------------------------------------------------------------------
 
 function loop() {
@@ -343,18 +365,18 @@ function loop() {
 
 
 // -----------------------------------------------------------------------------
-// ARAZİ YARDIMCI FONKSİYONLARI
+// TERRAIN HELPER FUNCTIONS
 // -----------------------------------------------------------------------------
 
-/** Verilen koordinat harita içinde kara mı? */
+/** Returns true if the given coordinate is a land tile within the map. */
 function isLand(x, y) {
     if (x < 0 || x >= gameState.cols || y < 0 || y >= gameState.rows) return false;
     return gameState.grid[y][x] === TILE_TYPE.LAND;
 }
 
 /**
- * Komşu kara durumuna göre doğru çimen sprite'ını döndürür.
- * 4 kenar + köşe birleşiminden oluşan tileset mantığını uygular.
+ * Returns the correct grass sprite based on neighbouring land tiles.
+ * Implements a 4-edge + diagonal tileset selection algorithm.
  */
 function getGrassSprite(x, y) {
     const n = isLand(x, y - 1);
@@ -362,27 +384,32 @@ function getGrassSprite(x, y) {
     const e = isLand(x + 1, y);
     const w = isLand(x - 1, y);
 
+    // All 4 sides water → island
     if (!n && !s && !e && !w) return sprites.grassIsland;
 
+    // 3 sides water → peninsula
     if (!n && !e && !w) return sprites.grassPeninsulaN;
     if (!s && !e && !w) return sprites.grassPeninsulaS;
     if (!n && !s && !w) return sprites.grassPeninsulaW;
     if (!n && !s && !e) return sprites.grassPeninsulaE;
 
+    // 2 opposite sides water → corridor
     if (!n && !s) return sprites.grassCorridorH;
     if (!e && !w) return sprites.grassCorridorV;
 
+    // 2 adjacent sides water → outer corner
     if (!n && !w) return sprites.grassCornerNW;
     if (!n && !e) return sprites.grassCornerNE;
     if (!s && !w) return sprites.grassCornerSW;
     if (!s && !e) return sprites.grassCornerSE;
 
+    // 1 side water → edge
     if (!n) return sprites.grassEdgeN;
     if (!s) return sprites.grassEdgeS;
     if (!e) return sprites.grassEdgeE;
     if (!w) return sprites.grassEdgeW;
 
-    // 4 komşu kara → çapraz kontrol
+    // All 4 neighbours are land → check diagonals
     const nw = isLand(x - 1, y - 1);
     const ne = isLand(x + 1, y - 1);
     const sw = isLand(x - 1, y + 1);
@@ -396,11 +423,12 @@ function getGrassSprite(x, y) {
     if (!se) return sprites.grassInnerSE;
     if (!sw) return sprites.grassInnerSW;
 
-    return sprites.grassCenter;
+    return sprites.grassCenter; // Fallback for undefined combinations
 }
 
 /**
- * 4 komşusu da kara olan bir karonun iç köşe overlay sprite'larını döndürür.
+ * Returns inner corner overlay sprites for a land tile
+ * surrounded by land on all 4 cardinal sides.
  *
  * @returns {Array<HTMLImageElement>}
  */
@@ -419,7 +447,7 @@ function getInnerCorners(x, y) {
     return overlays;
 }
 
-/** Doğru çimen sprite'ını seçerek kara karosunu çizer. */
+/** Selects the correct grass sprite and draws a land tile. */
 function drawLandTile(x, y, px, py, size) {
     const spr = getGrassSprite(x, y);
     if (spr) {
@@ -430,7 +458,7 @@ function drawLandTile(x, y, px, py, size) {
     }
 }
 
-/** Tüm harita üzerine yarı saydam grid çizgilerini çizer. */
+/** Draws semi-transparent grid lines across the entire map. */
 function drawGridLayer() {
     if (gameState.gridOpacity <= 0) return;
 
@@ -457,7 +485,8 @@ function drawGridLayer() {
 }
 
 /**
- * Sprite'ı orijinal en-boy oranını koruyarak karonun altına hizalar.
+ * Draws a sprite maintaining its original aspect ratio,
+ * aligned to the bottom of the tile.
  */
 function drawSpriteAspect(img, x, y, size) {
     const ratio = img.height / img.width;
