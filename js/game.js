@@ -1,42 +1,42 @@
 // =============================================================================
-// game.js — Oyun mantığı: dalga üretimi, kazanma koşulu, kaçış yolu
+// game.js — Game mechanics: wave generation, winning condition, escape route
 // =============================================================================
 
 
 // -----------------------------------------------------------------------------
-// DALGA OLUŞTURMA
+// WAVE generatıon
 // -----------------------------------------------------------------------------
 
 /**
- * Oyun alanı içindeki (waveMap) ve dışındaki (waves) dalga noktalarını üretir.
- * Her seviye yüklenişinde ve ekran yeniden boyutlandırıldığında çağrılır.
+ * It generates wave points inside (waveMap) and outside (waves) the game area.
+ * It is called at each level load and when the screen is resized.
  */
 function generateWaves() {
     gameState.waves = [];
     const { cols, rows, tileSize, offsetX, offsetY } = gameState;
 
-    // Ekranın tamamını kapsayacak sanal grid sınırlarını hesapla
+    // Calculate the virtual grid boundaries that will cover the entire screen
     const startCol = Math.floor(-offsetX / tileSize);
     const endCol   = cols + Math.floor((window.innerWidth  - (offsetX + cols * tileSize)) / tileSize) + 1;
     const startRow = Math.floor(-offsetY / tileSize);
     const endRow   = rows + Math.floor((window.innerHeight - (offsetY + rows * tileSize)) / tileSize) + 1;
 
-    // İç dalga haritasını sıfırla
+    // Reset the internal wave map
     gameState.waveMap = Array.from({ length: rows }, () => new Array(cols).fill(false));
 
     for (let c = startCol; c <= endCol; c++) {
         for (let r = startRow; r <= endRow; r++) {
-            if (Math.random() > 0.10) continue; // %10 yoğunluk
+            if (Math.random() > 0.10) continue; // %10 density
 
             const isInsideMap = (c >= 0 && c < cols && r >= 0 && r < rows);
 
             if (isInsideMap) {
-                // Yalnızca su karolarına iç dalga koy
+                // Only place internal waves on water tiles
                 if (gameState.grid[r][c] === TILE_TYPE.WATER) {
                     gameState.waveMap[r][c] = true;
                 }
             } else {
-                // Harita dışı dalgalar (dış deniz)
+                // Offshore waves (open sea)
                 gameState.waves.push({
                     x: offsetX + c * tileSize,
                     y: offsetY + r * tileSize,
@@ -48,12 +48,12 @@ function generateWaves() {
 
 
 // -----------------------------------------------------------------------------
-// KAZANMA KOŞULU
+// WINNING CONDITION
 // -----------------------------------------------------------------------------
 
 /**
- * BFS ile Moby'nin erişebildiği tüm alanı tarar.
- * Harita kenarına ulaşamazsa Moby çevrilmiş (oyun kazanılmış) demektir.
+ * It scans the entire area accessible to BFS and Moby.
+ * If Moby cannot reach the edge of the map, it means the game is over (the game has been won).
  */
 function checkWinCondition() {
     const { rows, cols } = gameState;
@@ -94,12 +94,12 @@ function checkWinCondition() {
 
 
 // -----------------------------------------------------------------------------
-// KAÇIŞ YOLU BULMA
+// FINDING AN ESCAPE ROUTE
 // -----------------------------------------------------------------------------
 
 /**
- * BFS ile Moby'den harita kenarına giden en kısa yolu döndürür.
- * Kaçış yoksa null döner.
+ * Returns the shortest path from Moby to the edge of the map using BFS.
+ * If there is no escape, it returns null.
  *
  * @returns {Array<{x,y}>|null}
  */
@@ -113,7 +113,7 @@ function findEscapePath() {
         const { x, y, path } = queue.shift();
         const currentPath = [...path, { x, y }];
 
-        // Kenar → kaçış bulundu
+        // Edge → escape found
         if (x === 0 || x === cols - 1 || y === 0 || y === rows - 1) {
             return currentPath;
         }
@@ -132,5 +132,5 @@ function findEscapePath() {
         }
     }
 
-    return null; // Kaçış yolu yok
+    return null; // There is no escape route
 }
