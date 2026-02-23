@@ -14,6 +14,8 @@
 
 <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9.jpg" alt="enclose.moby gameplay — Desktop" width="600">
 
+<br>
+
 *Desktop*
 
 <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9_moibl.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
