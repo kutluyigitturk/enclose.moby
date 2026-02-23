@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.8.3-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.8.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -162,6 +162,7 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.8.1  | 2026-02-19 | Add Buoy Limit Feedback With Shake + Color Flash Animation |
 | v0.8.2  | 2026-02-23 | TR/EN Localization System, Custom Font & Level Author Field |
 | v0.8.3  | 2026-02-24 | Fix mobile UI improvements — modal width, tab colors & button layout |
+| v0.8.4  | 2026-02-24 | Add animated lang toast on language switch |
 ---
 
 ## 📋 Changelog

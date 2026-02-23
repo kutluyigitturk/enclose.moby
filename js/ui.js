@@ -34,6 +34,17 @@ function toggleLang() {
     const newLang = currentLang === 'en' ? 'tr' : 'en';
     setLang(newLang);
     updateAllUI();
+
+    const btn = document.querySelector('.lang-btn');
+    const old = btn.querySelector('.lang-toast');
+    if (old) old.remove();
+
+    const toast = document.createElement('span');
+    toast.className = 'lang-toast';
+    toast.textContent = newLang.toUpperCase();
+    btn.appendChild(toast);
+
+    toast.addEventListener('animationend', () => toast.remove());
 }
 
 function updateAllUI() {
