@@ -12,7 +12,7 @@
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_8.jpg" alt="enclose.moby gameplay" width="600">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9.jpg" alt="enclose.moby gameplay" width="600">
 
 *A strategic puzzle game where you trap the legendary white whale*
 </div>
