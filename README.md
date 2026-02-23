@@ -12,13 +12,11 @@
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_8.jpg" alt="enclose.moby gameplay — Desktop" width="600">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9.jpg" alt="enclose.moby gameplay — Desktop" width="600">
 
 *Desktop*
 
-<br>
-
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9_moibl.png" alt="enclose.moby gameplay — iPhone 13 Safari" width="280">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9_moibl.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
 
 *iPhone 13 — Safari*
 
