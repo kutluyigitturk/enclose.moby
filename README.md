@@ -151,6 +151,7 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.8.0  | 2026-02-18 | Modular Architecture Refactor — Monolithic HTML split into 9 JS modules |
 | v0.8.1  | 2026-02-19 | Add Buoy Limit Feedback With Shake + Color Flash Animation |
 | v0.8.2  | 2026-02-23 | TR/EN Localization System, Custom Font & Level Author Field |
+| v0.8.3  | 2026-02-24 | Fix mobile UI improvements — modal width, tab colors & button layout |
 ---
 
 ## 📋 Changelog
