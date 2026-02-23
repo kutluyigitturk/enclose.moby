@@ -299,6 +299,7 @@ button {
     flex: 1; padding: 10px; border: none;
     background: #eee; font-family: var(--ui-font);
     font-size: 18px; cursor: pointer; transition: 0.2s;
+    color: #333; /* Let's use our own color instead of Safari's default blue button color. */
 }
 
 .tab-btn.active {
@@ -327,5 +328,25 @@ button {
         top: 5px;
         right: 5px;
         color: #000;
+    }
+
+    .modal-box {
+        width: calc(100vw - 40px);
+        max-width: calc(100vw - 40px);
+        box-sizing: border-box;
+    }
+
+    .menu-container > div {
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .lang-btn {
+        margin-right: 0;
+    }
+
+    .sound-btn {
+        margin-right: 0;
     }
 }

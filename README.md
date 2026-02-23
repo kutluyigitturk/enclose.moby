@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.8.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.8.3-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -73,6 +73,7 @@
 ├── README.md         # This file
 └── js/
     ├── config.js     # Constants & game configuration
+    ├── strings.js    # Localization strings for TR / EN
     ├── levels.js     # Level data
     ├── assets.js     # Base64 sprites & audio
     ├── bubble.js     # Speech bubble config, messages & rendering
