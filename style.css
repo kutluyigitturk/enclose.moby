@@ -5,6 +5,13 @@
 /* --- Google Fonts --- */
 /* @import yerine index.html <head> kısmında <link> etiketi kullanılıyor */
 
+@font-face {
+    font-family: 'Schoolbell';
+    src: url('fonts/Schoolbell-Custom.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* --- CSS Variables --- */
 :root {
     --bg-color: #142e47;
@@ -81,6 +88,17 @@ button {
     transform: translate(4px, 4px);
     box-shadow: 2px 2px 0 #000;
 }
+
+.lang-btn {
+    font-size: 18px;
+    line-height: 0;
+    color: #d4d4d8;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    margin-right: 8px;
+}
+
+.lang-btn:hover { opacity: 1; }
 
 /* ============================================
    MENU SYSTEM
@@ -161,6 +179,7 @@ button {
     padding: 12px 16px; width: 100%; text-align: left;
     background: none; border: none; border-bottom: 1px solid #ccc;
     font-family: var(--ui-font); font-size: 18px; cursor: pointer; color: black;
+    white-space: nowrap;
 }
 
 .menu-item:hover { background-color: #f0c040; color: white; }

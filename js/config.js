@@ -29,28 +29,3 @@ const BUBBLE_CONFIG = {
 };
 
 const BUBBLE_SIDE = Object.freeze({ LEFT: 'left', RIGHT: 'right' });
-
-const MOBY_MESSAGES = [
-    "You can't catch me!",
-    "I'm too fast for you!",
-    "Try harder, sailor!",
-    "The ocean is my home!",
-    "Freedom awaits!",
-    "Nice try, captain!",
-    "I am the king of the seven seas\nand you shall never enclose me.",
-    "Call me ismael...",
-    "It high time to get to sea\nas soon as I can.",
-    "In for a penny, in for a pound!",
-    "To the last I grapple with thee!",
-    "*blub*\nTHIS way looks good...",
-    "*splash*\nI can escape THIS way.",
-];
-
-const MOBY_WIN_MESSAGES = [
-    "Get me outta here!",
-    "I find myself in prison even though I committed no crime.",
-    "By what right do you imprison me within these walls?",
-    "I am capable of so much more than being an enclosed whale. There has to be more to this world.",
-    "I don't like being enclosed.",
-    "Do you think I might be living in a realm of eternal frost?",
-];

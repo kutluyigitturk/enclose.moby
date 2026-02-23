@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.8.1-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.8.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -149,9 +149,46 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.7.4  | 2026-02-17 | Sound Element Added For Moby Dick | Test |
 | v0.8.0  | 2026-02-18 | Modular Architecture Refactor — Monolithic HTML split into 9 JS modules |
 | v0.8.1  | 2026-02-19 | Add Buoy Limit Feedback With Shake + Color Flash Animation |
+| v0.8.2  | 2026-02-23 | TR/EN Localization System, Custom Font & Level Author Field |
 ---
 
 ## 📋 Changelog
+
+### v0.8.2 (2026-02-23) - The "Localization" Update 🌍
+
+**🌐 TR/EN Language System**
+- **`strings.js` Module:** A new dedicated localization module added to the JS pipeline. All in-game text is now managed through a centralized `STRINGS` object with `en` and `tr` keys.
+- **Language Switch Button:** A translate icon button (Bootstrap Icons) added to the top-right toolbar — between the volume and hamburger menu buttons.
+- **`t()` Helper Function:** All UI text is now rendered via `t('key')`, returning the correct string for the active language.
+- **`data-i18n` Attribute System:** HTML elements are tagged with `data-i18n` attributes; a single `updateAllUI()` loop updates all of them on language change.
+- **Canvas Text Localized:** Buoy counter, Area score, See Optimal, Your Solution and optimal found message all respond to language changes.
+- **Moby Messages Localized:** `MOBY_MESSAGES` and `MOBY_WIN_MESSAGES` arrays moved from `config.js` into `strings.js` for clean separation of concerns.
+- **Default Language:** Game always starts in English (`'en'`) regardless of previous session.
+
+**🔤 Custom Font**
+- **Schoolbell Turkish Support:** Missing Turkish characters (`ğ`, `Ğ`, `ş`, `Ş`, `ı`, `İ`) manually added to the Schoolbell font using FontForge.
+- **Self-Hosted Font:** Google Fonts CDN replaced with a locally hosted `Schoolbell-Custom.ttf` via `@font-face`.
+
+**🗺️ Level Improvements**
+- **Author Field:** Each level in `levels.js` now has an `author` property (`'Kutlu'` or `'enclose.mobyAi'`).
+- **Dynamic Author Display:** "This Level" tab now reads `lvl.author` instead of a hardcoded string.
+- **New Level Added:** One new puzzle level added to the game.
+
+---
+
+### v0.8.1 (2026-02-19) - The "Feedback" Update 🔔
+
+**✨ Visual Feedback**
+- **Buoy Limit Shake:** When the player tries to place a buoy after reaching the level's limit, the buoy counter triggers a shake + red flash animation.
+- **Shake Formula:** `Math.sin(t × π × 7) × (1-t) × 5` — 7 damped oscillations over 500ms.
+- **Color Interpolation:** Counter fades from `#9b1b22` (dark red) back to white over the feedback duration.
+- **Frame-Independent Timing:** Uses `Date.now()` timestamps for consistent behavior across all frame rates.
+
+**🎨 UI Polish**
+- Sound and hamburger menu buttons now have consistent size, alignment and hover opacity transition.
+- `lang` attribute corrected from `tr` to `en` to match the game's language.
+
+---
 
 ### v0.8.0 (2026-02-18) - The "Modular Architecture" Update 🏗️
 
@@ -166,10 +203,6 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 - **`game.js`** — Core logic: wave generation, BFS win detection, escape pathfinding
 - **`renderer.js`** — Full rendering pipeline, draw loop and all sprite helpers
 - **`main.js`** — Minimal entry point: event listeners and `window.onload`
-
-**🎨 UI Polish**
-- Sound and hamburger menu buttons now have consistent size, alignment and hover opacity transition
-- `lang` attribute corrected from `tr` to `en` to match the game's language
 
 ---
 

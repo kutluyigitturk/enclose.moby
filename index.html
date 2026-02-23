@@ -9,9 +9,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
-
+    
     <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,6 +40,11 @@
 <!-- ── NETWORK TOP: Audio + Hamburger Menu ─────────────────────────────────────── -->
 <div class="menu-container">
     <div style="display: flex; align-items: center;">
+
+        <!-- Language Swtich Button -->
+        <button class="menu-btn lang-btn" onclick="toggleLang()" aria-label="Switch Language">
+            <i class="bi bi-translate"></i>
+        </button>
 
         <!-- Volume Button -->
         <button class="sound-btn" id="sound-toggle-btn" onclick="toggleSound()">
@@ -74,13 +79,12 @@
                 <path d="M4 19h16"/>
             </svg>
         </button>
-
     </div>
 
     <!-- Drop-down Menu -->
     <div id="dropdown-menu" class="dropdown-content">
-        <button class="menu-item" onclick="openLevelSelector()">Past Puzzles</button>
-        <button class="menu-item" onclick="openSettings()">Settings</button>
+        <button class="menu-item" onclick="openLevelSelector()" data-i18n="pastPuzzles">Past Puzzles</button>
+        <button class="menu-item" onclick="openSettings()" data-i18n="settings">Settings</button>
     </div>
 </div>
 
@@ -97,7 +101,7 @@
 
 <!-- ── ALT: Reset Button ─────────────────────────────────────────────────── -->
 <div class="controls-container">
-    <button class="btn-primary" id="reset-btn">RESET</button>
+    <button class="btn-primary" id="reset-btn" data-i18n="reset">RESET</button>
 </div>
 
 <!-- ── MODALS ──────────────────────────────────────────────────────────── -->
@@ -111,24 +115,24 @@
 
         <!-- Tabs -->
         <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:10px;">
-            <button class="tab-btn active" id="btn-how" onclick="switchTab('how')">How to Play</button>
-            <button class="tab-btn"        id="btn-this" onclick="switchTab('this')">This Level</button>
+            <button class="tab-btn active" id="btn-how" onclick="switchTab('how')" data-i18n="howToPlay">How to Play</button>
+            <button class="tab-btn" id="btn-this" onclick="switchTab('this')" data-i18n="thisLevel">This Level</button>
         </div>
 
         <!-- How to Play -->
         <div id="content-how" class="tab-content active">
-            <p style="font-size:18px; text-align:center; margin-bottom:20px; color:#333;">
+            <p id="how-desc" style="font-size:18px; text-align:center; margin-bottom:20px; color:#333;">
                 Enclose Moby in the biggest possible pen!
             </p>
-            <h3 style="margin-bottom:10px; color:#000;">THE RULES</h3>
+            <h3 id="how-rules-title" style="margin-bottom:10px; color:#000;">THE RULES</h3>
             <ul style="padding-left:20px; line-height:1.8; color:#333;">
-                <li>Click water tiles to place <b>buoys</b>.</li>
-                <li>You have limited buoys.</li>
-                <li>Moby can't move over land or buoys.</li>
-                <li>Bigger enclosure = bigger score!</li>
+                <li id="how-rule1">Click water tiles to place <b>buoys</b>.</li>
+                <li id="how-rule2">You have limited buoys.</li>
+                <li id="how-rule3">Moby can't move over land or buoys.</li>
+                <li id="how-rule4">Bigger enclosure = bigger score!</li>
             </ul>
             <div style="background:#f1f1f1; padding:15px; margin-top:20px; font-style:italic; color:#333;">
-                <b>Tip:</b> Hover to see where Moby might escape!
+                <b>Tip:</b> <span id="how-tip">Hover to see where Moby might escape!</span>
             </div>
         </div>
 
@@ -143,7 +147,7 @@
 <div class="modal-overlay" id="level-modal" onclick="closeLevelSelector()">
     <div class="modal-box" onclick="event.stopPropagation()">
         <button onclick="closeLevelSelector()" class="close-x-btn">✕</button>
-        <div class="modal-header-custom">Past Puzzles</div>
+        <div class="modal-header-custom" data-i18n="pastPuzzles">Past Puzzles</div>
         <div class="level-list" id="level-list-container"></div>
     </div>
 </div>
@@ -152,10 +156,10 @@
 <div class="modal-overlay" id="settings-overlay" onclick="closeSettings()">
     <div class="modal-box" onclick="event.stopPropagation()">
         <button onclick="closeSettings()" class="close-x-btn">✕</button>
-        <div class="modal-header-custom">Settings</div>
+        <div class="modal-header-custom" data-i18n="settings">Settings</div>
         <div style="padding:10px; color:#333;">
             <label style="display:block; margin-bottom:15px; font-size:18px;">
-                Grid Visibility:
+                <span data-i18n="gridOpacity">Grid Visibility:</span>
                 <span id="grid-val-display" style="font-weight:bold;">15%</span>
             </label>
             <input type="range" id="grid-opacity-slider"
@@ -172,28 +176,31 @@
 <!-- 1. Constants and configuration -->
 <script src="js/config.js" defer></script>
 
-<!-- 2. Level data -->
+<!-- 2. Constants and configuration -->
+<script src="js/strings.js" defer></script>
+
+<!-- 3. Level data -->
 <script src="js/levels.js" defer></script>
 
-<!-- 3. Asset definitions (base64) -->
+<!-- 4. Asset definitions (base64) -->
 <script src="js/assets.js" defer></script>
 
-<!-- 4. Speech bubble constants, messages, and render functions -->
+<!-- 5. Speech bubble constants, messages, and render functions -->
 <script src="js/bubble.js" defer></script>
 
-<!-- 5. Game state, sound, canvas references, loadAssets, loadLevel -->
+<!-- 6. Game state, sound, canvas references, loadAssets, loadLevel -->
 <script src="js/state.js" defer></script>
 
-<!-- 6. UI, menu, modal, input, and resize -->
+<!-- 7. UI, menu, modal, input, and resize -->
 <script src="js/ui.js" defer></script>
 
-<!-- 7. Render loop and all drawing functions -->
+<!-- 8. Render loop and all drawing functions -->
 <script src="js/renderer.js" defer></script>
 
-<!-- 8. Game mechanics: wave generation, winning condition, escape route -->
+<!-- 9. Game mechanics: wave generation, winning condition, escape route -->
 <script src="js/game.js" defer></script>
 
-<!-- 9. Entry point: initGame and window.onload -->
+<!-- 10. Entry point: initGame and window.onload -->
 <script src="js/main.js" defer></script>
 
 </body>

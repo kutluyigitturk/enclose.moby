@@ -8,8 +8,8 @@
 // -----------------------------------------------------------------------------
 
 function toggleDropdown() {
-    const dropdown    = document.getElementById('dropdown-menu');
-    const menuBtn     = document.querySelector('.menu-container .menu-btn');
+    const dropdown = document.getElementById('dropdown-menu');
+    const menuBtn = document.querySelector('.menu-container .menu-btn:not(.lang-btn)');
     const menuOverlay = document.getElementById('menu-overlay');
 
     dropdown.classList.toggle('show');
@@ -26,8 +26,31 @@ function toggleDropdown() {
 /** Instantly closes the menu and removes the blur overlay. */
 function forceCloseMenu() {
     document.getElementById('dropdown-menu').classList.remove('show');
-    document.querySelector('.menu-container .menu-btn').classList.remove('menu-open');
+    document.querySelector('.menu-container .menu-btn:not(.lang-btn)').classList.remove('menu-open');
     document.getElementById('menu-overlay').style.display = 'none';
+}
+
+function toggleLang() {
+    const newLang = currentLang === 'en' ? 'tr' : 'en';
+    setLang(newLang);
+    updateAllUI();
+}
+
+function updateAllUI() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = t(el.getAttribute('data-i18n'));
+    });
+
+    // How to Play — innerHTML kullanıyoruz çünkü <b> etiketleri var
+    document.getElementById('how-desc').textContent       = t('howToPlayDesc');
+    document.getElementById('how-rules-title').textContent = t('theRules');
+    document.getElementById('how-rule1').innerHTML        = t('rule1');
+    document.getElementById('how-rule2').textContent      = t('rule2');
+    document.getElementById('how-rule3').textContent      = t('rule3');
+    document.getElementById('how-rule4').textContent      = t('rule4');
+    document.getElementById('how-tip').textContent        = t('tip');
+
+    updateLevelStats();
 }
 
 // Close menu when clicking outside
@@ -138,11 +161,11 @@ function updateLevelStats() {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="stat-line" style="color:#333;"><span>Name</span>        <b>${lvl.name}</b></div>
-        <div class="stat-line" style="color:#333;"><span>Made by</span>     <b>Kutlu</b></div>
-        <div class="stat-line" style="color:#333;"><span>Size</span>        <b>${gameState.cols} x ${gameState.rows}</b></div>
-        <div class="stat-line" style="color:#333;"><span>Buoy Budget</span> <b>${lvl.maxWalls}</b></div>
-        <div class="stat-line" style="color:#333;"><span>Level ID</span>    <b>#${gameState.currentLevelIndex + 100}</b></div>
+        <div class="stat-line" style="color:#333;"><span>${t('statName')}      </span>   <b>${lvl.name}</b></div>
+        <div class="stat-line" style="color:#333;"><span>${t('statMadeBy')}    </span>   <b>${lvl.author}</b></div>
+        <div class="stat-line" style="color:#333;"><span>${t('statSize')}      </span>   <b>${gameState.cols} x ${gameState.rows}</b></div>
+        <div class="stat-line" style="color:#333;"><span>${t('statBuoyBudget')}</span>   <b>${lvl.maxWalls}</b></div>
+        <div class="stat-line" style="color:#333;"><span>${t('statLevelID')}   </span>   <b>#${gameState.currentLevelIndex + 100}</b></div>
     `;
 }
 
@@ -219,7 +242,7 @@ function handleInput(e, type) {
             // Entering Moby — trigger speech bubble
             if (!wasMoby && isMoby) {
                 playMobySound();
-                const msgList = gameState.isWon ? MOBY_WIN_MESSAGES : MOBY_MESSAGES;
+                const msgList = gameState.isWon ? STRINGS[currentLang].mobyWinMessages : STRINGS[currentLang].mobyMessages;
                 gameState.bubbleAnim = {
                     active:    true,
                     side:      gameState.isWon

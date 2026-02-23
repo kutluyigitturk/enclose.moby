@@ -197,7 +197,7 @@ function toggleOptimalView() {
 
     // If the player already found the optimal solution, show a notification
     if (gameState.lastScore >= level.optimalArea && !gameState.showingOptimal) {
-        gameState.optimalMessage     = 'You found the optimal solution!';
+        gameState.optimalMessage = t('optimalFound');
         gameState.optimalMessageTime = Date.now();
         return;
     }

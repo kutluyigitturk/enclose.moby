@@ -198,7 +198,7 @@ function renderSpeechBubble(ctx, gs, assets) {
     if (!bubbleSprite) return;
 
     const fadeT   = Math.min(1, (elapsed - 250) / 200);
-    const msgList = gs.isWon ? MOBY_WIN_MESSAGES : MOBY_MESSAGES;
+    const msgList = gs.isWon ? STRINGS[currentLang].mobyWinMessages : STRINGS[currentLang].mobyMessages;
     const message = msgList[anim.msgIndex % msgList.length];
 
     const fontSize  = Math.max(10, Math.floor(ts * BUBBLE_CONFIG.LAYOUT.TEXT_SIZE));

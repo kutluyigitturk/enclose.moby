@@ -291,7 +291,7 @@ function draw() {
     // Buoy counter — shake + red flash feedback when limit is reached
     const FEEDBACK_DURATION = 500; // ms
     const feedbackElapsed   = now - (gameState.buoyLimitFeedback || 0);
-    const buoyText          = `Buoy: ${gameState.maxWalls - gameState.playerWalls.length}/${gameState.maxWalls}`;
+    const buoyText = `${t('buoy')}: ${gameState.maxWalls - gameState.playerWalls.length}/${gameState.maxWalls}`;
 
     if (feedbackElapsed < FEEDBACK_DURATION) {
         const t = feedbackElapsed / FEEDBACK_DURATION; // 0 → 1
@@ -315,12 +315,12 @@ function draw() {
     // Score (bottom right)
     ctx.textAlign = 'right';
     ctx.fillStyle = '#fff';
-    ctx.fillText(gameState.isWon ? `Area: ${gameState.lastScore}` : 'Area: -', offsetX + cols * tileSize, bottomY);
+    ctx.fillText(gameState.isWon ? `${t('area')}: ${gameState.lastScore}` : t('areaEmpty'), offsetX + cols * tileSize, bottomY);
 
     // "See Optimal" button (only shown after winning)
     if (gameState.isWon) {
         const optY = bottomY + 24;
-        ctx.font      = "16px 'Schoolbell'";
+        ctx.font = "16px 'Schoolbell'";
         ctx.textAlign = 'right';
 
         if (gameState.optimalMessage && (now - gameState.optimalMessageTime) < 2500) {
@@ -329,7 +329,7 @@ function draw() {
         } else {
             gameState.optimalMessage = null;
 
-            const label      = gameState.showingOptimal ? 'Your Solution' : 'See Optimal';
+            const label = gameState.showingOptimal ? t('yourSolution') : t('seeOptimal');
             const labelWidth = ctx.measureText(label).width;
             const labelX     = offsetX + cols * tileSize - labelWidth;
 
