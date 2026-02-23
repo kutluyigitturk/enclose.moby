@@ -240,6 +240,7 @@ button {
     cursor: pointer;
     text-align: left;
     transition: 0.2s;
+    color: #333; /* Let's use our own color instead of Safari's default blue button color. */
 }
 
 .level-item:hover {
@@ -349,4 +350,8 @@ button {
     .sound-btn {
         margin-right: 0;
     }
+    /* Mobile sorting: Hamburger → Sound → Language */
+    .menu-container .menu-btn:not(.lang-btn) { order: 1; }
+    .menu-container .sound-btn { order: 2; }
+    .menu-container .lang-btn { order: 3; }
 }
