@@ -180,7 +180,7 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 - **Stable Menu Selectors:** Replaced fragile `.menu-container .menu-btn:not(.lang-btn)` selectors with `getElementById('hamburger-btn')`. Added `id="hamburger-btn"` to the hamburger button in `index.html`.
 
 **⚡ Performance**
-- **BFS Path Memory Optimization:** `findEscapePath()` in `game.js` previously copied the full path array at every BFS step (O(n²) memory). Refactored to use a parent pointer pattern — each node now only stores its predecessor, and the path is reconstructed once on exit. Reduces memory pressure on large grids where the function runs on every hover.
+- **BFS Path Memory Optimization:** `findEscapePath()` in `game.js` previously copied the full path array at every BFS step (O(n²) memory). Refactored to use a parent pointer pattern — each node now only stores its predecessor and the path is reconstructed once on exit. Reduces memory pressure on large grids where the function runs on every hover.
 
 **📝 Code Clarity**
 - `main.js` startup step numbers corrected (step 4 was missing, step numbering is now sequential).
