@@ -121,6 +121,15 @@ button {
     100% { opacity: 0; transform: translateX(-50%) translateY(18px); }
 }
 
+#fullscreen-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+#fullscreen-btn {
+    margin-right: 8px;
+}
+
 /* ============================================
    MENU SYSTEM
    ============================================ */
@@ -375,4 +384,8 @@ button {
     .menu-container .menu-btn:not(.lang-btn) { order: 1; }
     .menu-container .sound-btn { order: 2; }
     .menu-container .lang-btn { order: 3; }
+
+    .hide-mobile {
+        display: none;
+    }
 }

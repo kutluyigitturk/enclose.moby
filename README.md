@@ -5,14 +5,14 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.8.4-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.8.5-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 <br>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9.jpg" alt="enclose.moby gameplay — Desktop" width="600">
+<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10.jpg" alt="enclose.moby gameplay — Desktop" width="600">
 
 <br>
 
@@ -163,9 +163,34 @@ Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigittur
 | v0.8.2  | 2026-02-23 | TR/EN Localization System, Custom Font & Level Author Field |
 | v0.8.3  | 2026-02-24 | Fix mobile UI improvements — modal width, tab colors & button layout |
 | v0.8.4  | 2026-02-24 | Add animated lang toast on language switch |
+| v0.8.5  | 2026-02-25 | Code Quality & Performance — Bug fixes, clean code improvements |
 ---
 
 ## 📋 Changelog
+
+### v0.8.5 (2026-02-25) - The "Code Quality" Update 🛠️
+
+**🐛 Bug Fixes**
+- **Variable Shadowing Fix:** `const t` inside the buoy feedback block in `renderer.js` was shadowing the global `t()` localization function. Renamed to `feedbackProgress` to prevent silent failures on future edits.
+- **Asset Loading Fix:** Sound files (mobySound keys) were being passed to `new Image()` inside `loadAssets()`, causing silent `onerror` calls on every load. Audio keys are now filtered out; only image keys are processed by the image loader.
+
+**🏗️ Architecture & Clean Code**
+- **`window.onclick` → `addEventListener`:** Replaced direct `window.onclick` assignment with `window.addEventListener('click', ...)` in `ui.js` to prevent accidental overwriting of existing click listeners.
+- **Stable DOM Selectors:** Replaced fragile `querySelector('button[onclick="openInfo()"]')` calls with `getElementById('info-btn')`. Added `id="info-btn"` to the info button in `index.html`.
+- **Stable Menu Selectors:** Replaced fragile `.menu-container .menu-btn:not(.lang-btn)` selectors with `getElementById('hamburger-btn')`. Added `id="hamburger-btn"` to the hamburger button in `index.html`.
+
+**⚡ Performance**
+- **BFS Path Memory Optimization:** `findEscapePath()` in `game.js` previously copied the full path array at every BFS step (O(n²) memory). Refactored to use a parent pointer pattern — each node now only stores its predecessor, and the path is reconstructed once on exit. Reduces memory pressure on large grids where the function runs on every hover.
+
+**📝 Code Clarity**
+- `main.js` startup step numbers corrected (step 4 was missing, step numbering is now sequential).
+- `loadAssets()` comment updated to reflect that audio is no longer loaded there.
+- `findEscapePath()` JSDoc updated to document the parent pointer approach.
+- Script loading order in `index.html` corrected: `game.js` now loads before `renderer.js` to match the dependency direction.
+- Fixed typo in `index.html` comment: "Language Swtich Button" → "Language Switch Button".
+- Fixed incorrect comment on `strings.js` script tag: was labeled "Constants and configuration", now correctly labeled "Localization strings (TR / EN)".
+
+---
 
 ### v0.8.2 (2026-02-23) - The "Localization" Update 🌍
 

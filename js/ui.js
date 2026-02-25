@@ -9,7 +9,7 @@
 
 function toggleDropdown() {
     const dropdown = document.getElementById('dropdown-menu');
-    const menuBtn = document.querySelector('.menu-container .menu-btn:not(.lang-btn)');
+    const menuBtn = document.getElementById('hamburger-btn');
     const menuOverlay = document.getElementById('menu-overlay');
 
     dropdown.classList.toggle('show');
@@ -26,9 +26,34 @@ function toggleDropdown() {
 /** Instantly closes the menu and removes the blur overlay. */
 function forceCloseMenu() {
     document.getElementById('dropdown-menu').classList.remove('show');
-    document.querySelector('.menu-container .menu-btn:not(.lang-btn)').classList.remove('menu-open');
+    document.getElementById('hamburger-btn').classList.remove('menu-open');
     document.getElementById('menu-overlay').style.display = 'none';
 }
+
+function toggleFullscreen() {
+    const btn = document.getElementById('fullscreen-btn');
+    const maximize = btn.querySelector('.icon-maximize');
+    const minimize = btn.querySelector('.icon-minimize');
+
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        maximize.style.display = 'none';
+        minimize.style.display = 'block';
+    } else {
+        document.exitFullscreen();
+        maximize.style.display = 'block';
+        minimize.style.display = 'none';
+    }
+}
+
+// Kullanıcı ESC ile çıkarsa ikonu sıfırla
+document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+        const btn = document.getElementById('fullscreen-btn');
+        btn.querySelector('.icon-maximize').style.display = 'block';
+        btn.querySelector('.icon-minimize').style.display = 'none';
+    }
+});
 
 function toggleLang() {
     const newLang = currentLang === 'en' ? 'tr' : 'en';
@@ -65,7 +90,7 @@ function updateAllUI() {
 }
 
 // Close menu when clicking outside
-window.onclick = function (event) {
+window.addEventListener('click', function (event) {
     // Ignore canvas clicks — game input is handled separately
     if (event.target.id === 'gameCanvas') return;
 
@@ -80,8 +105,7 @@ window.onclick = function (event) {
             menuOverlay.style.display = 'none';
         }
     }
-};
-
+});
 
 // -----------------------------------------------------------------------------
 // LEVEL SELECTOR MODAL
@@ -107,7 +131,6 @@ function openLevelSelector() {
 function closeLevelSelector() {
     document.getElementById('level-modal').style.display = 'none';
 }
-
 
 // -----------------------------------------------------------------------------
 // SETTINGS PANEL
@@ -138,7 +161,6 @@ function closeSettings() {
     document.getElementById('settings-overlay').style.display = 'none';
 }
 
-
 // -----------------------------------------------------------------------------
 // INFO MODAL (How to Play)
 // -----------------------------------------------------------------------------
@@ -147,8 +169,7 @@ function openInfo() {
     forceCloseMenu();
     document.getElementById('dropdown-menu')?.classList.remove('show');
     document.getElementById('info-modal').style.display = 'flex';
-
-    document.querySelector('button[onclick="openInfo()"]').classList.add('info-active');
+    document.getElementById('info-btn').classList.add('info-active');
 
     updateLevelStats();
     switchTab('how');
@@ -156,7 +177,7 @@ function openInfo() {
 
 function closeInfo() {
     document.getElementById('info-modal').style.display = 'none';
-    document.querySelector('button[onclick="openInfo()"]').classList.remove('info-active');
+    document.getElementById('info-btn').classList.remove('info-active');
 }
 
 function switchTab(tabName) {

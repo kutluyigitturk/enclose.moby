@@ -129,14 +129,14 @@ async function loadAssets() {
     const loadImg = (src) => new Promise((resolve) => {
         const img = new Image();
         img.onload  = () => resolve(img);
-        img.onerror = () => { console.error('Failed to load image'); resolve(null); };
+        img.onerror = () => { console.error('Failed to load image:', src); resolve(null); };
         img.src = src;
     });
 
-    const keys   = Object.keys(ASSETS);
-    const images = await Promise.all(keys.map(k => loadImg(ASSETS[k])));
+    const imageKeys = Object.keys(ASSETS).filter(k => !k.startsWith('mobySound'));
+    const images    = await Promise.all(imageKeys.map(k => loadImg(ASSETS[k])));
 
-    keys.forEach((key, i) => { sprites[key] = images[i]; });
+    imageKeys.forEach((key, i) => { sprites[key] = images[i]; });
 
     // Shortcut array for buoy animation frames
     sprites.buoys = [sprites.buoy0, sprites.buoy1, sprites.buoy2, sprites.buoy3];

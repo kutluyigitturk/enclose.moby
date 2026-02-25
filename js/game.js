@@ -2,7 +2,6 @@
 // game.js — Game mechanics: wave generation, winning condition, escape route
 // =============================================================================
 
-
 // -----------------------------------------------------------------------------
 // WAVE generatıon
 // -----------------------------------------------------------------------------
@@ -99,38 +98,46 @@ function checkWinCondition() {
 
 /**
  * Returns the shortest path from Moby to the edge of the map using BFS.
+ * Uses a parent pointer pattern instead of copying the path at each step,
+ * reducing memory usage on large grids.
  * If there is no escape, it returns null.
  *
  * @returns {Array<{x,y}>|null}
  */
 function findEscapePath() {
     const { rows, cols, mobyPos } = gameState;
-    const queue   = [{ x: mobyPos.x, y: mobyPos.y, path: [] }];
-    const visited = Array.from({ length: rows }, () => new Uint8Array(cols).fill(0));
+    const parent  = Array.from({ length: rows }, () => new Array(cols).fill(null));
+    const visited = Array.from({ length: rows }, () => new Uint8Array(cols));
+    const queue   = [{ x: mobyPos.x, y: mobyPos.y }];
     visited[mobyPos.y][mobyPos.x] = 1;
 
     while (queue.length > 0) {
-        const { x, y, path } = queue.shift();
-        const currentPath = [...path, { x, y }];
+        const { x, y } = queue.shift();
 
-        // Edge → escape found
         if (x === 0 || x === cols - 1 || y === 0 || y === rows - 1) {
-            return currentPath;
+            const path = [];
+            let cx = x, cy = y;
+            while (cx !== mobyPos.x || cy !== mobyPos.y) {
+                path.unshift({ x: cx, y: cy });
+                ({ x: cx, y: cy } = parent[cy][cx]);
+            }
+            path.unshift({ x: mobyPos.x, y: mobyPos.y });
+            return path;
         }
 
         for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
             const nx = x + dx;
             const ny = y + dy;
-            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
-                if (visited[ny][nx] === 0 &&
-                    gameState.grid[ny][nx] !== TILE_TYPE.LAND &&
-                    gameState.grid[ny][nx] !== TILE_TYPE.BUOY) {
-                    visited[ny][nx] = 1;
-                    queue.push({ x: nx, y: ny, path: currentPath });
-                }
+            if (nx >= 0 && nx < cols && ny >= 0 && ny < rows &&
+                visited[ny][nx] === 0 &&
+                gameState.grid[ny][nx] !== TILE_TYPE.LAND &&
+                gameState.grid[ny][nx] !== TILE_TYPE.BUOY) {
+                visited[ny][nx] = 1;
+                parent[ny][nx]  = { x, y };
+                queue.push({ x: nx, y: ny });
             }
         }
     }
 
-    return null; // There is no escape route
+    return null;
 }

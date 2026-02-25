@@ -49,10 +49,9 @@ async function initGame() {
     await loadAssets();              // 1. Upload images and sounds
     initMobySounds();                // 2. Prepare the sound objects
     initSoundButton();               // 3. Set the status of the sound button
-     loadLevel(LEVELS.length - 1);   // 5. Load the final level
-    loop();                          // 6. Start the rendering cycle
+    loadLevel(LEVELS.length - 1);    // 4. Load the final level
+    loop();                          // 5. Start the rendering cycle
 }
-
 
 // Start the game once the page has fully loaded
 window.onload = initGame;
