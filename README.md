@@ -99,7 +99,7 @@
 | HTML5 Canvas | Game rendering |
 | Vanilla JavaScript | Game logic (OOP Architecture) & BFS pathfinding |
 | CSS3 | UI styling & animations |
-| Base64 | Embedded sprites & assets |
+| [Base64](https://www.base64-image.de/) | Embedded sprites & assets |
 
 ---
 
