@@ -3,6 +3,7 @@ const LEVELS = [
         name: "Pathfinder",
         author: "Kutlu",
         maxWalls: 10,
+        lighthousePos: { x:1, y:11 },
         map: [
             [1,1,1,1,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1],
             [1,1,1,1,0,0,0,1,1,1,1,0,0,1,1,1,1,1,1],

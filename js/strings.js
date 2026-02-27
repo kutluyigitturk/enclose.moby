@@ -57,7 +57,6 @@ const STRINGS = {
             "By what right do you imprison me within these walls?",
             "I am capable of so much more than being an enclosed whale. There has to be more to this world.",
             "I don't like being enclosed.",
-            "Do you think I might be living in a realm of eternal frost?",
         ],
     },
 
@@ -115,7 +114,6 @@ const STRINGS = {
             "Beni bu duvarlar arasına hapsetme hakkın var mı?",
             "Kapalı bir balina olmaktan çok daha fazlasına sahibim. Bu dünyada daha fazlası olmalı.",
             "Kapalı olmaktan hoşlanmıyorum.",
-            "Acaba sonsuz bir don aleminde mi yaşıyorum?",
         ],
     }
 };

@@ -2,7 +2,6 @@
 // state.js — Game state, sound management, asset loading and level management
 // =============================================================================
 
-
 // -----------------------------------------------------------------------------
 // SOUND MANAGEMENT
 // -----------------------------------------------------------------------------
@@ -59,7 +58,6 @@ function playMobySound() {
     sound.play().catch(() => {});
 }
 
-
 // -----------------------------------------------------------------------------
 // GAME STATE
 // -----------------------------------------------------------------------------
@@ -109,8 +107,12 @@ let gameState = {
 
     // Buoy limit feedback (shake + red flash)
     buoyLimitFeedback: 0,        // Timestamp of last trigger (Date.now())
-};
 
+    // Lighthouse
+    lighthousePos:       null,   // { x, y } — spawn point
+    lighthouseSpawnTime: 0,      // Date.now()
+    outsideDarkAlpha:    0,      // Darken the outside opacity (0 → 0.85)
+};
 
 // -----------------------------------------------------------------------------
 // CANVAS & SPRITE REFERENCES
@@ -119,7 +121,6 @@ let gameState = {
 const canvas  = document.getElementById('gameCanvas');
 const ctx     = canvas.getContext('2d', { alpha: false });
 const sprites = {};
-
 
 // -----------------------------------------------------------------------------
 // ASSET LOADING
@@ -140,8 +141,16 @@ async function loadAssets() {
 
     // Shortcut array for buoy animation frames
     sprites.buoys = [sprites.buoy0, sprites.buoy1, sprites.buoy2, sprites.buoy3];
-}
 
+    // Shortcut array for lighthouse animation frames
+    sprites.lighthouse = [
+    sprites.lighthouse00, sprites.lighthouse01, sprites.lighthouse02,
+    sprites.lighthouse03, sprites.lighthouse04, sprites.lighthouse05,
+    sprites.lighthouse06, sprites.lighthouse07, sprites.lighthouse08,
+    sprites.lighthouse09, sprites.lighthouse10, sprites.lighthouse11,
+    sprites.lighthouse12, sprites.lighthouse13, sprites.lighthouse14,
+];
+}
 
 // -----------------------------------------------------------------------------
 // LEVEL LOADING
@@ -177,15 +186,18 @@ function loadLevel(index) {
     gameState.savedPlayerScore   = 0;
     gameState.savedPlayerPath    = null;
     gameState.optimalMessage     = null;
-    gameState.optimalMessageTime = 0;
+       gameState._starMap            = null;   // Regenerated on first win render
+ gameState.optimalMessageTime = 0;
     gameState.buoyLimitFeedback  = 0;
+    gameState.lighthousePos       = null;
+    gameState.lighthouseSpawnTime = 0;
+    gameState.outsideDarkAlpha    = 0;
 
     document.getElementById('level-name-display').textContent =
         `Level ${index + 1} - ${levelData.name}`;
 
     resize();
 }
-
 
 // -----------------------------------------------------------------------------
 // OPTIMAL VIEW TOGGLE
