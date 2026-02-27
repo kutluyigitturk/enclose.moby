@@ -30,7 +30,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <em>iPhone 13 — Safari - Winning Animation</em>
 
-<br><br><br> </div>
+<br> </div>
 
 *A strategic puzzle game where you trap the legendary white whale*
 </div>
