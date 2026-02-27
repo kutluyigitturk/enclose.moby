@@ -10,19 +10,34 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
-<br>
+<div align="center">
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10.jpg" alt="enclose.moby gameplay — Desktop" width="600">
+  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_11.jpg" alt="enclose.moby gameplay — Desktop 1" width="600">
+  <br>
+  <em>Desktop - 1</em>
+  <br><br>
 
-<br>
+  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_winning.jpg" alt="enclose.moby gameplay — Desktop 2" width="600">
+  <br>
+  <em>Desktop - 2</em>
+  <br><br>
 
-*Desktop*
+  <table>
+    <tr>
+      <td align="center">
+        <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
+      </td>
+      <td align="center">
+        <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><em>iPhone 13 — Safari</em></td>
+      <td align="center"><em>Mobil Görünüm - 2</em></td>
+    </tr>
+  </table>
 
-<img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_9_moibl.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
-
-*iPhone 13 — Safari*
-
-<br>
+</div>
 
 *A strategic puzzle game where you trap the legendary white whale*
 </div>
