@@ -319,6 +319,7 @@ function handleInput(e, type) {
         if (cell === TILE_TYPE.MOBY) return;
         gameState.grid[y][x] = TILE_TYPE.BUOY;
         gameState.playerWalls.push({ x, y, spawnTime: Date.now() });
+        playSFX('buoyPlaceSound');
         checkWinCondition();
     }
     // Click on water when buoy limit is reached → trigger feedback
@@ -332,6 +333,7 @@ function handleInput(e, type) {
         if (idx !== -1) {
             gameState.grid[y][x] = TILE_TYPE.WATER;
             gameState.playerWalls.splice(idx, 1);
+            playSFX('buoyRemoveSound');
         }
     }
 }

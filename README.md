@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.9.1-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.9.2-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -152,6 +152,10 @@ enclose.moby started as a single idea: what if you could trap Moby Dick using bu
 **The game needed to be fair.** Puzzle games live and die by clarity. Players needed to understand why they won, and whether they could have done better. This is why the optimal solution preview exists — after winning, you can compare your enclosure against the mathematically best possible solution. If you already found the optimal answer, the game tells you. No ambiguity, no frustration. You either solved it perfectly or you have something to aim for.
 
 **The game needed honest feedback.** When you run out of buoys, the counter shakes and flashes red. It sounds minor, but without it players assumed the game had a bug. Small signals matter enormously. The same thinking produced the ghost preview — a translucent buoy appears before you commit to placing it, removing uncertainty and making every move feel intentional rather than accidental.
+
+**The game needed a sense of triumph.** Winning a puzzle should feel like an event, not just a state change. When Moby is finally enclosed, the world outside his pen dims into darkness, a field of stars blooms across the trapped waters, and a lighthouse rises from the sea — its lantern slowly coming to life. None of this was in the original version. The first implementation simply stopped the game and displayed a score. It felt hollow. The winning animation exists because the moment of capture deserves ceremony. You spent minutes studying the map, planning your buoys, watching Moby's escape arrows — the payoff should match the effort.
+
+**The game needed to sound alive.** For a long time, enclose.moby was completely silent. Moby got his voice first — hover over him and you hear a whale call, different each time. But silence between those moments felt wrong. Now every buoy placement lands with a splash, every removal pops cleanly, and resetting a level has its own sound. When the lighthouse rises on a winning screen, a distinct chime marks the moment. These are small, deliberate sounds — not a soundtrack, but punctuation. They confirm that your actions are registering, that the world is responding. A game without sound is a game without feedback, and feedback is everything.
 
 **The game needed to speak your language.** Turkish and English are both fully supported, down to a custom-built font that includes the Turkish characters missing from the original typeface. The grid opacity, the sound, the language — all configurable, because different players want different things from the same game.
 

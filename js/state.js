@@ -32,6 +32,25 @@ function initMobySounds() {
     }
 }
 
+// --- SFX (one-off effects) ---
+const SFX = {};
+
+function initSFX() {
+    const sfxKeys = ['buoyPlaceSound', 'buoyRemoveSound', 'resetSound', 'lighthouseSound'];
+    for (const key of sfxKeys) {
+        if (ASSETS[key]) {
+            SFX[key] = new Audio(ASSETS[key]);
+            SFX[key].volume = 0.2;
+        }
+    }
+}
+
+function playSFX(key) {
+    if (isMuted || !SFX[key]) return;
+    SFX[key].currentTime = 0;
+    SFX[key].play().catch(() => {});
+}
+
 async function unlockAudio() {
     if (audioUnlocked) return;
     if (isMuted) return;

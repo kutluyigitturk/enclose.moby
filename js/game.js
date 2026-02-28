@@ -93,6 +93,7 @@ function checkWinCondition() {
             : findLighthousePos();
         gameState.lighthouseSpawnTime = Date.now();
         gameState.outsideDarkAlpha    = 0;
+        playSFX('lighthouseSound');
     }
 }
 

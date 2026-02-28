@@ -42,15 +42,19 @@ async function initGame() {
         handleInput(e, 'hover');
     }, { passive: false });
 
-    // BUTTONS 
-    document.getElementById('reset-btn').onclick = () => loadLevel(gameState.currentLevelIndex);
+    // Reset Button 
+    document.getElementById('reset-btn').onclick = () => {
+        playSFX('resetSound');
+        loadLevel(gameState.currentLevelIndex);
+    };
 
     // STARTUP ORDER
     await loadAssets();              // 1. Upload images and sounds
     initMobySounds();                // 2. Prepare the sound objects
-    initSoundButton();               // 3. Set the status of the sound button
-    loadLevel(LEVELS.length - 1);    // 4. Load the final level
-    loop();                          // 5. Start the rendering cycle
+    initSFX();                       // 3. Play SFX sound
+    initSoundButton();               // 4. Set the status of the sound button
+    loadLevel(LEVELS.length - 1);    // 5. Load the final level
+    loop();                          // 6. Start the rendering cycle
 }
 
 // Start the game once the page has fully loaded
