@@ -28,6 +28,7 @@ const LEVELS = [
         name: "Squares",
         author: "Kutlu",
         maxWalls: 14,
+        lighthousePos: { x:1, y:15 },
         map: [
             [0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0,1],
             [0,0,1,0,1,0,0,0,1,1,1,1,0,1,1,0,0],
@@ -54,6 +55,7 @@ const LEVELS = [
         name: "Tidebound",
         author: "Kutlu",
         maxWalls: 12,
+        lighthousePos: { x:3, y:11 },
         map: [
             [1,1,0,0,1,1,1,0,1,1,1,1],
             [1,0,0,0,0,0,0,0,0,0,0,1],
@@ -77,6 +79,7 @@ const LEVELS = [
         name: "First.Ai",
         author: "enclose.mobyAi",
         maxWalls: 8,
+        lighthousePos: { x:5, y:5 },
         map: [
             [1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,1,1],
             [1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1],
@@ -107,6 +110,7 @@ const LEVELS = [
         name: "Blind Solver",
         author: "enclose.mobyAi",
         maxWalls: 12,
+        lighthousePos: { x:16, y:20 },
         map: [
             [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -138,6 +142,7 @@ const LEVELS = [
         name: "Ahab",
         author: "enclose.mobyAi",
         maxWalls: 10,
+        lighthousePos: { x:5, y:13 },
         map: [
             [1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -163,6 +168,7 @@ const LEVELS = [
         name: "Ebü'l-Feth",
         author: "enclose.mobyAi",
         maxWalls: 11,
+        lighthousePos: { x:0, y:12 },
         map: [
             [0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
@@ -187,6 +193,7 @@ const LEVELS = [
         name: "Bolufeng",
         author: "enclose.mobyAi",
         maxWalls: 11,
+        lighthousePos: { x:1, y:16 },
         map: [
             [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
