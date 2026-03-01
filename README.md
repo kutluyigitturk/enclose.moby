@@ -14,21 +14,26 @@
 
   <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_11.jpg" alt="enclose.moby gameplay — Desktop 1" width="600">
   <br>
-  <em>Desktop - Playground</em>
+  <em>Desktop — Google Chrome - Playground</em>
   <br><br>
 
   <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_winning.jpg" alt="enclose.moby gameplay — Desktop 2" width="600">
   <br>
-  <em>Desktop - Winning Animation</em>
+  <em>Desktop — Google Chrome - Winning Animation</em>
   <br><br><br>
 
-  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
-  <br>
-  <em>iPhone 13 — Safari - Playground</em>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <em>iPhone 13 — Safari - Winning Animation</em>
+  <table align="center">
+    <tr>
+      <td align="center">
+        <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
+        <br><em>iPhone 13 — Safari - Playground</em>
+      </td>
+      <td align="center">
+        <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
+        <br><em>iPhone 13 — Safari - Winning Animation</em>
+      </td>
+    </tr>
+  </table>
 
 <br> </div>
 
