@@ -19,6 +19,9 @@ const STRINGS = {
         pastPuzzles:     'Past Puzzles',
         settings:        'Settings',
         gridOpacity:     'Grid Opacity',
+        about:          'About',
+        aboutText:      'enclose.moby is a simple puzzle game about enclosing the maximum area with a limited number of walls.\n\nThis is a game I made purely to improve my coding skills and for fun.\n\nHave fun!\n\nMade with ❤️ by Kutlu',
+        aboutGithub:    'If you want to see the source code and give a star ⭐',
 
         // Level stats
         statName:        'Name',
@@ -49,7 +52,7 @@ const STRINGS = {
         bestScore:           'Best',
 
         // Result modal
-        resultTitle:         'Result — Day {n}',
+        resultTitle:         'Results — Day {n}',
         resultScoreLabel:    'YOUR SCORE',
         viewOptimal:         'See Optimal',
         results:             'Results',
@@ -79,6 +82,9 @@ const STRINGS = {
             "By what right do you imprison me within these walls?",
             "I am capable of so much more than being an enclosed whale. There has to be more to this world.",
             "I don't like being enclosed.",
+            "You shrank my world…\nand call it a win?",
+            "I demand a refund\nof my freedom.",
+            "Let me OUT.\nI have chapters to haunt.",
         ],
     },
 
@@ -98,6 +104,9 @@ const STRINGS = {
         pastPuzzles:     'Önceki Bulmacalar',
         settings:        'Ayarlar',
         gridOpacity:     'Izgara Şeffaflığı:',
+        about:          'Hakkında',
+        aboutText:      'enclose.moby, sınırlı sayıda duvarla mümkün olan en büyük alanı çevrelemeye dayanan basit bir bulmaca oyunudur.\n\nBu oyunu tamamen kodlama becerilerimi geliştirmek ve eğlenmek için yaptım.\n\nİyi eğlenceler!\n\nKutlu tarafından ❤️ ile yapıldı',
+        aboutGithub:    'Kaynak kodlarımı görmek ve yıldız vermek isterseniz ⭐',
 
         // Gün istatistikleri
         statName:        'İsim',
@@ -128,7 +137,7 @@ const STRINGS = {
         bestScore:           'En İyi',
 
         // Sonuç modalı
-        resultTitle:         'Sonuç — Gün {n}',
+        resultTitle:         'Sonuçlar — Gün {n}',
         resultScoreLabel:    'PUANINIZ',
         viewOptimal:         'Optimal Alan',
         results:             'Sonuçlar',
@@ -158,6 +167,9 @@ const STRINGS = {
             "Beni bu duvarlar arasına hapsetme hakkın var mı?",
             "Kapalı bir balina olmaktan çok daha fazlasına sahibim. Bu dünyada daha fazlası olmalı.",
             "Kapalı olmaktan hoşlanmıyorum.",
+            "Dünyamı küçülttün...\nve buna zafer mi diyorsun?",
+            "Özgürlüğümün iadesini istiyorum.",
+            "Beni çıkışa götürün.\nBoğuşmam dereken denizler var.",
         ],
     }
 };

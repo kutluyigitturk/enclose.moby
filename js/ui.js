@@ -142,11 +142,14 @@ function openLevelSelector() {
     for (let i = LEVELS.length - 1; i >= 0; i--) {
         const lvl  = LEVELS[i];
         const best = getBestScore(i);
+        const medal = best > 0 ? getMedalForScore(i, best) : null;
+        const scoreText = best > 0
+            ? `${medal && medal.emoji ? medal.emoji + ' ' : ''}${best}`
+            : '';
         const btn  = document.createElement('button');
         btn.className = 'level-item';
 
-        const label     = `${t('day')} ${i + 1} — ${lvl.name}`;
-        const scoreText = best > 0 ? `${t('bestScore')}: ${best}` : '';
+        const label = `${t('day')} ${i + 1} — ${lvl.name}`;
 
         btn.innerHTML = `
             <span>${label}</span>
@@ -190,6 +193,21 @@ function openSettings() {
 
 function closeSettings() {
     document.getElementById('settings-overlay').style.display = 'none';
+}
+
+// -----------------------------------------------------------------------------
+// ABOUT MODAL
+// -----------------------------------------------------------------------------
+
+function openAbout() {
+    forceCloseMenu();
+    document.getElementById('about-text').textContent = t('aboutText');
+    document.getElementById('about-github-text').textContent = t('aboutGithub');
+    document.getElementById('about-overlay').style.display = 'flex';
+}
+
+function closeAbout() {
+    document.getElementById('about-overlay').style.display = 'none';
 }
 
 // -----------------------------------------------------------------------------

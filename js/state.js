@@ -251,6 +251,8 @@ function loadLevel(index) {
     gameState.outsideDarkAlpha    = 0;
     gameState.submitted           = false;
 
+    document.getElementById('submit-btn').textContent = t('submit');
+    document.getElementById('submit-btn').disabled = true;
     document.getElementById('level-name-display').textContent =
         `${t('day')} ${index + 1} - ${levelData.name}`;
 
