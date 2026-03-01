@@ -13,7 +13,7 @@ const STRINGS = {
         optimalFound:    'You found the optimal solution!',
 
         // Buttons & Modals
-        reset:           'RESET',
+        reset:           'Reset',
         howToPlay:       'How to Play',
         thisLevel:       'This Level',
         pastPuzzles:     'Past Puzzles',
@@ -35,6 +35,28 @@ const STRINGS = {
         rule3:           "Moby can't move over land or buoys.",
         rule4:           'Bigger enclosure = bigger score!',
         tip:             'Hover to see where Moby might escape!',
+
+        // Submit system
+        submit:              'Submit',
+        mobyTip:             'Moby Tip!',
+        unusedWalls:         'You have {n} unused buoys remaining.\n\nAre you sure you want to submit?',
+        neverShowTip:        'Never show me this tip again',
+        goBack:              'Go Back',
+        yourScore:           'Your Score',
+
+        // Past Puzzles update
+        day:                 'Day',
+        bestScore:           'Best',
+
+        // Result modal
+        resultTitle:         'Result — Day {n}',
+        resultScoreLabel:    'YOUR SCORE',
+        viewOptimal:         'See Optimal',
+        results:             'Results',
+        medalGold:           'Perfect!',
+        medalSilver:         'Great!',
+        medalBronze:         'Good',
+        medalNone:           'Keep trying',
 
         mobyMessages: [
             "You can't catch me!",
@@ -61,7 +83,7 @@ const STRINGS = {
     },
 
     tr: {
-        // Canvas UI
+        // Canvas Kullanıcı Arayüzü
         buoy:            'Şamandıra',
         area:            'Alan',
         areaEmpty:       'Alan: -',
@@ -69,7 +91,7 @@ const STRINGS = {
         yourSolution:    'Çözümün',
         optimalFound:    'En uygun çözümü zaten buldun!',
 
-        // Buttons & Modals
+        // Düğmeler ve Modal Pencereler
         reset:           'Sıfırla',
         howToPlay:       'Nasıl Oynanır?',
         thisLevel:       'Bu Seviye',
@@ -77,14 +99,14 @@ const STRINGS = {
         settings:        'Ayarlar',
         gridOpacity:     'Izgara Şeffaflığı:',
 
-        // Level stats
+        // Gün istatistikleri
         statName:        'İsim',
         statMadeBy:      'Yaratıcı',
         statSize:        'Boyut',
         statBuoyBudget:  'Şamandıra Bütçesi',
         statLevelID:     'Seviye Kimliği',
 
-        // How to Play content
+        // Nasıl oynanır içeriği
         howToPlayDesc:   "Moby'yi mümkün olan en büyük alana hapsedin!",
         theRules:        'KURALLAR',
         rule1:           'Su karolarına tıklayarak <b>şamandıralar</b> yerleştirin.',
@@ -92,6 +114,28 @@ const STRINGS = {
         rule3:           'Moby karadan veya şamandıraların üzerinde atlayamaz.',
         rule4:           'Daha büyük kapalı alan = daha yüksek puan!',
         tip:             "Moby'nin kaçabileceği yeri görmek için fareyi üzerine getirin!",
+
+        // Gönderme sistemi
+        submit:              'Gönder',
+        mobyTip:             'Moby İpucu!',
+        unusedWalls:         '{n} kullanılmamış şamandıran kaldı.\n\nGöndermek istediğine emin misin?',
+        neverShowTip:        'Bu ipucunu bir daha gösterme',
+        goBack:              'Geri Dön',
+        yourScore:           'Skorun',
+
+        // Geçmiş Bulmacalar güncellemesi
+        day:                 'Gün',
+        bestScore:           'En İyi',
+
+        // Sonuç modalı
+        resultTitle:         'Sonuç — Gün {n}',
+        resultScoreLabel:    'PUANINIZ',
+        viewOptimal:         'Optimal Alan',
+        results:             'Sonuçlar',
+        medalGold:           'Mükemmel!',
+        medalSilver:         'Harika!',
+        medalBronze:         'İyi',
+        medalNone:           'Denemeye devam',
 
         mobyMessages: [
             "Beni yakalayamazsın!",

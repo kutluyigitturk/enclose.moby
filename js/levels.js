@@ -218,6 +218,6 @@ const LEVELS = [
 
         ],
         optimalWalls: [{x:15,y:9}, {x:9,y:0}, {x:10,y:0}, {x:16,y:10}, {x:15,y:12}, {x:14,y:13}, {x:16,y:11}, {x:11,y:1}, {x:3,y:5}, {x:4,y:9}, {x:4,y:12}], // ← Coordinates
-        optimalArea: 67 // ← Maximum enclosed area
+        optimalArea: 68 // ← Maximum enclosed area
     }
 ];

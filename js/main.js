@@ -42,11 +42,12 @@ async function initGame() {
         handleInput(e, 'hover');
     }, { passive: false });
 
-    // Reset Button 
+    // Reset & Submit Buttons
     document.getElementById('reset-btn').onclick = () => {
         playSFX('resetSound');
         loadLevel(gameState.currentLevelIndex);
     };
+    document.getElementById('submit-btn').textContent = t('submit');
 
     // STARTUP ORDER
     await loadAssets();              // 1. Upload images and sounds
@@ -54,7 +55,8 @@ async function initGame() {
     initSFX();                       // 3. Play SFX sound
     initSoundButton();               // 4. Set the status of the sound button
     loadLevel(LEVELS.length - 1);    // 5. Load the final level
-    loop();                          // 6. Start the rendering cycle
+    updateAllUI();                   // 6. Button texts are also localized upon initial launch
+    loop();                          // 7. Start the rendering cycle
 }
 
 // Start the game once the page has fully loaded

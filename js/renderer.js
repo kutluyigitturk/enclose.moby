@@ -435,8 +435,8 @@ function draw() {
     ctx.fillStyle = '#fff';
     ctx.fillText(gameState.isWon ? `${t('area')}: ${gameState.lastScore}` : t('areaEmpty'), offsetX + cols * tileSize, bottomY);
 
-    // "See Optimal" button (only shown after winning)
-    if (gameState.isWon) {
+    // "See Optimal" button (only shown after submitting)
+    if (gameState.isWon && gameState.submitted) {
         const optY = bottomY + 24;
         ctx.font = "16px 'Schoolbell'";
         ctx.textAlign = 'right';

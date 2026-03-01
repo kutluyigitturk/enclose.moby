@@ -106,9 +106,10 @@
 <!-- ── GAME CANVAS ────────────────────────────────────────────────────────── -->
 <canvas id="gameCanvas"></canvas>
 
-<!-- ── ALT: Reset Button ─────────────────────────────────────────────────── -->
+<!-- ── ALT: Reset & Submit Button ─────────────────────────────────────────── -->
 <div class="controls-container">
     <button class="btn-primary" id="reset-btn" data-i18n="reset">RESET</button>
+    <button class="btn-primary" id="submit-btn" data-i18n="submit" disabled>SUBMIT</button>
 </div>
 
 <!-- ── MODALS ──────────────────────────────────────────────────────────── -->
@@ -176,6 +177,45 @@
     </div>
 </div>
 
+<!-- Moby Tip Modal -->
+<div id="moby-tip-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header-custom" id="moby-tip-title">Moby Tip!</div>
+        <p id="moby-tip-text" style="color:#333; text-align:center; line-height:1.5; margin-bottom:15px; white-space:pre-wrap; font-size:18px;"></p>
+        <label style="display:flex; align-items:center; justify-content:center; gap:8px; color:#333; font-size:18px; margin-bottom:20px; cursor:pointer; opacity:0.6;">
+            <input type="checkbox" id="never-show-tip">
+            <span id="never-show-tip-label">Never show me this tip again</span>
+        </label>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="tip-go-back" class="btn-primary tip-modal-btn">Go Back</button>
+            <button id="tip-submit" class="btn-primary tip-modal-btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- Result Modal -->
+<div id="score-modal" class="modal-overlay">
+    <div class="modal-box" style="text-align:center;">
+        <button class="close-x-btn" id="score-modal-close">✕</button>
+        <div class="modal-header-custom" id="score-modal-title">Result — Day 1</div>
+
+        <!-- Score Section with background -->
+        <div id="score-section" style="border-top:2px solid #ccc; border-bottom:2px solid #ccc; padding:20px 10px; margin:10px 0;">
+            <div id="score-label" style="font-size:16px; color:#888; letter-spacing:3px; margin-bottom:5px;">YOUR SCORE</div>
+            <div id="score-modal-number" style="font-size:64px; font-weight:bold; color:#000; margin:5px 0;"></div>
+            <div id="score-modal-medal" style="font-size:36px; margin-bottom:5px;"></div>
+            <div id="score-modal-medal-label" style="font-size:20px; color:#333;"></div>
+        </div>
+
+        <!-- View Optimal Button -->
+        <div style="display:flex; justify-content:center; margin-top:20px;">
+            <button id="result-view-optimal" class="btn-primary tip-modal-btn" style="font-size:18px;">
+                View Optimal
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- ============================================================================
      JAVASCRIPT — The loading order is arranged according to the dependency chain.
      ============================================================================ -->
@@ -184,7 +224,7 @@
 <script src="js/config.js" defer></script>
 
 <!-- 2. Localization strings (TR / EN) -->
-<script src="js/strings.js" defer></script>
+<script src="js/strings.js?v=2" defer></script>
 
 <!-- 3. Level data -->
 <script src="js/levels.js" defer></script>

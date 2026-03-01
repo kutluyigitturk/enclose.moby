@@ -131,7 +131,45 @@ let gameState = {
     lighthousePos:       null,   // { x, y } — spawn point
     lighthouseSpawnTime: 0,      // Date.now()
     outsideDarkAlpha:    0,      // Darken the outside opacity (0 → 0.85)
+
+    submitted:           false,
 };
+
+// --- SCORE PERSISTENCE ---
+
+function saveScore(levelIndex, area) {
+    const key = `enclose_best_${levelIndex}`;
+    const prev = parseInt(localStorage.getItem(key)) || 0;
+    if (area > prev) {
+        localStorage.setItem(key, area);
+        return true;  // new record
+    }
+    return false;
+}
+
+function getBestScore(levelIndex) {
+    return parseInt(localStorage.getItem(`enclose_best_${levelIndex}`)) || 0;
+}
+
+function shouldShowTip() {
+    return localStorage.getItem('enclose_hide_tip') !== 'true';
+}
+
+function hideTipForever() {
+    localStorage.setItem('enclose_hide_tip', 'true');
+}
+
+function getMedalForScore(levelIndex, score) {
+    const optimal = LEVELS[levelIndex].optimalArea;
+    if (!optimal || optimal === 0) return { emoji: '', label: '' };
+
+    const ratio = score / optimal;
+
+    if (ratio >= 1.0) return { emoji: '🥇', label: t('medalGold') };
+    if (ratio >= 0.8) return { emoji: '🥈', label: t('medalSilver') };
+    if (ratio >= 0.5) return { emoji: '🥉', label: t('medalBronze') };
+    return { emoji: '', label: t('medalNone') };
+}
 
 // -----------------------------------------------------------------------------
 // CANVAS & SPRITE REFERENCES
@@ -195,25 +233,26 @@ function loadLevel(index) {
     }
 
     // Reset state
-    gameState.playerWalls        = [];
-    gameState.isWon              = false;
-    gameState.winningPath        = null;
-    gameState.winAlpha           = 0;
-    gameState.winTime            = 0;
-    gameState.showingOptimal     = false;
-    gameState.savedPlayerWalls   = [];
-    gameState.savedPlayerScore   = 0;
-    gameState.savedPlayerPath    = null;
-    gameState.optimalMessage     = null;
-       gameState._starMap            = null;   // Regenerated on first win render
- gameState.optimalMessageTime = 0;
-    gameState.buoyLimitFeedback  = 0;
+    gameState.playerWalls         = [];
+    gameState.isWon               = false;
+    gameState.winningPath         = null;
+    gameState.winAlpha            = 0;
+    gameState.winTime             = 0;
+    gameState.showingOptimal      = false;
+    gameState.savedPlayerWalls    = [];
+    gameState.savedPlayerScore    = 0;
+    gameState.savedPlayerPath     = null;
+    gameState.optimalMessage      = null;
+    gameState._starMap            = null;
+    gameState.optimalMessageTime  = 0;
+    gameState.buoyLimitFeedback   = 0;
     gameState.lighthousePos       = null;
     gameState.lighthouseSpawnTime = 0;
     gameState.outsideDarkAlpha    = 0;
+    gameState.submitted           = false;
 
     document.getElementById('level-name-display').textContent =
-        `Level ${index + 1} - ${levelData.name}`;
+        `${t('day')} ${index + 1} - ${levelData.name}`;
 
     resize();
 }

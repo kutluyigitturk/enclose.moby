@@ -85,6 +85,29 @@ function updateAllUI() {
     document.getElementById('how-rule4').textContent      = t('rule4');
     document.getElementById('how-tip').textContent        = t('tip');
 
+    // Update subtitle (Day/Gün)
+    const levelData = LEVELS[gameState.currentLevelIndex];
+    document.getElementById('level-name-display').textContent =
+        `${t('day')} ${gameState.currentLevelIndex + 1} - ${levelData.name}`;
+
+    // Update submit button text based on state
+    if (gameState.submitted) {
+        document.getElementById('submit-btn').textContent = t('results');
+    } else {
+        document.getElementById('submit-btn').textContent = t('submit');
+    }
+
+    // Update result modal texts (whether open or closed)
+    if (gameState.submitted) {
+        const levelIndex = gameState.currentLevelIndex;
+        document.getElementById('score-modal-title').textContent =
+            t('resultTitle').replace('{n}', levelIndex + 1);
+        document.getElementById('score-label').textContent = t('resultScoreLabel');
+        const medal = getMedalForScore(levelIndex, gameState.lastScore);
+        document.getElementById('score-modal-medal-label').textContent = medal.label;
+        document.getElementById('result-view-optimal').textContent = t('viewOptimal');
+    }
+
     updateLevelStats();
 }
 
@@ -116,13 +139,22 @@ function openLevelSelector() {
     const container = document.getElementById('level-list-container');
     container.innerHTML = '';
 
-    LEVELS.forEach((lvl, idx) => {
-        const btn = document.createElement('button');
-        btn.className   = 'level-item';
-        btn.textContent = `${idx + 1}. ${lvl.name}`;
-        btn.onclick     = () => { loadLevel(idx); closeLevelSelector(); };
+    for (let i = LEVELS.length - 1; i >= 0; i--) {
+        const lvl  = LEVELS[i];
+        const best = getBestScore(i);
+        const btn  = document.createElement('button');
+        btn.className = 'level-item';
+
+        const label     = `${t('day')} ${i + 1} — ${lvl.name}`;
+        const scoreText = best > 0 ? `${t('bestScore')}: ${best}` : '';
+
+        btn.innerHTML = `
+            <span>${label}</span>
+            <span style="float:right; color:#888;">${scoreText}</span>
+        `;
+        btn.onclick = () => { loadLevel(i); closeLevelSelector(); };
         container.appendChild(btn);
-    });
+    }
 
     document.getElementById('level-modal').style.display = 'flex';
 }
@@ -200,6 +232,98 @@ function updateLevelStats() {
     `;
 }
 
+// -----------------------------------------------------------------------------
+// SUBMIT SYSTEM
+// -----------------------------------------------------------------------------
+
+function updateSubmitButton() {
+    document.getElementById('submit-btn').disabled = !gameState.isWon;
+}
+
+document.getElementById('submit-btn').onclick = () => {
+    if (!gameState.isWon) return;
+    playSFX('resetSound');
+
+    // If already submitted (button says Results), reopen modal
+    if (gameState.submitted) {
+        document.getElementById('score-modal').style.display = 'flex';
+        return;
+    }
+
+    const unusedWalls = gameState.maxWalls - gameState.playerWalls.length;
+
+    if (unusedWalls > 0 && shouldShowTip()) {
+        document.getElementById('moby-tip-text').textContent =
+            t('unusedWalls').replace('{n}', unusedWalls);
+        document.getElementById('moby-tip-title').textContent = t('mobyTip');
+        document.getElementById('never-show-tip-label').textContent = t('neverShowTip');
+        document.getElementById('tip-go-back').textContent = t('goBack');
+        document.getElementById('tip-submit').textContent = t('submit');
+        document.getElementById('moby-tip-modal').style.display = 'flex';
+        return;
+    }
+
+    submitScore();
+};
+
+document.getElementById('tip-go-back').onclick = () => {
+    playSFX('resetSound');
+    document.getElementById('moby-tip-modal').style.display = 'none';
+};
+
+document.getElementById('tip-submit').onclick = () => {
+    if (document.getElementById('never-show-tip').checked) {
+        hideTipForever();
+    }
+    document.getElementById('moby-tip-modal').style.display = 'none';
+    submitScore();
+};
+
+function submitScore() {
+    playSFX('resetSound');
+    gameState.submitted = true;
+    const levelIndex = gameState.currentLevelIndex;
+    saveScore(levelIndex, gameState.lastScore);
+
+    // Title: Result — Day n
+    document.getElementById('score-modal-title').textContent =
+        t('resultTitle').replace('{n}', levelIndex + 1);
+
+    document.getElementById('score-label').textContent = t('resultScoreLabel');
+
+    // Score number
+    document.getElementById('score-modal-number').textContent = gameState.lastScore;
+
+    // Medal
+    const medal = getMedalForScore(levelIndex, gameState.lastScore);
+    document.getElementById('score-modal-medal').textContent =
+        medal.emoji ? `${medal.emoji}` : '';
+    document.getElementById('score-modal-medal-label').textContent = medal.label;
+
+    // View Optimal button text
+    document.getElementById('result-view-optimal').textContent = t('viewOptimal');
+
+    // Show modal
+    document.getElementById('score-modal').style.display = 'flex';
+
+    // Switch Submit button → Results
+    document.getElementById('submit-btn').textContent = t('results');
+}
+
+document.getElementById('score-modal-close').onclick = () => {
+    document.getElementById('score-modal').style.display = 'none';
+};
+
+document.getElementById('result-view-optimal').onclick = () => {
+    // Close the modal
+    document.getElementById('score-modal').style.display = 'none';
+
+    // Trigger optimal view
+    toggleOptimalView();
+
+    // Switch Submit button → Results
+    document.getElementById('submit-btn').textContent = t('results');
+};
 
 // -----------------------------------------------------------------------------
 // SCREEN RESIZE
@@ -307,6 +431,7 @@ function handleInput(e, type) {
             gameState.playerWalls.splice(wallIndex, 1);
             gameState.isWon       = false;
             gameState.winningPath = null;
+            updateSubmitButton();
         }
         return;
     }
@@ -321,6 +446,7 @@ function handleInput(e, type) {
         gameState.playerWalls.push({ x, y, spawnTime: Date.now() });
         playSFX('buoyPlaceSound');
         checkWinCondition();
+        updateSubmitButton();
     }
     // Click on water when buoy limit is reached → trigger feedback
     else if (cell === TILE_TYPE.WATER &&
@@ -334,6 +460,7 @@ function handleInput(e, type) {
             gameState.grid[y][x] = TILE_TYPE.WATER;
             gameState.playerWalls.splice(idx, 1);
             playSFX('buoyRemoveSound');
+            updateSubmitButton();
         }
     }
 }
