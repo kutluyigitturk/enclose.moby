@@ -22,13 +22,13 @@
   <em>Desktop — Google Chrome - Winning Animation</em>
   <br><br><br>
 
-  <table align="center">
-    <tr>
-      <td align="center">
+  <table align="center" style="border:none; border-collapse:collapse;">
+    <tr style="border:none;">
+      <td align="center" style="border:none; padding:0 15px;">
         <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
         <br><em>iPhone 13 — Safari - Playground</em>
       </td>
-      <td align="center">
+      <td align="center" style="border:none; padding:0 15px;">
         <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
         <br><em>iPhone 13 — Safari - Winning Animation</em>
       </td>
