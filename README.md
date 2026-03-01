@@ -26,11 +26,8 @@
     <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
     &nbsp;&nbsp;&nbsp;&nbsp;
     <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_10_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
-  </p>
-  <p align="center">
-    <em>iPhone 13 — Safari - Playground</em>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <em>iPhone 13 — Safari - Winning Animation</em>
+    <br><br>
+    <sub>iPhone 13 — Safari - Playground &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iPhone 13 — Safari - Winning Animation</sub>
   </p>
 
 <br> </div>
