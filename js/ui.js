@@ -302,6 +302,7 @@ function submitScore() {
     gameState.submitted = true;
     const levelIndex = gameState.currentLevelIndex;
     saveScore(levelIndex, gameState.lastScore);
+    saveLevelState(levelIndex);
 
     // Title: Result — Day n
     document.getElementById('score-modal-title').textContent =

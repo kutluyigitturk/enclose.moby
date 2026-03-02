@@ -151,6 +151,27 @@ function getBestScore(levelIndex) {
     return parseInt(localStorage.getItem(`enclose_best_${levelIndex}`)) || 0;
 }
 
+// --- LEVEL STATE PERSISTENCE ---
+
+function saveLevelState(levelIndex) {
+    const data = {
+        walls: gameState.playerWalls.map(w => ({ x: w.x, y: w.y })),
+        score: gameState.lastScore,
+        isWon: gameState.isWon
+    };
+    localStorage.setItem(`enclose_state_${levelIndex}`, JSON.stringify(data));
+}
+
+function loadLevelState(levelIndex) {
+    const raw = localStorage.getItem(`enclose_state_${levelIndex}`);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+}
+
+function clearLevelState(levelIndex) {
+    localStorage.removeItem(`enclose_state_${levelIndex}`);
+}
+
 function shouldShowTip() {
     return localStorage.getItem('enclose_hide_tip') !== 'true';
 }
@@ -256,6 +277,19 @@ function loadLevel(index) {
     document.getElementById('level-name-display').textContent =
         `${t('day')} ${index + 1} - ${levelData.name}`;
 
+    // Restore saved state if previously submitted
+    const saved = loadLevelState(index);
+    if (saved && saved.isWon) {
+        for (const w of saved.walls) {
+            gameState.grid[w.y][w.x] = TILE_TYPE.BUOY;
+            gameState.playerWalls.push({ x: w.x, y: w.y, spawnTime: Date.now() });
+        }
+        checkWinCondition();
+        gameState.submitted = true;
+        document.getElementById('submit-btn').textContent = t('results');
+        document.getElementById('submit-btn').disabled = false;
+    }
+    
     resize();
 }
 
