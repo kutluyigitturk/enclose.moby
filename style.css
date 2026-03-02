@@ -61,6 +61,7 @@ canvas {
 .controls-container {
     position: fixed; bottom: 30px; left: 50%;
     transform: translateX(-50%); z-index: 1000; pointer-events: none;
+    display: flex; gap: 10px; align-items: center;
 }
 
 /* --- Buttons --- */
@@ -426,5 +427,16 @@ button {
 
     .hide-mobile {
         display: none;
+    }
+
+    .controls-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #submit-btn {
+        margin-left: 0;
     }
 }
