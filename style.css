@@ -433,10 +433,16 @@ button {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: 15px;
+        bottom: 20px;
     }
 
     #submit-btn {
         margin-left: 0;
+    }
+
+    .controls-container .btn-primary {
+        font-size: 18px;
+        padding: 6px 24px;
     }
 }
