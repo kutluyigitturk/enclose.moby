@@ -56,7 +56,7 @@ function draw() {
     // ── LAYER 4: GLOBAL GRID ────────────────────────────────────────────────
     drawGridLayer();
 
-    // ── LAYER 5: ENTITIES (MOBY, BUOY, GHOST) ───────────────────────────────
+    // ── LAYER 5: ENTITIES (MOBY + GHOST only) ───────────────────────────────
     for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
             const px   = x * tileSize + offsetX;
@@ -67,19 +67,6 @@ function draw() {
             if (x === gameState.mobyPos.x && y === gameState.mobyPos.y) {
                 const spr = gameState.isWon ? sprites.mobyHappy : sprites.moby;
                 if (spr) ctx.drawImage(spr, px + 2, py + 2, tileSize - 4, tileSize - 4);
-            }
-
-            // Buoy + drop shadow
-            if (cell === TILE_TYPE.BUOY) {
-                const wall    = gameState.playerWalls.find(w => w.x === x && w.y === y);
-                const elapsed = now - (wall ? wall.spawnTime : 0);
-                const frame   = Math.min(3, Math.floor(elapsed / 50));
-
-                ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                ctx.fillRect(px + 4, py + tileSize - 6, tileSize - 8, 4);
-
-                const img = sprites.buoys[frame];
-                if (img) drawSpriteAspect(img, px, py, tileSize);
             }
 
             // Ghost Preview (hover)
@@ -233,19 +220,6 @@ function draw() {
             ctx.fillRect(offsetX + cols * tileSize,  offsetY, canvas.width, rows * tileSize);
             ctx.fillRect(0, offsetY + rows * tileSize, canvas.width, canvas.height);
 
-            // Redraw ALL outside buoys after darkening
-            for (const w of gameState.playerWalls) {
-                if (gameState.winningPath[w.y][w.x] >= 0) continue;
-                const bpx = w.x * tileSize + offsetX;
-                const bpy = w.y * tileSize + offsetY;
-                const elapsed = now - (w.spawnTime || 0);
-                const frame   = Math.min(3, Math.floor(elapsed / 50));
-                ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                ctx.fillRect(bpx + 4, bpy + tileSize - 6, tileSize - 8, 4);
-                const img = sprites.buoys[frame];
-                if (img) drawSpriteAspect(img, bpx, bpy, tileSize);
-            }
-
             ctx.restore();
         }
 
@@ -374,7 +348,26 @@ function draw() {
         } */
     }
 
-    // ── LAYER 7: ESCAPE PATH + SPEECH BUBBLE ────────────────────────────────
+    // ── LAYER 7: BUOYS (drawn after win effects to prevent dark overlay clipping) ──
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            if (gameState.grid[y][x] !== TILE_TYPE.BUOY) continue;
+            const px = x * tileSize + offsetX;
+            const py = y * tileSize + offsetY;
+
+            const wall    = gameState.playerWalls.find(w => w.x === x && w.y === y);
+            const elapsed = now - (wall ? wall.spawnTime : 0);
+            const frame   = Math.min(3, Math.floor(elapsed / 50));
+
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fillRect(px + 4, py + tileSize - 6, tileSize - 8, 4);
+
+            const img = sprites.buoys[frame];
+            if (img) drawSpriteAspect(img, px, py, tileSize);
+        }
+    }
+
+    // ── LAYER 8: ESCAPE PATH + SPEECH BUBBLE ────────────────────────────────
     const isHoveringMoby = gameState.hoverPos.x === gameState.mobyPos.x &&
                            gameState.hoverPos.y === gameState.mobyPos.y;
 
