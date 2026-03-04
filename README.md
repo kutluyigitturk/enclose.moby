@@ -12,20 +12,20 @@
 
 <div align="center">
 
-  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_12.jpg" alt="enclose.moby gameplay — Desktop 1" width="600">
+  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_13.jpg" alt="enclose.moby gameplay — Desktop 1" width="600">
   <br>
   <em>Desktop — Google Chrome - Playground</em>
   <br><br>
 
-  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_11_winning.jpg" alt="enclose.moby gameplay — Desktop 2" width="600">
+  <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_12_winning.jpg" alt="enclose.moby gameplay — Desktop 2" width="600">
   <br>
   <em>Desktop — Google Chrome - Winning Animation</em>
   <br><br><br>
 
   <p align="center">
-    <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_11_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
+    <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_12_mobile.png" alt="enclose.moby gameplay — iPhone 13-Safari" width="280">
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_11_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
+    <img src="https://raw.githubusercontent.com/kutluyigitturk/enclose.moby/main/screenshoots/enclosemobyv0_12_mobile_winning.png" alt="enclose.moby gameplay — Mobile 2" width="280">
     <br><br>
     <em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPhone 13 — Safari - Playground&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iPhone 13 — Safari - Winning Animation</em>
   </p>
