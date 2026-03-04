@@ -197,6 +197,23 @@ function openSettings() {
     slider.value      = currentVal;
     label.textContent = currentVal + '%';
 
+    // Dark grid lines checkbox
+    const darkCheck = document.getElementById('dark-grid-checkbox');
+    darkCheck.checked = gameState.darkGridLines;
+    darkCheck.onchange = function () {
+        gameState.darkGridLines = this.checked;
+        localStorage.setItem('enclose_dark_grid', this.checked);
+        draw();
+    };
+
+    // Hide Moby thoughts checkbox
+    const mobyCheck = document.getElementById('hide-moby-checkbox');
+    mobyCheck.checked = gameState.hideMobyThoughts;
+    mobyCheck.onchange = function () {
+        gameState.hideMobyThoughts = this.checked;
+        localStorage.setItem('enclose_hide_moby_thoughts', this.checked);
+    };
+
     slider.oninput = function (e) {
         const val = e.target.value;
         label.textContent     = val + '%';

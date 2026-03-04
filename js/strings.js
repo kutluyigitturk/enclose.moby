@@ -20,6 +20,8 @@ const STRINGS = {
         settings:        'Settings',
         feedback:        'Feedback',
         gridOpacity:     'Grid Opacity',
+        darkGridLines:   'Dark grid lines',
+        hideMobyThoughts:'Hide Moby thoughts',
         about:          'About',
         aboutText:      'enclose.moby is a simple puzzle game about enclosing the maximum area with a limited number of walls.\n\nThis is a game I made purely to improve my coding skills and for fun.\n\nHave fun!\n\nMade with ❤️ by Kutlu',
         aboutGithub:    'If you want to see the source code and give a star ⭐',
@@ -108,9 +110,11 @@ const STRINGS = {
         settings:        'Ayarlar',
         feedback:        'Yorum',
         gridOpacity:     'Izgara Şeffaflığı:',
-        about:          'Hakkında',
-        aboutText:      'enclose.moby, sınırlı sayıda duvarla mümkün olan en büyük alanı çevrelemeye dayanan basit bir bulmaca oyunudur.\n\nBu oyunu tamamen kodlama becerilerimi geliştirmek ve eğlenmek için yaptım.\n\nİyi eğlenceler!\n\nKutlu tarafından ❤️ ile yapıldı',
-        aboutGithub:    'Kaynak kodlarımı görmek ve yıldız vermek isterseniz ⭐',
+        darkGridLines:   'Koyu ızgara çizgileri',
+        hideMobyThoughts:'Moby düşüncelerini gizle',
+        about:           'Hakkında',
+        aboutText:       'enclose.moby, sınırlı sayıda duvarla mümkün olan en büyük alanı çevrelemeye dayanan basit bir bulmaca oyunudur.\n\nBu oyunu tamamen kodlama becerilerimi geliştirmek ve eğlenmek için yaptım.\n\nİyi eğlenceler!\n\nKutlu tarafından ❤️ ile yapıldı',
+        aboutGithub:     'Kaynak kodlarımı görmek ve yıldız vermek isterseniz ⭐',
 
         // Gün istatistikleri
         statName:        'İsim',

@@ -168,6 +168,15 @@
         <button onclick="closeSettings()" class="close-x-btn">✕</button>
         <div class="modal-header-custom" data-i18n="settings">Settings</div>
         <div style="padding:10px; color:#333;">
+            <label class="settings-checkbox">
+                <input type="checkbox" id="dark-grid-checkbox" class="settings-tick">
+                <span data-i18n="darkGridLines">Dark grid lines</span>
+            </label>
+            <label class="settings-checkbox">
+                <input type="checkbox" id="hide-moby-checkbox" class="settings-tick">
+                <span data-i18n="hideMobyThoughts">Hide Moby thoughts</span>
+            </label>
+            <hr style="border:0; border-top:2px solid #ccc; margin:15px 0;">
             <label style="display:block; margin-bottom:15px; font-size:18px;">
                 <span data-i18n="gridOpacity">Grid Visibility:</span>
                 <span id="grid-val-display" style="font-weight:bold;">15%</span>

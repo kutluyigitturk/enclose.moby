@@ -208,6 +208,50 @@ button {
     transform: scale(1.1);
 }
 
+/* --- Settings Checkboxes --- */
+.settings-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+    font-family: var(--ui-font);
+    font-size: 18px;
+    cursor: pointer;
+    margin-bottom: 14px;
+}
+
+/* --- Custom Checkbox (sarı zemin + beyaz tik) --- */
+.settings-tick {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #999;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    background: #fff;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.settings-tick:checked {
+    background: #f0c040;
+    border-color: #f0c040;
+}
+
+.settings-tick:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+}
+
 /* --- Volume Button --- */
 .sound-btn {
     background: transparent;

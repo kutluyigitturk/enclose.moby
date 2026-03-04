@@ -618,7 +618,8 @@ function drawGridLayer() {
     const height = rows * tileSize;
 
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(0, 0, 0, ${gridOpacity})`;
+    const gridColor = gameState.darkGridLines ? '0, 0, 0' : '255, 255, 255';
+    ctx.strokeStyle = `rgba(${gridColor}, ${gridOpacity})`;
     ctx.lineWidth   = 0.5;
 
     for (let x = 0; x <= cols; x++) {

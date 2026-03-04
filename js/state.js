@@ -107,6 +107,9 @@ let gameState = {
                      ? parseFloat(localStorage.getItem('enclose_grid_opacity'))
                      : 0.15,
 
+    darkGridLines: localStorage.getItem('enclose_dark_grid') !== 'false',
+    hideMobyThoughts: localStorage.getItem('enclose_hide_moby_thoughts') === 'true',
+
     // Speech bubble animation
     bubbleAnim: { active: false, side: 'right', msgIndex: 0, startTime: 0, sideSet: false },
 

@@ -135,6 +135,7 @@ function renderBubbleText(ctx, text, centerX, centerY, maxWidth, ts) {
  */
 function renderSpeechBubble(ctx, gs, assets) {
     const anim = gs.bubbleAnim;
+    if (gs.hideMobyThoughts) return;
     if (!anim.active) return;
 
     const ts      = gs.tileSize;
