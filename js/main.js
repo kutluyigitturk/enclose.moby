@@ -28,7 +28,7 @@ async function initGame() {
     // We send both hover and click events on touchstart:
     //   → hover: When you hover over Moby, a speech bubble should appear.
     //   → click: trigger buoy placement/removal
-    // Additionally, since touchstart is considered a “gesture,” audio unlock is also performed here.
+    // Additionally, since touchstart is considered a "gesture," audio unlock is also performed here.
     canvas.addEventListener('touchstart', async (e) => {
         if (e.cancelable) e.preventDefault();
         await unlockAudio();
@@ -42,11 +42,34 @@ async function initGame() {
         handleInput(e, 'hover');
     }, { passive: false });
 
-    // Reset & Submit Buttons
+    // Reset Button
     document.getElementById('reset-btn').onclick = () => {
         playSFX('resetSound');
+        if (gameState.submitted) {
+            document.getElementById('reset-confirm-title').textContent = t('mobyTip');
+            document.getElementById('reset-confirm-text').textContent = t('resetConfirm');
+            document.getElementById('reset-go-back').textContent = t('goBack');
+            document.getElementById('reset-yes').textContent = t('resetYes');
+            document.getElementById('reset-confirm-modal').style.display = 'flex';
+            return;
+        }
         loadLevel(gameState.currentLevelIndex);
     };
+
+    // Reset Confirm — Go Back
+    document.getElementById('reset-go-back').onclick = () => {
+        playSFX('resetSound');
+        document.getElementById('reset-confirm-modal').style.display = 'none';
+    };
+
+    // Reset Confirm — Yes, Reset
+    document.getElementById('reset-yes').onclick = () => {
+        playSFX('resetSound');
+        document.getElementById('reset-confirm-modal').style.display = 'none';
+        clearLevelState(gameState.currentLevelIndex);
+        loadLevel(gameState.currentLevelIndex);
+    };
+
     document.getElementById('submit-btn').textContent = t('submit');
 
     // STARTUP ORDER

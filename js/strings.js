@@ -48,6 +48,8 @@ const STRINGS = {
         unusedWalls:         'You have {n} unused buoys remaining.\n\nAre you sure you want to submit?',
         neverShowTip:        'Never show me this tip again',
         goBack:              'Go Back',
+        resetConfirm:        'You could lose your progress.\nAre you sure you want to reset?',
+        resetYes:            'Reset',
         yourScore:           'Your Score',
 
         // Past Puzzles update
@@ -138,6 +140,8 @@ const STRINGS = {
         unusedWalls:         '{n} kullanılmamış şamandıran kaldı.\n\nGöndermek istediğine emin misin?',
         neverShowTip:        'Bu ipucunu bir daha gösterme',
         goBack:              'Geri Dön',
+        resetConfirm:        'İlerlemenizi kaybedebilirsiniz.\nSıfırlamak istediğinize emin misiniz?',
+        resetYes:            'Sıfırla',
         yourScore:           'Skorun',
 
         // Geçmiş Bulmacalar güncellemesi
