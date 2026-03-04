@@ -399,7 +399,8 @@ function draw() {
     ctx.save();
     canvas.style.cursor = 'default';
     // --- Prev / Next Navigation ---
-    const topY = offsetY - 10;
+    const isMobile = window.innerWidth < 600;
+    const navY = isMobile ? bottomY - 18 : offsetY - 10;
     ctx.font = "18px 'Schoolbell'";
 
     // Prev
