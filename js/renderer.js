@@ -292,60 +292,6 @@ function draw() {
                 // ** LIGHTHOUSE DARKENING EFFECT END **
             }
         }
-        /*
-        // --- Lighthouse Light Effect (active only on the final frame) ---
-        if (gameState.lighthousePos && sprites.lighthouse) {
-            const TOTAL_FRAMES = 15;
-            const spawnElapsed = now - gameState.lighthouseSpawnTime;
-            const frame        = Math.min(TOTAL_FRAMES - 1, Math.floor(spawnElapsed / 80));
-
-            if (frame === TOTAL_FRAMES - 1) {
-                const lp      = gameState.lighthousePos;
-                const BASE_TILE = 50;
-                const scale   = tileSize / BASE_TILE;
-                const lhW     = sprites.lighthouse[14].width  * scale;
-                const lhH     = sprites.lighthouse[14].height * scale;
-                const baseX   = lp.x * tileSize + offsetX + tileSize - lhW / 2;
-                const baseY   = lp.y * tileSize + offsetY + tileSize * 2;
-
-                // Light source at the lamp room — top ~15% of the sprite
-                const lightX = baseX + lhW / 2;
-                const lightY = baseY - lhH * 0.85;
-
-                // Subtle flicker effect
-                const flicker  = 0.85 + Math.sin(now / 200) * 0.08;
-                const radius   = tileSize * 6;
-
-                const gradient = ctx.createRadialGradient(
-                    lightX, lightY, 0,
-                    lightX, lightY, radius
-                );
-                gradient.addColorStop(0,    `rgba(255, 220, 100, ${0.9  * flicker})`);
-                gradient.addColorStop(0.15, `rgba(255, 210, 80,  ${0.7  * flicker})`);
-                gradient.addColorStop(0.4,  `rgba(255, 190, 60,  ${0.35 * flicker})`);
-                gradient.addColorStop(0.7,  `rgba(255, 170, 40,  ${0.15 * flicker})`);
-                gradient.addColorStop(1,    `rgba(255, 150, 20,  0)`);
-
-                // Clip the light to only illuminate the enclosed area
-                ctx.save();
-                ctx.beginPath();
-                for (let y = 0; y < gameState.rows; y++) {
-                    for (let x = 0; x < gameState.cols; x++) {
-                        if (gameState.winningPath[y][x] >= 0) {
-                            ctx.rect(
-                                x * tileSize + offsetX,
-                                y * tileSize + offsetY,
-                                tileSize, tileSize
-                            );
-                        }
-                    }
-                }
-                ctx.clip();
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.restore();
-            }
-        } */
     }
 
     // ── LAYER 7: BUOYS (drawn after win effects to prevent dark overlay clipping) ──
