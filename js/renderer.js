@@ -340,12 +340,13 @@ function draw() {
     }
 
     // ── UI OVERLAY ───────────────────────────────────────────────────────────
+    const isMobile = window.innerWidth < 600;
     const bottomY = offsetY + rows * tileSize + 30;
 
     ctx.save();
     canvas.style.cursor = 'default';
+
     // --- Prev / Next Navigation ---
-    const isMobile = window.innerWidth < 600;
     const navY = isMobile ? bottomY - 18 : offsetY - 10;
     ctx.font = "18px 'Schoolbell'";
 
@@ -357,13 +358,13 @@ function draw() {
     const isPrevHover = !prevDisabled &&
         gameState._mouseX >= prevX &&
         gameState._mouseX <= prevX + prevW &&
-        gameState._mouseY >= topY - 14 &&
-        gameState._mouseY <= topY + 4;
+        gameState._mouseY >= navY - 14 &&
+        gameState._mouseY <= navY + 4;
 
     ctx.textAlign = 'left';
     ctx.fillStyle = prevDisabled ? 'rgba(255,255,255,0.2)'
         : isPrevHover ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.7)';
-    ctx.fillText(prevLabel, prevX, topY);
+    ctx.fillText(prevLabel, prevX, navY);
     if (isPrevHover) canvas.style.cursor = 'pointer';
     gameState._prevBtn = isPrevHover;
 
@@ -375,13 +376,13 @@ function draw() {
     const isNextHover = !nextDisabled &&
         gameState._mouseX >= nextX - nextW &&
         gameState._mouseX <= nextX &&
-        gameState._mouseY >= topY - 14 &&
-        gameState._mouseY <= topY + 4;
+        gameState._mouseY >= navY - 14 &&
+        gameState._mouseY <= navY + 4;
 
     ctx.textAlign = 'right';
     ctx.fillStyle = nextDisabled ? 'rgba(255,255,255,0.2)'
         : isNextHover ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.7)';
-    ctx.fillText(nextLabel, nextX, topY);
+    ctx.fillText(nextLabel, nextX, navY);
     if (isNextHover) canvas.style.cursor = 'pointer';
     gameState._nextBtn = isNextHover;
 
