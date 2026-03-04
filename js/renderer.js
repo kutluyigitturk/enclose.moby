@@ -341,13 +341,13 @@ function draw() {
 
     // ── UI OVERLAY ───────────────────────────────────────────────────────────
     const isMobile = window.innerWidth < 600;
-    const bottomY = offsetY + rows * tileSize + 30;
+    const bottomY = offsetY + rows * tileSize + (isMobile ? 42 : 30);
 
     ctx.save();
     canvas.style.cursor = 'default';
 
     // --- Prev / Next Navigation ---
-    const navY = isMobile ? bottomY - 18 : offsetY - 10;
+    const navY = isMobile ? bottomY - 23 : offsetY - 10;
     ctx.font = "18px 'Schoolbell'";
 
     // Prev
