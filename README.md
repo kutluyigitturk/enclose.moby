@@ -4,14 +4,7 @@
 
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
-<br>
-
-<a href="https://kutluyigitturk.github.io/enclose.moby">
-  <img src="https://img.shields.io/badge/▶_PLAY_NOW-f0c040?style=for-the-badge&logoColor=black&labelColor=f0c040" alt="Play Now" height="45">
-</a>
-
-<br><br>
-
+[![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
 [![Version](https://img.shields.io/badge/version-0.9.13-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
