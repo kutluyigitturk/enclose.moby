@@ -5,7 +5,7 @@
 ### *Enclose the Moby Dick in the biggest possible pen!*
 
 [![Play Now](https://img.shields.io/badge/▶_PLAY_NOW-1a1a2e?style=for-the-badge&logo=github&logoColor=white)](https://kutluyigitturk.github.io/enclose.moby)
-[![Version](https://img.shields.io/badge/version-0.9.7-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
+[![Version](https://img.shields.io/badge/version-0.9.13-blue?style=for-the-badge)](https://github.com/kutluyigitturk/enclose.moby)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -37,21 +37,44 @@
 
 ---
 
+## 📖 The Story Behind the Game
+
+enclose.moby started as a single idea: what if you could trap Moby Dick using buoys? The first version had one level, basic click interactions, and almost no visual polish. But the core puzzle loop felt satisfying — and that was enough to keep building.
+
+**The game needed to feel alive.** In the early versions, Moby Dick just sat there waiting. He had no personality, no reaction. So he got a voice. Hovering over him now reveals his escape route with a directional arrow — you can see exactly where he plans to go. He reacts to your moves through pixel-art speech bubbles, taunts you when he sees an opening, and goes quiet when he's cornered. He even sounds different every time. The goal was to make you feel like you're actually hunting something, not just clicking tiles.
+
+**The game needed to be fair.** Puzzle games live and die by clarity. Players needed to understand why they won, and whether they could have done better. This is why the optimal solution preview exists — after winning, you can compare your enclosure against the mathematically best possible solution. If you already found the optimal answer, the game tells you. No ambiguity, no frustration. You either solved it perfectly or you have something to aim for.
+
+**The game needed honest feedback.** When you run out of buoys, the counter shakes and flashes red. It sounds minor, but without it players assumed the game had a bug. Small signals matter enormously. The same thinking produced the ghost preview — a translucent buoy appears before you commit to placing it, removing uncertainty and making every move feel intentional rather than accidental.
+
+**The game needed a sense of triumph.** Winning a puzzle should feel like an event, not just a state change. When Moby is finally enclosed, the world outside his pen dims into darkness, a field of stars blooms across the trapped waters, and a lighthouse rises from the sea — its lantern slowly coming to life. None of this was in the original version. The first implementation simply stopped the game and displayed a score. It felt hollow. The winning animation exists because the moment of capture deserves ceremony. You spent minutes studying the map, planning your buoys, watching Moby's escape arrows — the payoff should match the effort.
+
+**The game needed to sound alive.** For a long time, enclose.moby was completely silent. Moby got his voice first — hover over him and you hear a whale call, different each time. But silence between those moments felt wrong. Now every buoy placement lands with a splash, every removal pops cleanly, and resetting a level has its own sound. When the lighthouse rises on a winning screen, a distinct chime marks the moment. These are small, deliberate sounds — not a soundtrack, but punctuation. They confirm that your actions are registering, that the world is responding. A game without sound is a game without feedback, and feedback is everything.
+
+**The game needed to speak your language.** Turkish and English are both fully supported, down to a custom-built font that includes the Turkish characters missing from the original typeface. The grid opacity, the sound, the language — all configurable, because different players want different things from the same game.
+
+**The game needed a solid foundation.** At one point the entire codebase was a single 2000-line HTML file. It worked, but it was fragile. A full restructure split everything into nine dedicated JavaScript modules. Players never saw this change, but it made every subsequent improvement faster, safer, and cleaner. Good architecture is invisible until the moment you need it.
+
+The game is still being built. Every version exists because something felt incomplete, something felt unfair, or something felt like it could be more beautiful. That's the only roadmap that matters.
+
+---
+
 ## 🎮 How to Play
 
-**Objective:** Trap Moby Dick in the smallest possible area using buoys.
+**Objective:** Trap Moby Dick in the biggest possible area using buoys.
 
 | Action | Desktop | Mobile |
 |--------|---------|--------|
 | Place buoy | `Left Click` on sea tile | `Tap` on sea tile |
 | Remove buoy | `Left Click` on placed buoy | `Tap` on placed buoy |
+| Navigate levels | `‹ Prev` / `Next ›` buttons | Same |
 | Reset level | Click `Reset` button | Tap `Reset` button |
 
 ### 📋 Rules
 
-- 🌊 Click/tap on sea tiles to place buoys (walls)
+- 🌊 Click/tap on sea tiles to place buoys
 - 🚫 You have limited buoys per level
-- 🐋 Moby Dick cannot swim diagonally or over walls
+- 🐋 Moby Dick cannot swim diagonally or over buoys
 - 📏 Bigger enclosure = Higher score
 - ✨ The game auto-detects when Moby is trapped
 
@@ -61,25 +84,27 @@
 
 ### 🧠 Smart Game Mechanics
 - **Auto-Detection System** — BFS algorithm instantly calculates if Moby Dick is trapped after each buoy placement
-- **Area-Based Scoring** — Score is determined by how small the enclosed area is, not by buoys used
+- **Area-Based Scoring** — Score is determined by the size of the enclosed area
+- **Optimal Solution Preview** — Compare your solution against the mathematically best enclosure
 - **Non-Blocking Gameplay** — No annoying pop-ups; continue playing even after winning
 
 ### 🎨 Visual & UI Enhancements
-- **Layered Rendering System** — Distinct layers for terrain, grid, entities, and UI to prevent visual artifacts.
-- **Global Grid System** — Pixel-perfect grid lines with adjustable opacity (0% - 100%) via Settings.
-- **Smart Wave Logic** — Inner waves align perfectly to grid cells; outer waves respect a buffer zone.
-- **Menu System** — Consolidated UI with a dropdown menu and dedicated Settings modal.
+- **Layered Rendering System** — 8 distinct render layers for terrain, grid, entities, effects and UI
+- **Winning Ceremony** — Darkness, star field, lighthouse animation on capture
+- **Speech Bubbles** — Moby reacts to your moves with pixel-art dialogue (toggleable in Settings)
+- **Escape Path Visualization** — Hover over Moby to see his calculated escape route
+- **Customizable Grid** — Dark/light grid lines toggle with adjustable opacity via Settings
 
 ### 📱 Cross-Platform Support
 - **Full Mobile Support** — Touch controls work seamlessly on iOS and Android
 - **Responsive Design** — Game scales to fit any screen size
-- **Dynamic TILE Sizing** — Grid adapts from 15px to 60px based on device
+- **Dynamic Tile Sizing** — Grid adapts from 15px to 60px based on device
 
 ### 🖥️ User Interface
-- **Integrated Scoreboard** — Score displayed as `Area: X` in the bottom-right corner
-- **Custom Favicon** — Moby Dick icon in browser tab
-- **Modular Architecture** — Codebase split into 9 dedicated JS modules for maintainability and scalability
-- **Dropdown Menu** — Access past puzzles via hamburger menu
+- **Level Navigation** — Canvas-native Prev/Next buttons aligned to the grid
+- **TR/EN Localization** — Full Turkish and English support with custom font
+- **Player Feedback** — Google Form integration for suggestions and bug reports
+- **Dropdown Menu** — Access past puzzles, settings, feedback and about sections
 
 ---
 
@@ -92,20 +117,20 @@
 └── js/
     ├── config.js     # Constants & game configuration
     ├── strings.js    # Localization strings for TR / EN
-    ├── levels.js     # Level data
+    ├── levels.js     # Level data (10 hand-crafted + AI-generated puzzles)
     ├── assets.js     # Base64 sprites & audio
-    ├── bubble.js     # Speech bubble config, messages & rendering
+    ├── bubble.js     # 9-slice speech bubble system & rendering
     ├── state.js      # Game state, sound management, asset loading
     ├── ui.js         # Menus, modals, input handling & resize
-    ├── game.js       # Core logic: waves, win condition, pathfinding
-    ├── renderer.js   # Rendering pipeline & draw loop
+    ├── game.js       # Core logic: waves, win condition, BFS pathfinding
+    ├── renderer.js   # 8-layer rendering pipeline & draw loop
     └── main.js       # Entry point: initGame & event listeners
 ```
 
 | Technology | Usage |
 |------------|-------|
 | HTML5 Canvas | Game rendering |
-| Vanilla JavaScript | Game logic (OOP Architecture) & BFS pathfinding |
+| Vanilla JavaScript | Game logic & BFS pathfinding |
 | CSS3 | UI styling & animations |
 | [Base64](https://www.base64-image.de/) | Embedded sprites & assets |
 
@@ -118,9 +143,15 @@
 - [x] Dynamic wave animations
 - [x] Area-based scoring system
 - [x] Mobile touch support
-- [x] Refactor to OOP Architecture (v0.5)
-- [x] Additional levels
-- [x] Modular JS architecture — 9 dedicated modules (v0.8)
+- [x] Modular JS architecture — 9 dedicated modules
+- [x] 10 puzzle levels (hand-crafted + AI-generated)
+- [x] Optimal solution preview & comparison
+- [x] TR/EN localization with custom font
+- [x] Winning ceremony (darkness, stars, lighthouse)
+- [x] Level navigation (Prev/Next)
+- [x] Player feedback system
+- [x] Customizable settings (grid style, Moby thoughts)
+- [ ] Animated GIF in README
 - [ ] Level editor
 - [ ] Leaderboard system
 
@@ -142,27 +173,6 @@ start index.html # Windows
 Or simply visit: **[kutluyigitturk.github.io/enclose.moby](https://kutluyigitturk.github.io/enclose.moby)**
 
 ---
-
-## 📖 The Story Behind the Game
-
-enclose.moby started as a single idea: what if you could trap Moby Dick using buoys? The first version had one level, basic click interactions, and almost no visual polish. But the core puzzle loop felt satisfying — and that was enough to keep building.
-
-**The game needed to feel alive.** In the early versions, Moby Dick just sat there waiting. He had no personality, no reaction. So he got a voice. Hovering over him now reveals his escape route with a directional arrow — you can see exactly where he plans to go. He reacts to your moves through pixel-art speech bubbles, taunts you when he sees an opening, and goes quiet when he's cornered. He even sounds different every time. The goal was to make you feel like you're actually hunting something, not just clicking tiles.
-
-**The game needed to be fair.** Puzzle games live and die by clarity. Players needed to understand why they won, and whether they could have done better. This is why the optimal solution preview exists — after winning, you can compare your enclosure against the mathematically best possible solution. If you already found the optimal answer, the game tells you. No ambiguity, no frustration. You either solved it perfectly or you have something to aim for.
-
-**The game needed honest feedback.** When you run out of buoys, the counter shakes and flashes red. It sounds minor, but without it players assumed the game had a bug. Small signals matter enormously. The same thinking produced the ghost preview — a translucent buoy appears before you commit to placing it, removing uncertainty and making every move feel intentional rather than accidental.
-
-**The game needed a sense of triumph.** Winning a puzzle should feel like an event, not just a state change. When Moby is finally enclosed, the world outside his pen dims into darkness, a field of stars blooms across the trapped waters, and a lighthouse rises from the sea — its lantern slowly coming to life. None of this was in the original version. The first implementation simply stopped the game and displayed a score. It felt hollow. The winning animation exists because the moment of capture deserves ceremony. You spent minutes studying the map, planning your buoys, watching Moby's escape arrows — the payoff should match the effort.
-
-**The game needed to sound alive.** For a long time, enclose.moby was completely silent. Moby got his voice first — hover over him and you hear a whale call, different each time. But silence between those moments felt wrong. Now every buoy placement lands with a splash, every removal pops cleanly, and resetting a level has its own sound. When the lighthouse rises on a winning screen, a distinct chime marks the moment. These are small, deliberate sounds — not a soundtrack, but punctuation. They confirm that your actions are registering, that the world is responding. A game without sound is a game without feedback, and feedback is everything.
-
-**The game needed to speak your language.** Turkish and English are both fully supported, down to a custom-built font that includes the Turkish characters missing from the original typeface. The grid opacity, the sound, the language — all configurable, because different players want different things from the same game.
-
-**The game needed a solid foundation.** At one point the entire codebase was a single 2000-line HTML file. It worked, but it was fragile. A full restructure split everything into nine dedicated JavaScript modules. Players never saw this change, but it made every subsequent improvement faster, safer, and cleaner. Good architecture is invisible until the moment you need it.
-
-The game is still being built. Every version exists because something felt incomplete, something felt unfair, or something felt like it could be more beautiful. That's the only roadmap that matters.
-
 
 <div align="center">
 
