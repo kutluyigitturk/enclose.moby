@@ -397,6 +397,47 @@ function draw() {
     const bottomY = offsetY + rows * tileSize + 30;
 
     ctx.save();
+    canvas.style.cursor = 'default';
+    // --- Prev / Next Navigation ---
+    const topY = offsetY - 10;
+    ctx.font = "18px 'Schoolbell'";
+
+    // Prev
+    const prevDisabled = gameState.currentLevelIndex === 0;
+    const prevLabel = '‹ ' + t('prev');
+    const prevW = ctx.measureText(prevLabel).width;
+    const prevX = offsetX;
+    const isPrevHover = !prevDisabled &&
+        gameState._mouseX >= prevX &&
+        gameState._mouseX <= prevX + prevW &&
+        gameState._mouseY >= topY - 14 &&
+        gameState._mouseY <= topY + 4;
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = prevDisabled ? 'rgba(255,255,255,0.2)'
+        : isPrevHover ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.7)';
+    ctx.fillText(prevLabel, prevX, topY);
+    if (isPrevHover) canvas.style.cursor = 'pointer';
+    gameState._prevBtn = isPrevHover;
+
+    // Next
+    const nextDisabled = gameState.currentLevelIndex >= LEVELS.length - 1;
+    const nextLabel = t('next') + ' ›';
+    const nextX = offsetX + cols * tileSize;
+    const nextW = ctx.measureText(nextLabel).width;
+    const isNextHover = !nextDisabled &&
+        gameState._mouseX >= nextX - nextW &&
+        gameState._mouseX <= nextX &&
+        gameState._mouseY >= topY - 14 &&
+        gameState._mouseY <= topY + 4;
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = nextDisabled ? 'rgba(255,255,255,0.2)'
+        : isNextHover ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.7)';
+    ctx.fillText(nextLabel, nextX, topY);
+    if (isNextHover) canvas.style.cursor = 'pointer';
+    gameState._nextBtn = isNextHover;
+
     ctx.font = "22px 'Schoolbell'";
 
     // Buoy counter — shake + red flash feedback when the limit is reached
@@ -456,7 +497,7 @@ function draw() {
             ctx.fillStyle = `rgba(255, 255, 255, ${gameState.optBtnAlpha})`;
             ctx.fillText(label, offsetX + cols * tileSize, optY);
 
-            canvas.style.cursor = isHovering ? 'pointer' : 'default';
+            if (isHovering) canvas.style.cursor = 'pointer';
             gameState._optBtn   = isHovering;
         }
     }

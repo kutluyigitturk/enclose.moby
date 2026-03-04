@@ -122,6 +122,8 @@ let gameState = {
     _mouseX:    0,
     _mouseY:    0,
     _optBtn:    false,
+    _prevBtn:   false,
+    _nextBtn:   false,
     optBtnAlpha: 0.6,            // Current opacity of the optimal button
 
     // Buoy limit feedback (shake + red flash)

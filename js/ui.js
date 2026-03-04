@@ -3,6 +3,20 @@
 // =============================================================================
 
 // -----------------------------------------------------------------------------
+// LEVEL NAVIGATION (Prev / Next)
+// -----------------------------------------------------------------------------
+
+function goToPrevLevel() {
+    if (gameState.currentLevelIndex <= 0) return;
+    loadLevel(gameState.currentLevelIndex - 1);
+}
+
+function goToNextLevel() {
+    if (gameState.currentLevelIndex >= LEVELS.length - 1) return;
+    loadLevel(gameState.currentLevelIndex + 1);
+}
+
+// -----------------------------------------------------------------------------
 // MENU MANAGEMENT
 // -----------------------------------------------------------------------------
 
@@ -108,6 +122,7 @@ function updateAllUI() {
         document.getElementById('result-view-optimal').textContent = t('viewOptimal');
     }
 
+    updateLevelStats();
     updateLevelStats();
 }
 
@@ -439,6 +454,10 @@ function handleInput(e, type) {
         toggleOptimalView();
         return;
     }
+
+    // Prev / Next button click
+    if (gameState._prevBtn) { goToPrevLevel(); return; }
+    if (gameState._nextBtn) { goToNextLevel(); return; }
 
     if (x < 0 || x >= gameState.cols || y < 0 || y >= gameState.rows) return;
 

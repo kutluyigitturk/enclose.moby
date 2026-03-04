@@ -50,6 +50,8 @@ const STRINGS = {
         // Past Puzzles update
         day:                 'Day',
         bestScore:           'Best',
+        prev:                'Prev',
+        next:                'Next',
 
         // Result modal
         resultTitle:         'Results — Day {n}',
@@ -135,6 +137,8 @@ const STRINGS = {
         // Geçmiş Bulmacalar güncellemesi
         day:                 'Gün',
         bestScore:           'En İyi',
+        prev:                'Önceki',
+        next:                'Sonraki',
 
         // Sonuç modalı
         resultTitle:         'Sonuçlar — Gün {n}',
