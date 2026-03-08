@@ -389,23 +389,21 @@ function draw() {
     ctx.font = "22px 'Schoolbell'";
 
     // Buoy counter — shake + red flash feedback when the limit is reached
-    const FEEDBACK_DURATION = 500; // ms
+    const FEEDBACK_DURATION = 700; // ms
     const feedbackElapsed   = now - (gameState.buoyLimitFeedback || 0);
     const buoyText = `${t('buoy')}: ${gameState.maxWalls - gameState.playerWalls.length}/${gameState.maxWalls}`;
 
     if (feedbackElapsed < FEEDBACK_DURATION) {
-        const feedbackProgress = feedbackElapsed / FEEDBACK_DURATION; // 0 → 1
+        const feedbackProgress = feedbackElapsed / FEEDBACK_DURATION;
+        const glowAlpha = 1 - feedbackProgress;
 
-        // Shake: damped sine wave → left/right jitter
-        const shakeX = Math.round(Math.sin(feedbackProgress * Math.PI * 6) * (1 - feedbackProgress) * 2);
-
-        // Color: red (#9b1b22) fading to white
-        const r = Math.round(155 + (255 - 155) * feedbackProgress);
-        const g = Math.round(27  + (255 - 27)  * feedbackProgress);
-        const b = Math.round(34  + (255 - 34)  * feedbackProgress);
-        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
         ctx.textAlign = 'left';
-        ctx.fillText(buoyText, offsetX + shakeX, bottomY);
+        ctx.save();
+        ctx.shadowColor = `rgba(255, 255, 255, ${glowAlpha})`;
+        ctx.shadowBlur = 10 + (1 - feedbackProgress) * 15;
+        ctx.fillStyle = '#fff';
+        ctx.fillText(buoyText, offsetX, bottomY);
+        ctx.restore();
     } else {
         ctx.fillStyle = '#fff';
         ctx.textAlign = 'left';
