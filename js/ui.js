@@ -297,6 +297,12 @@ function updateLevelStats() {
 
 function updateSubmitButton() {
     document.getElementById('submit-btn').disabled = !gameState.isWon;
+    updateCheckButton();
+}
+
+function updateCheckButton() {
+    const checkBtn = document.getElementById('check-btn');
+    if (checkBtn) checkBtn.disabled = !gameState.isWon || gameState.submitted;
 }
 
 document.getElementById('submit-btn').onclick = () => {

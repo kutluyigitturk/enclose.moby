@@ -61,7 +61,13 @@ canvas {
 .controls-container {
     position: fixed; bottom: 30px; left: 50%;
     transform: translateX(-50%); z-index: 1000; pointer-events: none;
-    display: flex; gap: 10px; align-items: center;
+    display: flex; gap: 15px; align-items: center;
+}
+
+.controls-container .btn-primary {
+    min-width: 110px;
+    text-align: center;
+    padding: 8px 20px;
 }
 
 /* --- Buttons --- */
@@ -104,10 +110,15 @@ button {
 
 /* --- Submit Button --- */
 #submit-btn {
-    margin-left: 10px;
+    margin-left: 0;
 }
 
 #submit-btn:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+#check-btn:disabled {
     opacity: 0.35;
     pointer-events: none;
 }
@@ -475,9 +486,9 @@ button {
 
     .controls-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        gap: 15px;
+        gap: 8px;
         bottom: 20px;
     }
 

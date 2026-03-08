@@ -70,6 +70,48 @@ async function initGame() {
         loadLevel(gameState.currentLevelIndex);
     };
 
+    // Check Button
+    document.getElementById('check-btn').onclick = () => {
+        if (!gameState.isWon || gameState.submitted) return;
+        playSFX('resetSound');
+
+        const levelIndex = gameState.currentLevelIndex;
+        const currentScore = gameState.lastScore;
+        const optimalScore = LEVELS[levelIndex].optimalArea;
+        const medal = getMedalForScore(levelIndex, currentScore);
+
+        if (currentScore >= optimalScore) {
+            document.getElementById('check-modal-medal').textContent = '💎';
+            document.getElementById('check-modal-title').textContent = t('perfect');
+            document.getElementById('check-modal-text').textContent =
+                t('perfectMsg').replace('{score}', currentScore);
+            document.getElementById('check-keep-playing').textContent = t('keepPlaying');
+            document.getElementById('check-submit').textContent = t('submit');
+            } else {
+            document.getElementById('check-modal-medal').textContent = medal.emoji || '';
+            document.getElementById('check-modal-title').textContent = t('keepGoing');
+            document.getElementById('check-modal-text').textContent =
+                t('keepGoingMsg').replace('{score}', currentScore).replace('{optimal}', optimalScore);
+            document.getElementById('check-keep-playing').textContent = t('keepPlaying');
+            document.getElementById('check-submit').textContent = t('submit');
+        }
+
+        document.getElementById('check-modal').style.display = 'flex';
+    };
+
+    // Check Modal — Keep Playing
+    document.getElementById('check-keep-playing').onclick = () => {
+        playSFX('resetSound');
+        document.getElementById('check-modal').style.display = 'none';
+    };
+
+    // Check Modal — Submit
+    document.getElementById('check-submit').onclick = () => {
+        playSFX('resetSound');
+        document.getElementById('check-modal').style.display = 'none';
+        submitScore();
+    };
+
     document.getElementById('submit-btn').textContent = t('submit');
 
     // STARTUP ORDER

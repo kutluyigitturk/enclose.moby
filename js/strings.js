@@ -44,6 +44,12 @@ const STRINGS = {
 
         // Submit system
         submit:              'Submit',
+        check:               'Check',
+        keepGoing:           'Keep Going!',
+        keepGoingMsg:        'Your current score is {score}, but the optimal is {optimal}.\nKeep trying!',
+        keepPlaying:         'Keep Playing',
+        perfect:             'Perfect!',
+        perfectMsg:          'Your current score is {score} — that\'s the best possible score!',
         mobyTip:             'Moby Tip!',
         unusedWalls:         'You have {n} unused buoys remaining.\n\nAre you sure you want to submit?',
         neverShowTip:        'Never show me this tip again',
@@ -136,6 +142,12 @@ const STRINGS = {
 
         // Gönderme sistemi
         submit:              'Gönder',
+        check:               'Kontrol',
+        keepGoing:           'Devam Et!',
+        keepGoingMsg:        'Mevcut skorun {score}, fakat optimal skor {optimal}.\nDenemeye devam et!',
+        keepPlaying:         'Oynamaya Devam',
+        perfect:             'Mükemmel!',
+        perfectMsg:          'Mevcut skorun {score} — bu mümkün olan en iyi skor!',
         mobyTip:             'Moby İpucu!',
         unusedWalls:         '{n} kullanılmamış şamandıran kaldı.\n\nGöndermek istediğine emin misin?',
         neverShowTip:        'Bu ipucunu bir daha gösterme',

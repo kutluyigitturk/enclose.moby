@@ -108,10 +108,11 @@
 <!-- ── GAME CANVAS ────────────────────────────────────────────────────────── -->
 <canvas id="gameCanvas"></canvas>
 
-<!-- ── ALT: Reset & Submit Button ─────────────────────────────────────────── -->
+<!-- ── ALT: Reset & Check & Submit Button ─────────────────────────────────── -->
 <div class="controls-container">
-    <button class="btn-primary" id="reset-btn" data-i18n="reset">RESET</button>
-    <button class="btn-primary" id="submit-btn" data-i18n="submit" disabled>SUBMIT</button>
+    <button class="btn-primary" id="reset-btn" data-i18n="reset">Reset</button>
+    <button class="btn-primary" id="check-btn" data-i18n="check" disabled>Check</button>
+    <button class="btn-primary" id="submit-btn" data-i18n="submit" disabled>Submit</button>
 </div>
 
 <!-- ── MODALS ──────────────────────────────────────────────────────────── -->
@@ -219,6 +220,21 @@
         <div style="display:flex; gap:10px; justify-content:center;">
             <button id="tip-go-back" class="btn-primary tip-modal-btn">Go Back</button>
             <button id="tip-submit" class="btn-primary tip-modal-btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- Check Modal -->
+<div id="check-modal" class="modal-overlay">
+    <div class="modal-box" style="text-align:center;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:5px;">
+            <span id="check-modal-medal" style="font-size:36px;"></span>
+            <span id="check-modal-title" style="font-size:24px; font-weight:bold; color:#000;">Keep Going!</span>
+        </div>
+        <p id="check-modal-text" style="color:#333; text-align:center; line-height:1.5; margin-top:0; margin-bottom:20px; white-space:pre-wrap; font-size:18px;"></p>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="check-keep-playing" class="btn-primary tip-modal-btn">Keep Playing</button>
+            <button id="check-submit" class="btn-primary tip-modal-btn">Submit</button>
         </div>
     </div>
 </div>
