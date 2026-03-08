@@ -497,7 +497,8 @@ button {
     }
 
     .controls-container .btn-primary {
-        font-size: 18px;
-        padding: 6px 24px;
+        font-size: 15px;
+        padding: 5px 16px;
+        letter-spacing: 1px;
     }
 }
