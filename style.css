@@ -475,6 +475,66 @@ button {
     border-bottom: 1px dashed #ccc; margin-bottom: 5px;
 }
 
+/* --- AI Author Badge & Collapsible Explanation --- */
+.author-ai-toggle {
+    cursor: pointer;
+}
+
+.author-ai-toggle:hover {
+    opacity: 0.7;
+}
+
+.ai-badge {
+    display: inline-block;
+    background: #f0c040;
+    color: #333;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.ai-explain {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: #e8e8e8;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.2;
+    color: #555;
+    padding: 0 10px;
+    margin: 0 auto 5px;
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+
+.ai-explain.open {
+    max-height: 120px;
+    padding: 8px 10px;
+}
+
+.ai-github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #333;
+    font-family: var(--ui-font);
+    font-size: 13px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.ai-github-link:hover {
+    opacity: 0.6;
+}
+
 /* ============================================
    RESPONSIVE — MOBİL
    ============================================ */
