@@ -279,6 +279,7 @@ function loadLevel(index) {
 
     document.getElementById('submit-btn').textContent = t('submit');
     document.getElementById('submit-btn').disabled = true;
+    document.getElementById('check-btn').disabled = true;
     document.getElementById('level-name-display').textContent =
         `${t('day')} ${index + 1} - ${levelData.name}`;
 
