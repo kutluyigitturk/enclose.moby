@@ -157,19 +157,44 @@ function openLevelSelector() {
     for (let i = LEVELS.length - 1; i >= 0; i--) {
         const lvl  = LEVELS[i];
         const best = getBestScore(i);
+        const optimal = lvl.optimalArea || 0;
         const medal = best > 0 ? getMedalForScore(i, best) : null;
-        const scoreText = best > 0
-            ? `${medal && medal.emoji ? medal.emoji + ' ' : ''}${best}`
-            : '';
         const btn  = document.createElement('button');
         btn.className = 'level-item';
 
         const label = `${t('day')} ${i + 1} — ${lvl.name}`;
 
-        btn.innerHTML = `
-            <span>${label}</span>
-            <span style="float:right; color:#888;">${scoreText}</span>
-        `;
+        if (best > 0 && optimal > 0) {
+            const ratio = Math.min(best / optimal, 1);
+            const pct = Math.round(ratio * 100);
+
+            // Gold for perfect, silver for >=80%, bronze for >=50%, gray otherwise
+            let barColor;
+            if (ratio >= 1.0) barColor = '#f0c040';
+            else if (ratio >= 0.8) barColor = '#c0c0c0';
+            else if (ratio >= 0.5) barColor = '#cd7f32';
+            else barColor = '#999';
+
+            const medalEmoji = medal && medal.emoji ? medal.emoji + ' ' : '';
+
+            btn.innerHTML = `
+                <div class="level-item-top">
+                    <span>${label}</span>
+                    <span class="level-item-score">${medalEmoji}<b>${best}</b><span class="optimal">/${optimal}</span></span>
+                </div>
+                <div class="level-progress-bar">
+                    <div class="level-progress-fill" style="width:${pct}%; background:${barColor};"></div>
+                </div>
+            `;
+        } else {
+            btn.innerHTML = `
+                <div class="level-item-top">
+                    <span>${label}</span>
+                    <span class="level-item-score" style="color:#aaa;">—</span>
+                </div>
+            `;
+        }
+
         btn.onclick = () => { loadLevel(i); closeLevelSelector(); };
         container.appendChild(btn);
     }
